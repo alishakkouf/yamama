@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Yamama.Models;
+using Yamama.Services;
 using Yamama.ViewModels;
 
 namespace Yamama.Controllers
@@ -14,15 +17,21 @@ namespace Yamama.Controllers
     {
       
       
-            private readonly UserManager<IdentityUser> userManager;
-            private readonly SignInManager<IdentityUser> signInManager;
+            private readonly UserManager<ExtendedUser> userManager;
+            private readonly SignInManager<ExtendedUser> signInManager;
+            private readonly ILogger<AuthController> logger;
+        private readonly ISmsSender smsSender;
 
-            public AuthController(UserManager<IdentityUser> userManager,
-                                     SignInManager<IdentityUser> signInManager)
+        public AuthController(UserManager<ExtendedUser> userManager,
+                                     SignInManager<ExtendedUser> signInManager,
+                                     ILogger<AuthController> logger,ISmsSender smsSender)
             {
                 this.userManager = userManager;
                 this.signInManager = signInManager;
-            }
+            this.logger = logger;
+            this.smsSender = smsSender;
+
+        }
 
             [HttpPost]
             [Route("Register")]
@@ -35,14 +44,23 @@ namespace Yamama.Controllers
                     if (user1 == null)
                     {
 
-                        var user = new IdentityUser { UserName = userRegisterInformation.UserName, Email = userRegisterInformation.E_mail };
+                        var user = new ExtendedUser { UserName = userRegisterInformation.UserName,
+                                                      Email = userRegisterInformation.E_mail,
+                                                      FullName = userRegisterInformation.FullName ,
+                                                       PhoneNumber = userRegisterInformation.PhoneNumber};
                         var result = await userManager.CreateAsync(user, userRegisterInformation.Password);
 
                         if (result.Succeeded)
                         {
-                            await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
-                            return Ok("successful");
-                        }
+
+
+                        //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                        //var confirmationlink = Url.Action("ConfirmEmail", "Auth", new { userId = user.Id, Token = token }, Request.Scheme);
+
+                        //logger.Log(LogLevel.Warning, confirmationlink);
+                        await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
+                        return Ok("successful");
+                    }
                         else
                         {
                             return BadRequest();
@@ -70,15 +88,22 @@ namespace Yamama.Controllers
                     var result = await signInManager.PasswordSignInAsync(loginInformation.E_mail, loginInformation.Password,
                                                       loginInformation.RememberMe, false);
 
-                    if (result.Succeeded)
-                    {
+                if (result.Succeeded)
+                {
 
-                        return Ok();
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
+                    return Ok();
+                }
+                        else if (result.IsNotAllowed)
+                        {
+                    
+                    
+                              return BadRequest("phoneNumber need to be confirmed !!");
+                        }
+                           
+                                           else
+                                           {
+                                              return BadRequest();
+                                           }
                 }
                 catch (Exception)
                 {
@@ -95,5 +120,21 @@ namespace Yamama.Controllers
 
                 return Ok();
             }
+
+
+        [HttpPost]
+        [Route("Login2factor")]
+        public async Task<IActionResult> Login2factor(TwoFactor twoFactor)
+        {
+            string message = "Your code is " + "1996";
+           
+            var test = await smsSender.SendSmsAsync(twoFactor.number, message);
+                return Ok();
+
+         
+          
+          
+           
         }
+    }
     }
