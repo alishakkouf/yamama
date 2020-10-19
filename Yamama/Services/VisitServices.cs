@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Yamama.Repository;
 using Yamama.Models;
-using M = Yamama.Models.Task;
-using Yamama.ViewModels;
 
 namespace Yamama.Services
 {
