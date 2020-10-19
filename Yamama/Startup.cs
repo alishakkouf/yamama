@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yamama.Repository;
+using Yamama.Services;
 //using Yamama.Models.AppYamamaContext;
 
 namespace Yamama
@@ -29,6 +31,8 @@ namespace Yamama
                 Options.Password.RequiredLength = 10;
 
             }).AddEntityFrameworkStores<yamamadbContext>();
+
+            services.AddScoped<IVisit , VisitServices>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
