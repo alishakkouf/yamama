@@ -2,13 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Yamama.Models
+namespace Yamama
 {
     public partial class yamamaContext : DbContext
     {
-        public yamamaContext()
-        {
-        }
+        //public yamamaContext()
+        //{
+        //}
 
         public yamamaContext(DbContextOptions<yamamaContext> options)
             : base(options)
@@ -16,10 +16,12 @@ namespace Yamama.Models
         }
 
         public virtual DbSet<Alert> Alert { get; set; }
+        public virtual DbSet<Efmigrationshistory> Efmigrationshistory { get; set; }
         public virtual DbSet<Factory> Factory { get; set; }
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Photo> Photo { get; set; }
         public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<Production> Production { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<RequestInformation> RequestInformation { get; set; }
         public virtual DbSet<Role> Role { get; set; }
@@ -34,7 +36,7 @@ namespace Yamama.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseMySql("Server=localhost;Database=yamama;UID=root;PWD=batoolhammoud95_mysql;");
             }
         }
@@ -81,12 +83,30 @@ namespace Yamama.Models
                     .HasConstraintName("task_id_al_fk");
             });
 
+            modelBuilder.Entity<Efmigrationshistory>(entity =>
+            {
+                entity.HasKey(e => e.MigrationId)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("__efmigrationshistory");
+
+                entity.Property(e => e.MigrationId).HasColumnType("varchar(95)");
+
+                entity.Property(e => e.ProductVersion)
+                    .IsRequired()
+                    .HasColumnType("varchar(32)");
+            });
+
             modelBuilder.Entity<Factory>(entity =>
             {
                 entity.HasKey(e => e.Idfactory)
                     .HasName("PRIMARY");
 
                 entity.ToTable("factory");
+
+                entity.HasIndex(e => e.Idfactory)
+                    .HasName("idfactory_UNIQUE")
+                    .IsUnique();
 
                 entity.Property(e => e.Idfactory).HasColumnName("idfactory");
 
@@ -146,13 +166,26 @@ namespace Yamama.Models
 
                 entity.ToTable("photo");
 
+                entity.HasIndex(e => e.ProjectId)
+                    .HasName("project_id");
+
                 entity.Property(e => e.Idphoto).HasColumnName("idphoto");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.Path)
                     .HasColumnName("path")
                     .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Photo)
+                    .HasForeignKey(d => d.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("photo_project_id_fk");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -173,12 +206,47 @@ namespace Yamama.Models
                     .HasColumnType("decimal(10,0)");
             });
 
+            modelBuilder.Entity<Production>(entity =>
+            {
+                entity.HasKey(e => e.Idproduction)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("production");
+
+                entity.HasIndex(e => e.Idproduction)
+                    .HasName("idproduction_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("product_id");
+
+                entity.Property(e => e.Idproduction).HasColumnName("idproduction");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.Property(e => e.Quantity).HasColumnType("varchar(100)");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Production)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("product_production_fk");
+            });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.HasKey(e => e.Idproject)
                     .HasName("PRIMARY");
 
                 entity.ToTable("project");
+
+                entity.HasIndex(e => e.Idproject)
+                    .HasName("idproject_UNIQUE")
+                    .IsUnique();
 
                 entity.Property(e => e.Idproject).HasColumnName("idproject");
 
@@ -332,8 +400,6 @@ namespace Yamama.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("type_id_fk");
             });
-
-
 
             modelBuilder.Entity<TaskStatus>(entity =>
             {

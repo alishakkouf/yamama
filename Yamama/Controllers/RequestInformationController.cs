@@ -14,28 +14,26 @@ namespace Yamama.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VisitController : ControllerBase
+    public class RequestInformationController : ControllerBase
     {
-        private readonly IVisit _visit;
+        private readonly IRequestInformation _requestInfo;
         private readonly yamamaContext _db;
-        //private readonly TaskTypeViewModel _taskTypeViewModel;
 
-        public VisitController(IVisit visit, yamamaContext db)
+        public RequestInformationController(IRequestInformation requestInfo, yamamaContext db)
         {
-            _visit = visit;
+            _requestInfo = requestInfo;
             _db = db;
-            //_taskTypeViewModel = taskTypeViewModel;
         }
 
 
-        // POST api/<VisitController>
-        [HttpPost("AddVisit")]
-        public async Task<IActionResult> AddVisit([FromBody] TaskTypeViewModel taskTypeViewModel)
+        // POST api/<RequestInformationController>
+        [HttpPost("AddRequestInfo")]
+        public async Task<IActionResult> AddRequestInfo([FromBody] TaskTypeViewModel taskTypeViewModel)
         {
             try
             {
-                
-                var result = await _visit.AddVisit(taskTypeViewModel);
+
+                var result = await _requestInfo.AddRequestInfo(taskTypeViewModel);
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -56,15 +54,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("ArchiveVisit")]
-        public async Task<IActionResult> ArchiveVisit()
+        // GET: api/<RequestInformationController>
+        [HttpGet("ArchiveRequestInfo")]
+        public async Task<IActionResult> ArchiveRequestInfo()
         {
-            //var result = await _db.Visit.ToListAsync();
-            //return result;
             try
             {
-                var result = await _db.Visit.ToListAsync();
+                var result = await _db.RequestInformation.ToListAsync();
 
                 if (result != null)
                 {
@@ -84,13 +80,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("GetAllVisits")]
-        public async Task<IActionResult> GetAllVisits()
+        // GET: api/<RequestInformationController>
+        [HttpGet("GetAllRequestInfo")]
+        public async Task<IActionResult> GetAllRequestInfo()
         {
             try
             {
-                var result = await _visit.GetAllVisits();
+                var result = await _requestInfo.GetAllRequestInfo();
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -109,13 +105,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("NewAssignedVisits")]
-        public async Task<IActionResult> NewAssignedVisits()
+        // GET: api/<RequestInformationController>
+        [HttpGet("NewAssignedRequestInfo")]
+        public async Task<IActionResult> NewAssignedRequestInfo()
         {
             try
             {
-                var result = await _visit.NewAssignedVisits();
+                var result = await _requestInfo.NewAssignedRequestInfo();
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -135,50 +131,40 @@ namespace Yamama.Controllers
         }
 
 
-        // GET api/<VisitController>/
-        [HttpGet("VisitReport/{id}")]
-        public async Task<IActionResult> VisitReport(int id)
-        {
-
-            //try{
-            //await _visit.VisitReport(id);
-            //return Ok();
-            //}
-            //catch
-            //{
-            //    return BadRequest();
-            //}
-            try
-            {
-                //await _visit.VisitReport(id);
-                //return Ok();
-                var result = await _visit.VisitReport(id);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-        // PUT api/<VisitController>/
-        [HttpPut("UpdateVisit/{id}")]
-
-        public async Task<IActionResult> UpdateVisit(TaskTypeViewModel taskTypeViewModel, int id)
+        // GET api/<RequestInformationController>/
+        [HttpGet("GetRequestInfo/{id}")]
+        public async Task<IActionResult> GetRequest(int id)
         {
             try
             {
-                var result = await _visit.UpdateVisit(id, taskTypeViewModel);
                 
+                var result = await _requestInfo.GetRequest(id);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        // PUT api/<RequestInformationController>/
+        [HttpPut("UpdateRequestInfo/{id}")]
+
+        public async Task<IActionResult> UpdateRequestInfo(int id,[FromBody] TaskTypeViewModel taskTypeViewModel)
+        {
+            try
+            {
+                var result = await _requestInfo.UpdateRequestInfo(id, taskTypeViewModel);
+
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -199,13 +185,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // DELETE api/<VisitController>/
-        [HttpDelete("DeleteVisit/{id}")]
-        public async Task<IActionResult> DeleteVisit(int id)
+        // DELETE api/<RequestInformationController>/
+        [HttpDelete("DeleteRequestInfo/{id}")]
+        public async Task<IActionResult> DeleteRequestInfo(int id)
         {
             try
             {
-                var result= await _visit.DeleteVisit(id);
+                var result = await _requestInfo.DeleteRequestInfo(id);
 
 
                 if (result != 0)

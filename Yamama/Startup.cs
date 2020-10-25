@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.Services;
 //using Yamama.Models.AppYamamaContext;
@@ -23,7 +24,7 @@ namespace Yamama
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<yamamadbContext>(item => item.UseMySql
+            services.AddDbContextPool<yamamaContext>(item => item.UseMySql
               (Configuration.GetConnectionString("yamamaConnection")));
 
             services.AddIdentity<IdentityUser, IdentityRole>(Options =>
@@ -32,8 +33,13 @@ namespace Yamama
 
             }).AddEntityFrameworkStores<yamamadbContext>();
 
-            services.AddScoped<IVisit , VisitServices>();
+            
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddScoped<IVisit, VisitServices>();
+            services.AddScoped<ITask, TaskService>();
+            services.AddScoped<IAlert, AlertServices>();
+            services.AddScoped<IRequestInformation, RequestInformationServices>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

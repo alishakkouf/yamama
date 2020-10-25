@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama.Models
+namespace Yamama
 {
     public partial class Project
     {
         public Project()
         {
+            Photo = new HashSet<Photo>();
             Visit = new HashSet<Visit>();
         }
 
@@ -23,6 +24,7 @@ namespace Yamama.Models
         public string Notes { get; set; }
         public string InformationSource { get; set; }
 
+        public virtual ICollection<Photo> Photo { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
 }

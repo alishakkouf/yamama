@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama.Models
+namespace Yamama
 {
     public partial class File
     {

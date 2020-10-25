@@ -14,28 +14,26 @@ namespace Yamama.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VisitController : ControllerBase
+    public class AlertController : ControllerBase
     {
-        private readonly IVisit _visit;
+        private readonly IAlert _alert;
         private readonly yamamaContext _db;
-        //private readonly TaskTypeViewModel _taskTypeViewModel;
 
-        public VisitController(IVisit visit, yamamaContext db)
+        public AlertController(IAlert alert, yamamaContext db)
         {
-            _visit = visit;
+            _alert = alert;
             _db = db;
-            //_taskTypeViewModel = taskTypeViewModel;
         }
 
 
-        // POST api/<VisitController>
-        [HttpPost("AddVisit")]
-        public async Task<IActionResult> AddVisit([FromBody] TaskTypeViewModel taskTypeViewModel)
+        // POST api/<AlertController>
+        [HttpPost("AddAlert")]
+        public async Task<IActionResult> AddAlert([FromBody] TaskTypeViewModel taskTypeViewModel)
         {
             try
             {
-                
-                var result = await _visit.AddVisit(taskTypeViewModel);
+
+                var result = await _alert.AddAlert(taskTypeViewModel);
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -56,15 +54,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("ArchiveVisit")]
-        public async Task<IActionResult> ArchiveVisit()
+        // GET: api/<AlertController>
+        [HttpGet("ArchiveAlert")]
+        public async Task<IActionResult> ArchiveAlert()
         {
-            //var result = await _db.Visit.ToListAsync();
-            //return result;
             try
             {
-                var result = await _db.Visit.ToListAsync();
+                var result = await _db.Alert.ToListAsync();
 
                 if (result != null)
                 {
@@ -84,13 +80,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("GetAllVisits")]
-        public async Task<IActionResult> GetAllVisits()
+        // GET: api/<AlertController>
+        [HttpGet("GetAllAlerts")]
+        public async Task<IActionResult> GetAllAlerts()
         {
             try
             {
-                var result = await _visit.GetAllVisits();
+                var result = await _alert.GetAllAlerts();
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -109,13 +105,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet("NewAssignedVisits")]
-        public async Task<IActionResult> NewAssignedVisits()
+        // GET: api/<AlertController>
+        [HttpGet("NewAssignedAlerts")]
+        public async Task<IActionResult> NewAssignedAlerts()
         {
             try
             {
-                var result = await _visit.NewAssignedVisits();
+                var result = await _alert.NewAssignedAlerts();
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -135,50 +131,40 @@ namespace Yamama.Controllers
         }
 
 
-        // GET api/<VisitController>/
-        [HttpGet("VisitReport/{id}")]
-        public async Task<IActionResult> VisitReport(int id)
-        {
-
-            //try{
-            //await _visit.VisitReport(id);
-            //return Ok();
-            //}
-            //catch
-            //{
-            //    return BadRequest();
-            //}
-            try
-            {
-                //await _visit.VisitReport(id);
-                //return Ok();
-                var result = await _visit.VisitReport(id);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-        // PUT api/<VisitController>/
-        [HttpPut("UpdateVisit/{id}")]
-
-        public async Task<IActionResult> UpdateVisit(TaskTypeViewModel taskTypeViewModel, int id)
+        // GET api/<AlertController>/
+        [HttpGet("GetAlert/{id}")]
+        public async Task<IActionResult> GetAlert(int id)
         {
             try
             {
-                var result = await _visit.UpdateVisit(id, taskTypeViewModel);
                 
+                var result = await _alert.GetAlert(id);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+        // PUT api/<AlertController>/
+        [HttpPut("UpdateAlert/{id}")]
+
+        public async Task<IActionResult> UpdateAlert(TaskTypeViewModel taskTypeViewModel, int id)
+        {
+            try
+            {
+                var result = await _alert.UpdateAlert(id, taskTypeViewModel);
+
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -199,13 +185,13 @@ namespace Yamama.Controllers
             }
         }
 
-        // DELETE api/<VisitController>/
-        [HttpDelete("DeleteVisit/{id}")]
-        public async Task<IActionResult> DeleteVisit(int id)
+        // DELETE api/<AlertController>/
+        [HttpDelete("DeleteAlert/{id}")]
+        public async Task<IActionResult> DeleteAlert(int id)
         {
             try
             {
-                var result= await _visit.DeleteVisit(id);
+                var result = await _alert.DeleteAlert(id);
 
 
                 if (result != 0)
@@ -231,4 +217,5 @@ namespace Yamama.Controllers
 
         }
     }
+
 }
