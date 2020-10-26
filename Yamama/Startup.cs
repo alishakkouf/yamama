@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Yamama.Models;
+//using Yamama.Models;
+using Yamama.Repository;
 using Yamama.Services;
 //using Yamama.Models.AppYamamaContext;
 
@@ -27,6 +28,8 @@ namespace Yamama
             // Add application services.
             
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddScoped<IInvoicecs, InvoiceService>();
+            services.AddScoped<ICart, CartService>();
             services.Configure<AuthMessageSMSSenderOptions>(Configuration);
 
 
@@ -36,7 +39,7 @@ namespace Yamama
             services.AddIdentity<ExtendedUser, IdentityRole>(Options =>
             {
                 Options.Password.RequiredLength = 10;
-               // Options.SignIn.RequireConfirmedPhoneNumber = true;
+                //Options.SignIn.RequireConfirmedEmail= true;
 
             }).AddEntityFrameworkStores<yamamadbContext>()
             .AddDefaultTokenProviders();

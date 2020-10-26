@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Yamama.Models;
 using Yamama.Services;
 using Yamama.ViewModels;
 
@@ -46,8 +45,8 @@ namespace Yamama.Controllers
 
                         var user = new ExtendedUser { UserName = userRegisterInformation.UserName,
                                                       Email = userRegisterInformation.E_mail,
-                                                      FullName = userRegisterInformation.FullName ,
-                                                       PhoneNumber = userRegisterInformation.PhoneNumber};
+                            FullName = userRegisterInformation.FullName,
+                            PhoneNumber = userRegisterInformation.PhoneNumber};
                         var result = await userManager.CreateAsync(user, userRegisterInformation.Password);
 
                         if (result.Succeeded)
@@ -83,27 +82,23 @@ namespace Yamama.Controllers
             {
 
                 try
-                {
-
-                    var result = await signInManager.PasswordSignInAsync(loginInformation.E_mail, loginInformation.Password,
-                                                      loginInformation.RememberMe, false);
+                { var result = await signInManager.PasswordSignInAsync(loginInformation.E_mail,
+                                                                       loginInformation.Password,
+                                                                       loginInformation.RememberMe, false);
 
                 if (result.Succeeded)
                 {
-
                     return Ok();
                 }
-                        else if (result.IsNotAllowed)
+                    else if (result.IsNotAllowed)
+                    {
+                       return BadRequest("Email need to be confirmed !!");
+                    }
+                         
+                        else
                         {
-                    
-                    
-                              return BadRequest("phoneNumber need to be confirmed !!");
+                          return BadRequest();
                         }
-                           
-                                           else
-                                           {
-                                              return BadRequest();
-                                           }
                 }
                 catch (Exception)
                 {
@@ -136,5 +131,89 @@ namespace Yamama.Controllers
           
            
         }
+
+        [HttpGet]
+        [Route("ListUsers")]
+        public async Task<IActionResult> ListUsers()
+        {
+            var users = userManager.Users;
+            return Ok(users);
+        }
+
+        [HttpPost]
+        [Route("EditUser")]
+        public async Task<IActionResult> EditUser(string id , UserRegisterInformation userRegisterInformation)
+        {
+            //fetch the user
+            var user = await userManager.FindByIdAsync(id);
+
+            //update user information
+            user.Email = userRegisterInformation.E_mail;
+            user.FullName = userRegisterInformation.FullName;
+            user.PhoneNumber = userRegisterInformation.PhoneNumber;
+            user.UserName = userRegisterInformation.UserName;
+
+            //check if the role changed or not
+            var testAssign = await userManager.IsInRoleAsync(user, userRegisterInformation.Role);
+            if (!testAssign)
+            {
+                //add new role to the user
+                await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
+            }
+            
+            //update user in database
+            var result = await userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+
+        }
+
+        [HttpPost]
+        [Route("DeleteUser")]
+        public async Task<IActionResult> DeleteUser (string id)
+        {
+            //fetch the user
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                //delete user
+             var result = await userManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest("The user not found");
+                }
+            }
+            return BadRequest("The user not found");
+
+        }
+
+
+        [HttpGet]
+        [Route("GetUser")]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            //fetch the user
+            var user = await userManager.FindByIdAsync(id);
+            if (user != null)
+            { return Ok(user); }
+                else
+                {
+                    return BadRequest("The user not found");
+                }
+        }
+            
+
+
     }
-    }
+}
