@@ -12,6 +12,7 @@ namespace Yamama.Services
     public class InvoiceService : IInvoicecs
     {
         private readonly yamamadbContext _yamamadbContext;
+        
         private readonly ICart _cart;
 
         public InvoiceService(yamamadbContext yamamadbContext, ICart cart)
@@ -522,7 +523,89 @@ namespace Yamama.Services
             return null;
         }
 
-      
+        public async Task<List<TransporterReports>> GetReportsAsync(int transporter, int FactoryId, int ProjectId, int product)
+        {
+            List<TransporterReports> reports = new List<TransporterReports>();
+            List<TransporterReports> FinalReport = new List<TransporterReports>();
+            List<Invoice> invoices = new List<Invoice>();
+
+            //get list of integer (invoices_Id ) from Cart table according to transporter_id
+            List<Cart> InvoicesID = _yamamadbContext.Cart.Where(x => x.TransportedId == transporter &&
+                                                                x.ProductId == product
+                                                                ).ToList();
+            for (int i = 0; i < InvoicesID.Count; i++)
+            {
+                //get list of invoices from invoice table according to invoice_id
+                Invoice invoice = await _yamamadbContext.Invoice.Where(x => x.Idinvoice == InvoicesID[i].InvoiceId).SingleOrDefaultAsync();
+                invoices.Add(invoice);
+            }
+
+
+            int client1 = 0;
+            
+            if (FactoryId != 0) { client1 = FactoryId; } else { client1 = ProjectId; }
+            int sum = 0;
+            for (int i = 0; i < InvoicesID.Count; i++)
+            {
+                int invoiceRow = InvoicesID[i].InvoiceId;
+                int stop = invoiceRow;
+                if (invoiceRow == stop)
+                {
+
+
+                    DateTime dateTime = Convert.ToDateTime(invoices[i].Date);
+                    sum = InvoicesID[i].Qty;
+                    for (int j = 1; j <= InvoicesID.Count; j++)
+                    {
+                        if (invoiceRow != InvoicesID[j].InvoiceId) { stop = InvoicesID[j].InvoiceId; break; }
+                        else
+                        {
+                            stop = InvoicesID[j].InvoiceId;
+                            sum += InvoicesID[j].Qty;
+
+                        }
+
+                    }
+                    TransporterReports Subreports = new TransporterReports
+                    {
+                        TransporterClient = transporter,
+                        Qty = sum,
+                        client = client1,
+                        product = product,
+                        date = dateTime,
+                        ID_invoice = invoiceRow
+
+                    };
+                    reports.Add(Subreports);
+                }
+                else { break; }
+        }
+            var finalResult = reports.Select(x => x.ID_invoice).Distinct().ToList();
+            for (int i = 0; i < finalResult.Count; i++)
+            {
+                TransporterReports value = reports.Where(x => x.ID_invoice == finalResult[i]).FirstOrDefault();
+                FinalReport.Add(value);
+            }
+            return FinalReport;
+         
+                //var result = (from cart in _yamamadbContext.Cart join
+                //                   invoice in _yamamadbContext.Invoice on
+                //                   cart.InvoiceId equals invoice.Idinvoice join
+                //              goal in _yamamadbContext.Transporter on
+                //              cart.TransportedId equals goal.Idtransporter select
+                //              new TransporterReports
+                //              {
+                //                  TransporterClient = goal.Name,
+                //                  date = Convert.ToDateTime(invoice.Date),
+                //                  Factory = Convert.ToInt32(invoice.FactoryId),
+                //                  project = Convert.ToInt32(invoice.ProjectId),
+                //                  product = Convert.ToInt32(cart.ProductId),
+                //                  Qty = Convert.ToInt32(cart.Qty),
+                //              }).ToListAsync();
+         
+
+                //return result;
+        }
     }
     }
 

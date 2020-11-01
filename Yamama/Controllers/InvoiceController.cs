@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Yamama.Repository;
 using Yamama.ViewModels;
@@ -22,7 +23,7 @@ namespace Yamama.Controllers
 
         //POST api/<InvoiceController>
         [HttpPost]
-        //[Authorize(Roles = "Admin  , Employee")]
+        //[Authorize(Roles = "Admin")]
         [Route("Create")]
         public async Task<IActionResult> Create(InvoiceCartViewModel invoiceCartViewModel)
         {
@@ -143,5 +144,23 @@ namespace Yamama.Controllers
 
         }
 
+        //POST api/<InvoiceController>
+        [HttpGet]
+        [Route("TansportReport")]
+        public async Task<IActionResult> TansportReport(int transporter, int FactoryId, int ProjectId, int product)
+        {
+            var result = await _invoice.GetReportsAsync(transporter, FactoryId, ProjectId, product);
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+
+        }
     }
 }

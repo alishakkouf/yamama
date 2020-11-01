@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 //using Yamama.Models;
 using Yamama.Repository;
 using Yamama.Services;
+using Yamama.ViewModels;
+using IEmailSender = Yamama.Repository.IEmailSender;
 //using Yamama.Models.AppYamamaContext;
 
 namespace Yamama
@@ -25,9 +27,13 @@ namespace Yamama
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //email
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+            services.AddScoped<IEmailSender, EmailSender>();
             // Add application services.
-            
+
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<Iquestionnaire, QuestionnaireService>();
             services.AddScoped<IInvoicecs, InvoiceService>();
             services.AddScoped<ICart, CartService>();
             services.Configure<AuthMessageSMSSenderOptions>(Configuration);

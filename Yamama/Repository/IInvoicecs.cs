@@ -23,5 +23,7 @@ namespace Yamama.Repository
         Task<List<Double>> GetSalesReports(string period, DateTime start, DateTime end);
 
         Task<List<MoneyAndQuantity>> GetSalesReportsClientCement(int factory,int project , string CementType , string period , DateTime from , DateTime end);
+
+        Task<List<TransporterReports>> GetReportsAsync(int transporter, int FactoryId, int ProjectId, int product);
     }
 }

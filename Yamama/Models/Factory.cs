@@ -7,6 +7,7 @@ namespace Yamama
     {
         public Factory()
         {
+            CustomerSatisfactionReports = new HashSet<CustomerSatisfactionReports>();
             Invoice = new HashSet<Invoice>();
             Visit = new HashSet<Visit>();
         }
@@ -21,6 +22,7 @@ namespace Yamama
         public string Notes { get; set; }
         public string InformationSource { get; set; }
 
+        public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
