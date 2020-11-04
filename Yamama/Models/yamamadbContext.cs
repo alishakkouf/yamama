@@ -31,17 +31,18 @@ namespace Yamama
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
         public virtual DbSet<LinkRQA> LinkRQA { get; set; }
+        public virtual DbSet<MoneyDelivered> MoneyDelivered { get; set; }
         public virtual DbSet<Photo> Photo { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<RequestInformation> RequestInformation { get; set; }
-       
+      
         public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<TaskType> TaskType { get; set; }
         public virtual DbSet<Transporter> Transporter { get; set; }
-       
+
         public virtual DbSet<Visit> Visit { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -457,11 +458,19 @@ namespace Yamama
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.Property(e => e.Paid).HasColumnName("paid");
+                entity.Property(e => e.FullCost).HasDefaultValueSql("'0'");
 
-                entity.Property(e => e.RemainForCustomer).HasColumnName("remainForCustomer");
+                entity.Property(e => e.Paid)
+                    .HasColumnName("paid")
+                    .HasDefaultValueSql("'0'");
 
-                entity.Property(e => e.RemainForYamama).HasColumnName("remainForYamama");
+                entity.Property(e => e.RemainForCustomer)
+                    .HasColumnName("remainForCustomer")
+                    .HasDefaultValueSql("'0'");
+
+                entity.Property(e => e.RemainForYamama)
+                    .HasColumnName("remainForYamama")
+                    .HasDefaultValueSql("'0'");
 
                 entity.Property(e => e.Type)
                     .HasColumnName("type")
@@ -516,6 +525,56 @@ namespace Yamama
                     .WithMany(p => p.LinkRQA)
                     .HasForeignKey(d => d.ReportId)
                     .HasConstraintName("report_id");
+            });
+
+            modelBuilder.Entity<MoneyDelivered>(entity =>
+            {
+                entity.HasKey(e => e.IdmoneyDelivered)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("money_delivered");
+
+                entity.HasIndex(e => e.FId)
+                    .HasName("factory_id_idx");
+
+                entity.HasIndex(e => e.InvoiceId)
+                    .HasName("invoice_id_idx");
+
+                entity.HasIndex(e => e.PId)
+                    .HasName("p_id_idx");
+
+                entity.Property(e => e.IdmoneyDelivered).HasColumnName("idmoney_delivered");
+
+                entity.Property(e => e.Amount).HasColumnName("amount");
+
+                entity.Property(e => e.FId).HasColumnName("f_id");
+
+                entity.Property(e => e.FirstDate)
+                    .HasColumnName("first_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
+
+                entity.Property(e => e.PId).HasColumnName("p_id");
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state")
+                    .HasColumnType("varchar(45)");
+
+                entity.HasOne(d => d.F)
+                    .WithMany(p => p.MoneyDelivered)
+                    .HasForeignKey(d => d.FId)
+                    .HasConstraintName("f_id");
+
+                entity.HasOne(d => d.Invoice)
+                    .WithMany(p => p.MoneyDelivered)
+                    .HasForeignKey(d => d.InvoiceId)
+                    .HasConstraintName("invoice_id");
+
+                entity.HasOne(d => d.P)
+                    .WithMany(p => p.MoneyDelivered)
+                    .HasForeignKey(d => d.PId)
+                    .HasConstraintName("p_id");
             });
 
             modelBuilder.Entity<Photo>(entity =>
@@ -660,7 +719,7 @@ namespace Yamama
                     .HasConstraintName("task_id_info_fk");
             });
 
-         
+      
 
             modelBuilder.Entity<Task>(entity =>
             {
@@ -760,7 +819,7 @@ namespace Yamama
                     .HasColumnType("varchar(50)");
             });
 
-        
+       
 
             modelBuilder.Entity<Visit>(entity =>
             {
@@ -809,7 +868,7 @@ namespace Yamama
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("task_id_fk");
 
-           
+            
             });
         }
     }

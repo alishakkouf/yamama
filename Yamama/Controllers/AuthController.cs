@@ -125,20 +125,16 @@ namespace Yamama.Controllers
         }
 
 
-        [HttpPost]
-        [Route("Login2factor")]
-        public async Task<IActionResult> Login2factor(TwoFactor twoFactor)
-        {
-            string message = "Your code is " + "1996";
+        //[HttpPost]
+        //[Route("Login2factor")]
+        //public async Task<IActionResult> Login2factor(TwoFactor twoFactor)
+        //{
+        //    string message = "Your code is " + "1996";
 
-            var test = await smsSender.SendSmsAsync(twoFactor.number, message);
-            return Ok();
-
-
-
-
-
-        }
+        //    var test = await smsSender.SendSmsAsync(twoFactor.number, message);
+        //    return Ok();
+        
+        //}
 
         [HttpGet]
         [Route("ListUsers")]
@@ -253,12 +249,16 @@ namespace Yamama.Controllers
             }
         }
 
+
+
+        //Email module is 80% ready , it needs some configurations
         [HttpPost]
-        [Route("send")]
-        public async Task<IActionResult> send(string pass , string to_email, string subject, string message, string attachement)
+        [Route("sendEmail")]
+        public async Task<IActionResult> sendEmail(string pass , string to_email, string subject, string message, string attachement)
         {
             try
             {
+                //current user_id
                 string id = await GetCurrentUserId();
                 var sender = await GetUser(id);
                 string from_email = sender.Email;

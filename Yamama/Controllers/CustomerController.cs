@@ -39,8 +39,27 @@ namespace Yamama.Controllers
                 return Ok(Response);
             }
 
+        }
+        
 
+        //POST api/<CustomerController>
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        [Route("GetQuestion")]
+        public async Task<IActionResult> GetQuestion(int factory, int project)
+        {
 
+            var result = await _question.GetQuestionnaireTexts(factory, project);
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
 
         }
     }

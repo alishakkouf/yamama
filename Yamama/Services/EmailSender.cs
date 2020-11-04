@@ -15,26 +15,10 @@ namespace Yamama.Services
 {
     public class EmailSender : IEmailSender
     {
-
-        //private readonly EmailSettings _emailSettings;
-        //private readonly IHostingEnvironment _env;
-
-        //public EmailSender(IOptions<EmailSettings> emailSettings, IHostingEnvironment env)
-        //{
-        //    _emailSettings = emailSettings.Value;
-        //    _env = env;
-        //}
-        private readonly UserManager<ExtendedUser> _userManager;
-        public EmailSender(UserManager<ExtendedUser> userManager)
-        {
-            _userManager = userManager;
-        }
-
         public async Task<int> SendEmailAsync(string from_email, string password , string to_email, string subject, string message, string attachement)
         {
-
             try
-            {
+               {
                 MimeMessage _message = new MimeMessage();
                 //sender
                 MailboxAddress from = new MailboxAddress("sender", from_email);
@@ -60,7 +44,7 @@ namespace Yamama.Services
 
                 SmtpClient client = new SmtpClient();
         
-                client.Connect("smtp.yamama.prokoders.work",465, false);
+                client.Connect("smtp.yamama.prokoders.work",465, true);
 
                 client.Authenticate(from_email, password);
 

@@ -9,5 +9,6 @@ namespace Yamama.ViewModels
     {
         public Invoice invoice { get; set; }
         public List<Cart> listcart { get; set; }
+        public List<MoneyDelivered> Money { get; set; }
     }
 }

@@ -9,5 +9,7 @@ namespace Yamama.Repository
    public interface Iquestionnaire
     {
         Task<Double> AddQuestionnaire(QuestionnaireViewModel questionnaireViewModel);
+        //Task<List<CustomerSatisfactionReports>> GetQuestionnaireTexts(int factory , int project);
+        Task<List<QuestionnairesReports>> GetQuestionnaireTexts(int factory, int project);
     }
 }

@@ -13,7 +13,7 @@ namespace Yamama
         public int IdcustomerSatisfactionReports { get; set; }
         public int? ProjectId { get; set; }
         public string Notes { get; set; }
-        public double? SatisfactionEvaluation { get; set; }
+        public double SatisfactionEvaluation { get; set; }
         public int? FactoryId { get; set; }
 
         public virtual Factory Factory { get; set; }

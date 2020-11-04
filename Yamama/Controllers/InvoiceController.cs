@@ -15,10 +15,12 @@ namespace Yamama.Controllers
     public class InvoiceController : ControllerBase
     {
         private readonly IInvoicecs _invoice;
+        private readonly ICart _cart;
 
-        public InvoiceController(IInvoicecs invoice)
+        public InvoiceController(IInvoicecs invoice , ICart cart)
         {
             _invoice = invoice;
+            _cart = cart;
         }
 
         //POST api/<InvoiceController>
@@ -162,5 +164,69 @@ namespace Yamama.Controllers
             }
 
         }
+
+        
+        //POST api/<InvoiceController>
+        [HttpGet]
+        [Route("GetCustomersMoneyReports")]
+        public async Task<IActionResult> GetCustomersMoneyReports( int FactoryId, int ProjectId)
+        {
+            var result = await _invoice.GetCustomersMoneyReportsAsync(FactoryId, ProjectId);
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+
+        }
+
+        
+
+        //POST api/<InvoiceController>
+        [HttpGet]
+        [Route("IndebtednessReportsAsync")]
+        public async Task<IActionResult> IndebtednessReportsAsync()
+        {
+            var result = await _invoice.IndebtednessReportsAsync();
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+
+        }
+
+     
+        //POST api/<InvoiceController>
+        [HttpGet]
+        [Route("GetLateCustomers")]
+        public async Task<IActionResult> GetLateCustomers()
+        {
+            var result = await _invoice.GetLateCustomers();
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+
+        }
+
+
+
     }
 }

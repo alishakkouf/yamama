@@ -9,6 +9,7 @@ namespace Yamama
         {
             CustomerSatisfactionReports = new HashSet<CustomerSatisfactionReports>();
             Invoice = new HashSet<Invoice>();
+            MoneyDelivered = new HashSet<MoneyDelivered>();
             Visit = new HashSet<Visit>();
         }
 
@@ -24,6 +25,7 @@ namespace Yamama
 
         public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual ICollection<Invoice> Invoice { get; set; }
+        public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
 }
