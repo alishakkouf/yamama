@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Yamama.Repository;
+using Yamama.Services;
 //using Yamama.Models.AppYamamaContext;
 
 namespace Yamama
@@ -29,6 +31,20 @@ namespace Yamama
                 Options.Password.RequiredLength = 10;
 
             }).AddEntityFrameworkStores<yamamadbContext>();
+
+
+            // inject the repositories and services classes
+            services.AddScoped<IFactory, FactoryService>();
+            services.AddScoped<IProject, ProjectService>();
+            services.AddScoped<IPhoto, PhotoService>();
+            services.AddScoped<IProduction, ProductionService>();
+            services.AddScoped<I_ImportInvoce, ImportInvoiceService>();
+            services.AddScoped<I_Invoice, InvoiceService>();
+            services.AddScoped<ICart, CartService>();
+            services.AddScoped<IStore, StoreService>();
+            services.AddScoped<IBalance, BalanceService>();
+
+            services.AddScoped<IProduct, ProductService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
