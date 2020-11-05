@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class Visit
     {
@@ -10,6 +10,8 @@ namespace Yamama
         public int? FactoryId { get; set; }
         public int? ProjectId { get; set; }
         public int? TaskId { get; set; }
+        public int? Gifts { get; set; }
+        public string Notes { get; set; }
 
         public virtual Factory Factory { get; set; }
         public virtual Project Project { get; set; }

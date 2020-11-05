@@ -5,7 +5,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
@@ -14,28 +13,138 @@ namespace Yamama.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VisitController : ControllerBase
+    public class NeedsController : ControllerBase
     {
-        private readonly IVisit _visit;
+        private readonly INeeds _needs;
         private readonly yamamaContext _db;
-        
 
-        public VisitController(IVisit visit, yamamaContext db)
+        public NeedsController(INeeds needs, yamamaContext db)
         {
-            _visit = visit;
+            _needs = needs;
             _db = db;
         }
 
 
-        // POST api/<VisitController>
+
+        //Get Daily Actual Needs By type
+        // GET: api/<NeedsController>
+        [HttpGet]
+        [Route("GetDailyActualNeeds")]
+        public async Task<IActionResult> GetDailyActualNeeds(int id)
+        {
+            try
+            {
+
+                var result = await _needs.GetDailyActualNeeds(id);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        //Get Daily Expected Needs By type
+        // GET: api/<NeedsController>
+        [HttpGet]
+        [Route("GetAllDailyExpectedNeeds")]
+        public async Task<IActionResult> GetAllDailyExpectedNeeds(int type)
+        {
+            try
+            {
+
+                var result = await _needs.GetDailyExpectedNeeds(type);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/<NeedsController>
+        [HttpGet]
+        [Route("GetExpectedNeedsByType")]
+        public async Task<IActionResult> GetExpectedNeedsByType(int type, string period, DateTime start, DateTime end)
+        {
+            try
+            {
+
+                var result = await _needs.GetExpectedNeedsByType(type, period, start, end);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // GET: api/<NeedsController>
+        [HttpGet]
+        [Route("GetActaulNeedsByType")]
+        public async Task<IActionResult> GetActaulNeedsByType(int type, string period, DateTime start, DateTime end)
+        {
+            try
+            {
+
+                var result = await _needs.GetActualNeedsByType(type, period, start, end);
+                if (result != null)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // POST api/<NeedsController>
         [HttpPost]
-        [Route("AddVisit")]
-        public async Task<IActionResult> AddVisit([FromBody] TaskTypeViewModel taskTypeViewModel)
+        [Route("AddActualNeeds")]
+        public async Task<IActionResult> AddActualNeeds([FromBody] ActualNeeds actual)
         {
             try
             {
-                
-                var result = await _visit.AddVisit(taskTypeViewModel);
+
+                var result = await _needs.AddActualNeeds(actual);
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -56,17 +165,16 @@ namespace Yamama.Controllers
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet]
-        [Route("ArchiveVisit")]
-        public async Task<IActionResult> ArchiveVisit()
+        // POST api/<NeedsController>
+        [HttpPost]
+        [Route("AddExpectedNeeds")]
+        public async Task<IActionResult> AddExpectedNeeds([FromBody] ExpectedNeeds expected)
         {
-            
             try
             {
-                var result = await _visit.ArchiveVisit();
 
-                if (result != null)
+                var result = await _needs.AddExpectedNeeds(expected);
+                if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
                     return Ok(Response);
@@ -77,188 +185,25 @@ namespace Yamama.Controllers
                     var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
                     return Ok(Response);
                 }
+
             }
+
             catch
             {
                 return BadRequest();
             }
         }
 
-        // GET: api/<VisitController>
-        [HttpGet]
-        [Route("GetAllVisits")]
-        public async Task<IActionResult> GetAllVisits()
-        {
-            try
-            {
-                var result = await _visit.GetAllVisits();
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        // GET: api/<VisitController>
-        [HttpGet]
-        [Route("NewAssignedVisits")]
-        public async Task<IActionResult> NewAssignedVisits()
-        {
-            try
-            {
-                var result = await _visit.NewAssignedVisits();
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-
-        // GET api/<VisitController>/
-        [HttpGet]
-        [Route("GetVisitbyID/{id}")]
-        public async Task<IActionResult> GetVisitbyID(int id)
-        {
-
-            
-            try
-            {
-                var result = await _visit.GetVisitbyID(id);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
-
-        // GET api/<VisitController>/
-        [HttpGet]
-        [Route("GetVisitReports")]
-        public async Task<IActionResult> GetVisitReports(int salesman, int? projectId, int? factoryId, string period, DateTime start, DateTime end)
-        {
-
-
-            try
-            {
-                var result = await _visit.GetVisitReports(salesman, projectId, factoryId, period, start, end);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-
-            }
-        }
-        // GET api/<VisitController>/
-        [HttpGet]
-        [Route("GetVisisBySalesman")]
-        public async Task<IActionResult> GetVisisBySalesman(int salesman, string period, DateTime start, DateTime end)
-        {
-
-
-            try
-            {
-                var result = await _visit.GetVisisBySalesman(salesman, period, start, end);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-
-            }
-        }
-        // GET api/<VisitController>/
-        [HttpGet]
-        [Route("GetVisitsByClient")]
-        public async Task<IActionResult> GetVisitsByClient(int? projectId, int? factoryId, string period, DateTime start, DateTime end)
-        {
-
-
-            try
-            {
-                var result = await _visit.GetVisitsByClient(projectId, factoryId, period, start, end);
-                if (result != null)
-                {
-                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
-                    return Ok(Response);
-                }
-
-                else
-                {
-                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                    return Ok(Response);
-                }
-            }
-            catch
-            {
-                return BadRequest();
-
-            }
-        }
-        // PUT api/<VisitController>/
+        // PUT api/<NeedsController>/
         [HttpPut]
-        [Route("UpdateVisit/{id}")]
+        [Route("UpdateActualNeeds/{id}")]
 
-        public async Task<IActionResult> UpdateVisit(TaskTypeViewModel taskTypeViewModel, int id)
+        public async Task<IActionResult> UpdateActualNeeds(ActualNeeds actual, int id)
         {
             try
             {
-                var result = await _visit.UpdateVisit(id, taskTypeViewModel);
-                
+                var result = await _needs.UpdateActualNeeds(id, actual);
+
                 if (result != 0)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -279,14 +224,44 @@ namespace Yamama.Controllers
             }
         }
 
-        // DELETE api/<VisitController>/
-        [HttpDelete]
-        [Route("DeleteVisit/{id}")]
-        public async Task<IActionResult> DeleteVisit(int id)
+        // PUT api/<NeedsController>/
+        [HttpPut]
+        [Route("UpdateExpectedNeeds/{id}")]
+
+        public async Task<IActionResult> UpdateExpectedNeeds(ExpectedNeeds expected, int id)
         {
             try
             {
-                var result= await _visit.DeleteVisit(id);
+                var result = await _needs.UpdateExpectedNeeds(id, expected);
+
+                if (result != 0)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+
+            }
+
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        // DELETE api/<NeedsController>/
+        [HttpDelete]
+        [Route("DeleteActualNeeds/{id}")]
+        public async Task<IActionResult> DeleteActualNeeds(int id)
+        {
+            try
+            {
+                var result = await _needs.DeleteActualNeeds(id);
 
 
                 if (result != 0)
@@ -310,6 +285,36 @@ namespace Yamama.Controllers
                 return BadRequest();
             }
 
+        }
+
+        // DELETE api/<NeedsController>/
+        [HttpDelete]
+        [Route("DeleteExpectedNeeds/{id}")]
+        public async Task<IActionResult> DeleteExpectedNeeds(int id)
+        {
+            try
+            {
+                var result = await _needs.DeleteExpectedNeeds(id);
+
+
+                if (result != 0)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+                
+            }
+
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }

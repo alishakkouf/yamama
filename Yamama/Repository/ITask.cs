@@ -9,6 +9,7 @@ namespace Yamama.Repository
 {
     public interface ITask
     {
+        //Task<int> AddTask(TaskTypeViewModel taskTypeViewModel, PhotoFileViewModel photoFileViewModel);
         Task<int> AddTask(TaskTypeViewModel taskTypeViewModel);
         Task<int> UpdateTask(int id, TaskTypeViewModel taskTypeViewModel);
         Task<int> DeleteTask(int id);

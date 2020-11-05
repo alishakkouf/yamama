@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class Factory
     {
         public Factory()
         {
+            Invoice = new HashSet<Invoice>();
             Visit = new HashSet<Visit>();
         }
 
@@ -20,6 +21,7 @@ namespace Yamama
         public string Notes { get; set; }
         public string InformationSource { get; set; }
 
+        public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
 }

@@ -27,7 +27,8 @@ namespace Yamama.Controllers
 
 
         // POST api/<RequestInformationController>
-        [HttpPost("AddRequestInfo")]
+        [HttpPost]
+        [Route("AddRequestInfo")]
         public async Task<IActionResult> AddRequestInfo([FromBody] TaskTypeViewModel taskTypeViewModel)
         {
             try
@@ -55,12 +56,13 @@ namespace Yamama.Controllers
         }
 
         // GET: api/<RequestInformationController>
-        [HttpGet("ArchiveRequestInfo")]
+        [HttpGet]
+        [Route("ArchiveRequestInfo")]
         public async Task<IActionResult> ArchiveRequestInfo()
         {
             try
             {
-                var result = await _db.RequestInformation.ToListAsync();
+                var result = await _requestInfo.ArchiveRequestInfo();
 
                 if (result != null)
                 {
@@ -81,7 +83,8 @@ namespace Yamama.Controllers
         }
 
         // GET: api/<RequestInformationController>
-        [HttpGet("GetAllRequestInfo")]
+        [HttpGet]
+        [Route("GetAllRequestInfo")]
         public async Task<IActionResult> GetAllRequestInfo()
         {
             try
@@ -106,7 +109,8 @@ namespace Yamama.Controllers
         }
 
         // GET: api/<RequestInformationController>
-        [HttpGet("NewAssignedRequestInfo")]
+        [HttpGet]
+        [Route("NewAssignedRequestInfo")]
         public async Task<IActionResult> NewAssignedRequestInfo()
         {
             try
@@ -132,7 +136,8 @@ namespace Yamama.Controllers
 
 
         // GET api/<RequestInformationController>/
-        [HttpGet("GetRequestInfo/{id}")]
+        [HttpGet]
+        [Route("GetRequestInfo/{id}")]
         public async Task<IActionResult> GetRequest(int id)
         {
             try
@@ -156,8 +161,10 @@ namespace Yamama.Controllers
                 return BadRequest();
             }
         }
+
         // PUT api/<RequestInformationController>/
-        [HttpPut("UpdateRequestInfo/{id}")]
+        [HttpPut]
+        [Route("UpdateRequestInfo/{id}")]
 
         public async Task<IActionResult> UpdateRequestInfo(int id,[FromBody] TaskTypeViewModel taskTypeViewModel)
         {
@@ -186,7 +193,8 @@ namespace Yamama.Controllers
         }
 
         // DELETE api/<RequestInformationController>/
-        [HttpDelete("DeleteRequestInfo/{id}")]
+        [HttpDelete]
+        [Route("DeleteRequestInfo/{id}")]
         public async Task<IActionResult> DeleteRequestInfo(int id)
         {
             try

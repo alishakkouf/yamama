@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class yamamadbContext : IdentityDbContext
     {

@@ -38,13 +38,15 @@ namespace Yamama.Services
             {
 
 
-                var item = await(from alert in _db.Alert
-                                 join task in _db.Task on alert.Idalert equals task.Idtask
-                                 where task.StatusId == 3 & task.TypeId == 2
-                                 select alert).ToListAsync();
-
-
-                return item;
+                List<int> tasks = await _db.Task.Where(x => x.StatusId == 3 && x.TypeId == 2)
+                            .Select(x => x.Idtask).ToListAsync();
+                var alerts = new List<Alert>();
+                for (int j = 0; j < tasks.Count; j++)
+                {
+                    alerts = await _db.Alert.Where(x => x.TaskId == tasks[j])
+                        .ToListAsync();
+                }
+                return alerts;
 
 
             }
@@ -89,13 +91,16 @@ namespace Yamama.Services
             if (_db != null)
             {
 
-                var item = await (from alert in _db.Alert
-                                  join task in _db.Task on alert.Idalert equals task.Idtask
-                                  where task.StatusId == 4 & task.TypeId == 1
-                                  select alert).ToListAsync();
+                List<int> tasks = await _db.Task.Where(x => x.StatusId == 4 && x.TypeId == 2)
+                            .Select(x => x.Idtask).ToListAsync();
+                var alerts = new List<Alert>();
+                for (int j = 0; j < tasks.Count; j++)
+                {
+                    alerts = await _db.Alert.Where(x => x.TaskId == tasks[j])
+                        .ToListAsync();
+                }
+                return alerts;
 
-
-                return item;
             }
             return null;
         }

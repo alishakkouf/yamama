@@ -43,13 +43,15 @@ namespace Yamama.Services
             {
 
 
-                var item = await(from requstInfo in _db.RequestInformation
-                                 join task in _db.Task on requstInfo.IdrequestInformation equals task.Idtask
-                                 where task.StatusId == 3 & task.TypeId == 3
-                                 select requstInfo).ToListAsync();
-
-
-                return item;
+                List<int> tasks = await _db.Task.Where(x => x.StatusId == 3 && x.TypeId == 3)
+                            .Select(x => x.Idtask).ToListAsync();
+                var reqs = new List<RequestInformation>();
+                for (int j = 0; j < tasks.Count; j++)
+                {
+                    reqs = await _db.RequestInformation.Where(x => x.TaskId == tasks[j])
+                        .ToListAsync();
+                }
+                return reqs;
 
 
             }
@@ -101,13 +103,15 @@ namespace Yamama.Services
             if (_db != null)
             {
 
-                var item = await(from requestInfo in _db.RequestInformation
-                                 join task in _db.Task on requestInfo.IdrequestInformation equals task.Idtask
-                                 where task.StatusId == 4 & task.TypeId == 3
-                                 select requestInfo).ToListAsync();
-
-
-                return item;
+                List<int> tasks = await _db.Task.Where(x => x.StatusId == 4 && x.TypeId == 3)
+                            .Select(x => x.Idtask).ToListAsync();
+                var reqs = new List<RequestInformation>();
+                for (int j = 0; j < tasks.Count; j++)
+                {
+                    reqs = await _db.RequestInformation.Where(x => x.TaskId == tasks[j])
+                        .ToListAsync();
+                }
+                return reqs;
             }
             return null;
         }

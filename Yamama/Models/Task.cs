@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class Task
     {
@@ -21,7 +21,11 @@ namespace Yamama
         public string Content { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int? FileId { get; set; }
+        public int? PhotoId { get; set; }
 
+        public virtual File File { get; set; }
+        public virtual Photo Photo { get; set; }
         public virtual TaskStatus Status { get; set; }
         public virtual TaskType Type { get; set; }
         public virtual ICollection<Alert> Alert { get; set; }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class TaskStatus
     {
