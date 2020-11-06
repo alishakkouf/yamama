@@ -4,45 +4,41 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Yamama.Models
 {
-    public partial class yamamadbContext : DbContext
+    public partial class yamamaContext : DbContext
     {
-        //public yamamadbContext()
+        //public yamamaContext()
         //{
         //}
 
-        public yamamadbContext(DbContextOptions<yamamadbContext> options)
+        public yamamaContext(DbContextOptions<yamamaContext> options)
             : base(options)
         {
         }
 
+        public virtual DbSet<ActualIntencive> ActualIntencive { get; set; }
+        public virtual DbSet<ActualNeeds> ActualNeeds { get; set; }
         public virtual DbSet<Alert> Alert { get; set; }
-        public virtual DbSet<Answers> Answers { get; set; }
-        public virtual DbSet<Aspnetroleclaims> Aspnetroleclaims { get; set; }
-        public virtual DbSet<Aspnetroles> Aspnetroles { get; set; }
-        public virtual DbSet<Aspnetuserclaims> Aspnetuserclaims { get; set; }
-        public virtual DbSet<Aspnetuserlogins> Aspnetuserlogins { get; set; }
-        public virtual DbSet<Aspnetuserroles> Aspnetuserroles { get; set; }
-        public virtual DbSet<Aspnetusers> Aspnetusers { get; set; }
-        public virtual DbSet<Aspnetusertokens> Aspnetusertokens { get; set; }
         public virtual DbSet<Cart> Cart { get; set; }
-        public virtual DbSet<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual DbSet<Efmigrationshistory> Efmigrationshistory { get; set; }
+        public virtual DbSet<ExpectedIntencive> ExpectedIntencive { get; set; }
+        public virtual DbSet<ExpectedNeeds> ExpectedNeeds { get; set; }
         public virtual DbSet<Factory> Factory { get; set; }
         public virtual DbSet<File> File { get; set; }
         public virtual DbSet<Invoice> Invoice { get; set; }
-        public virtual DbSet<LinkRQA> LinkRQA { get; set; }
-        public virtual DbSet<MoneyDelivered> MoneyDelivered { get; set; }
+        public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<Photo> Photo { get; set; }
         public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<Production> Production { get; set; }
         public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<RequestInformation> RequestInformation { get; set; }
-      
+        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Store> Store { get; set; }
+        public virtual DbSet<Target> Target { get; set; }
         public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<TaskType> TaskType { get; set; }
         public virtual DbSet<Transporter> Transporter { get; set; }
-
+        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Visit> Visit { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -50,12 +46,66 @@ namespace Yamama.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
+                optionsBuilder.UseMySql("Server=localhost;Database=yamama;UID=root;PWD=batoolhammoud95_mysql;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ActualIntencive>(entity =>
+            {
+                entity.HasKey(e => e.IdactualIntencive)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("actual_intencive");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("user_actual_intencive_id_idx");
+
+                entity.Property(e => e.IdactualIntencive).HasColumnName("idactual_intencive");
+
+                entity.Property(e => e.ActualIntencive1).HasColumnName("actual_intencive");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.ActualIntencive)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("user_actual_intencive_id");
+            });
+
+            modelBuilder.Entity<ActualNeeds>(entity =>
+            {
+                entity.HasKey(e => e.IdactualNeeds)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("actual_needs");
+
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("product_id_idx");
+
+                entity.Property(e => e.IdactualNeeds).HasColumnName("idactual_needs");
+
+                entity.Property(e => e.ActualNeeds1).HasColumnName("actual_needs");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ActualNeeds)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("product_actual_needs_id");
+            });
+
             modelBuilder.Entity<Alert>(entity =>
             {
                 entity.HasKey(e => e.Idalert)
@@ -96,277 +146,40 @@ namespace Yamama.Models
                     .HasConstraintName("task_id_al_fk");
             });
 
-            modelBuilder.Entity<Answers>(entity =>
-            {
-                entity.HasKey(e => e.Idanswers)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("answers");
-
-                entity.HasIndex(e => e.QuestionId)
-                    .HasName("question_id_idx");
-
-                entity.Property(e => e.Idanswers).HasColumnName("idanswers");
-
-                entity.Property(e => e.AnswerText)
-                    .HasColumnName("answer_text")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.AnswerWeight).HasColumnName("answer_weight");
-
-                entity.Property(e => e.QuestionId).HasColumnName("question_id");
-
-                entity.HasOne(d => d.Question)
-                    .WithMany(p => p.Answers)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("question_id");
-            });
-
-            modelBuilder.Entity<Aspnetroleclaims>(entity =>
-            {
-                entity.ToTable("aspnetroleclaims");
-
-                entity.HasIndex(e => e.RoleId)
-                    .HasName("IX_AspNetRoleClaims_RoleId");
-
-                entity.Property(e => e.ClaimType).HasColumnType("longtext");
-
-                entity.Property(e => e.ClaimValue).HasColumnType("longtext");
-
-                entity.Property(e => e.RoleId)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Aspnetroleclaims)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
-            });
-
-            modelBuilder.Entity<Aspnetroles>(entity =>
-            {
-                entity.ToTable("aspnetroles");
-
-                entity.HasIndex(e => e.NormalizedName)
-                    .HasName("RoleNameIndex")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.ConcurrencyStamp).HasColumnType("longtext");
-
-                entity.Property(e => e.Name).HasColumnType("varchar(256)");
-
-                entity.Property(e => e.NormalizedName).HasColumnType("varchar(256)");
-            });
-
-            modelBuilder.Entity<Aspnetuserclaims>(entity =>
-            {
-                entity.ToTable("aspnetuserclaims");
-
-                entity.HasIndex(e => e.UserId)
-                    .HasName("IX_AspNetUserClaims_UserId");
-
-                entity.Property(e => e.ClaimType).HasColumnType("longtext");
-
-                entity.Property(e => e.ClaimValue).HasColumnType("longtext");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Aspnetuserclaims)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserClaims_AspNetUsers_UserId");
-            });
-
-            modelBuilder.Entity<Aspnetuserlogins>(entity =>
-            {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey })
-                    .HasName("PRIMARY");
-
-                entity.ToTable("aspnetuserlogins");
-
-                entity.HasIndex(e => e.UserId)
-                    .HasName("IX_AspNetUserLogins_UserId");
-
-                entity.Property(e => e.LoginProvider).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.ProviderKey).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.ProviderDisplayName).HasColumnType("longtext");
-
-                entity.Property(e => e.UserId)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Aspnetuserlogins)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
-            });
-
-            modelBuilder.Entity<Aspnetuserroles>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId })
-                    .HasName("PRIMARY");
-
-                entity.ToTable("aspnetuserroles");
-
-                entity.HasIndex(e => e.RoleId)
-                    .HasName("IX_AspNetUserRoles_RoleId");
-
-                entity.Property(e => e.UserId).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.RoleId).HasColumnType("varchar(255)");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Aspnetuserroles)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Aspnetuserroles)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserRoles_AspNetUsers_UserId");
-            });
-
-            modelBuilder.Entity<Aspnetusers>(entity =>
-            {
-                entity.ToTable("aspnetusers");
-
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
-                    .IsUnique();
-
-                entity.Property(e => e.Id).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.ConcurrencyStamp).HasColumnType("longtext");
-
-                entity.Property(e => e.Email).HasColumnType("varchar(256)");
-
-                entity.Property(e => e.EmailConfirmed).HasColumnType("bit(1)");
-
-                entity.Property(e => e.FullName).HasColumnType("longtext");
-
-                entity.Property(e => e.LockoutEnabled).HasColumnType("bit(1)");
-
-                entity.Property(e => e.NormalizedEmail).HasColumnType("varchar(256)");
-
-                entity.Property(e => e.NormalizedUserName).HasColumnType("varchar(256)");
-
-                entity.Property(e => e.PasswordHash).HasColumnType("longtext");
-
-                entity.Property(e => e.PhoneNumber).HasColumnType("longtext");
-
-                entity.Property(e => e.PhoneNumberConfirmed).HasColumnType("bit(1)");
-
-                entity.Property(e => e.SecurityStamp).HasColumnType("longtext");
-
-                entity.Property(e => e.TwoFactorEnabled).HasColumnType("bit(1)");
-
-                entity.Property(e => e.UserName).HasColumnType("varchar(256)");
-            });
-
-            modelBuilder.Entity<Aspnetusertokens>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name })
-                    .HasName("PRIMARY");
-
-                entity.ToTable("aspnetusertokens");
-
-                entity.Property(e => e.UserId).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.LoginProvider).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.Name).HasColumnType("varchar(255)");
-
-                entity.Property(e => e.Value).HasColumnType("longtext");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Aspnetusertokens)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
-            });
-
             modelBuilder.Entity<Cart>(entity =>
             {
-                entity.HasKey(e => e.IdCart)
+                entity.HasKey(e => e.Idcart)
                     .HasName("PRIMARY");
 
                 entity.ToTable("cart");
 
                 entity.HasIndex(e => e.InvoiceId)
-                    .HasName("InvoiceId_idx");
+                    .HasName("invoice_id");
 
                 entity.HasIndex(e => e.ProductId)
-                    .HasName("ProductId_idx");
+                    .HasName("product_id");
 
-                entity.HasIndex(e => e.TransportedId)
-                    .HasName("transported_id_idx");
+                entity.Property(e => e.Idcart).HasColumnName("idcart");
 
-                entity.Property(e => e.IdCart).HasColumnName("idCart");
+                entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
 
                 entity.Property(e => e.Price).HasColumnName("price");
 
-                entity.Property(e => e.Qty).HasColumnName("QTY");
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.TransportedId).HasColumnName("transported_id");
+                entity.Property(e => e.SubCost).HasColumnName("Sub_Cost");
 
                 entity.HasOne(d => d.Invoice)
                     .WithMany(p => p.Cart)
                     .HasForeignKey(d => d.InvoiceId)
-                    .HasConstraintName("InvoiceId");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("cart_invoice_fk");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Cart)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("ProductId");
-
-                entity.HasOne(d => d.Transported)
-                    .WithMany(p => p.Cart)
-                    .HasForeignKey(d => d.TransportedId)
-                    .HasConstraintName("transported_id");
-            });
-
-            modelBuilder.Entity<CustomerSatisfactionReports>(entity =>
-            {
-                entity.HasKey(e => e.IdcustomerSatisfactionReports)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("customer_satisfaction_reports");
-
-                entity.HasIndex(e => e.FactoryId)
-                    .HasName("factory_id_idx");
-
-                entity.HasIndex(e => e.ProjectId)
-                    .HasName("project_id_idx");
-
-                entity.Property(e => e.IdcustomerSatisfactionReports).HasColumnName("idcustomer_satisfaction_reports");
-
-                entity.Property(e => e.FactoryId).HasColumnName("factory_id");
-
-                entity.Property(e => e.Notes)
-                    .HasColumnName("notes")
-                    .HasColumnType("text");
-
-                entity.Property(e => e.ProjectId).HasColumnName("project_id");
-
-                entity.Property(e => e.SatisfactionEvaluation).HasColumnName("satisfaction_evaluation");
-
-                entity.HasOne(d => d.Factory)
-                    .WithMany(p => p.CustomerSatisfactionReports)
-                    .HasForeignKey(d => d.FactoryId)
-                    .HasConstraintName("factory_id");
-
-                entity.HasOne(d => d.Project)
-                    .WithMany(p => p.CustomerSatisfactionReports)
-                    .HasForeignKey(d => d.ProjectId)
-                    .HasConstraintName("project_id");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("cart_product_fk");
             });
 
             modelBuilder.Entity<Efmigrationshistory>(entity =>
@@ -383,12 +196,70 @@ namespace Yamama.Models
                     .HasColumnType("varchar(32)");
             });
 
+            modelBuilder.Entity<ExpectedIntencive>(entity =>
+            {
+                entity.HasKey(e => e.IdexpectedIntencive)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("expected_intencive");
+
+                entity.HasIndex(e => e.UserId)
+                    .HasName("user_expected_intencive_idx");
+
+                entity.Property(e => e.IdexpectedIntencive).HasColumnName("idexpected_intencive");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ExpectedIntencive1).HasColumnName("expected_intencive");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.ExpectedIntencive)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("user_expected_intencive");
+            });
+
+            modelBuilder.Entity<ExpectedNeeds>(entity =>
+            {
+                entity.HasKey(e => e.IdexptedNeeds)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("expected_needs");
+
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("prod_actual_needs_idx");
+
+                entity.Property(e => e.IdexptedNeeds).HasColumnName("idexpted_needs");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ExpectedNeeds1).HasColumnName("expected_needs");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ExpectedNeeds)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("prod_actual_needs");
+            });
+
             modelBuilder.Entity<Factory>(entity =>
             {
                 entity.HasKey(e => e.Idfactory)
                     .HasName("PRIMARY");
 
                 entity.ToTable("factory");
+
+                entity.HasIndex(e => e.Idfactory)
+                    .HasName("idfactory_UNIQUE")
+                    .IsUnique();
 
                 entity.Property(e => e.Idfactory).HasColumnName("idfactory");
 
@@ -449,28 +320,37 @@ namespace Yamama.Models
                 entity.ToTable("invoice");
 
                 entity.HasIndex(e => e.FactoryId)
-                    .HasName("FactoryId_idx");
+                    .HasName("factory_id");
 
                 entity.HasIndex(e => e.ProjectId)
-                    .HasName("ProjectId_idx");
+                    .HasName("project_id");
+
+                entity.HasIndex(e => e.Salesman)
+                    .HasName("salesman_invoice_fk_idx");
 
                 entity.Property(e => e.Idinvoice).HasColumnName("idinvoice");
 
-                entity.Property(e => e.Date).HasColumnType("date");
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
 
-                entity.Property(e => e.FullCost).HasDefaultValueSql("'0'");
+                entity.Property(e => e.FactoryId).HasColumnName("factory_id");
 
-                entity.Property(e => e.Paid)
-                    .HasColumnName("paid")
-                    .HasDefaultValueSql("'0'");
+                entity.Property(e => e.FullCost).HasColumnName("full_cost");
 
-                entity.Property(e => e.RemainForCustomer)
-                    .HasColumnName("remainForCustomer")
-                    .HasDefaultValueSql("'0'");
+                entity.Property(e => e.Paid).HasColumnName("paid");
 
-                entity.Property(e => e.RemainForYamama)
-                    .HasColumnName("remainForYamama")
-                    .HasDefaultValueSql("'0'");
+                entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.Property(e => e.RemainForCustomer).HasColumnName("remain_for_Customer");
+
+                entity.Property(e => e.RemainForYamama).HasColumnName("remain_for_yamama");
+
+                entity.Property(e => e.Salesman).HasColumnName("salesman");
+
+                entity.Property(e => e.Supplier)
+                    .HasColumnName("supplier")
+                    .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.Type)
                     .HasColumnName("type")
@@ -479,102 +359,55 @@ namespace Yamama.Models
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Invoice)
                     .HasForeignKey(d => d.FactoryId)
-                    .HasConstraintName("FactoryId");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("factory_invoice_fk");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Invoice)
                     .HasForeignKey(d => d.ProjectId)
-                    .HasConstraintName("ProjectId");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("project_invoice_fk");
+
+                entity.HasOne(d => d.SalesmanNavigation)
+                    .WithMany(p => p.Invoice)
+                    .HasForeignKey(d => d.Salesman)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("salesman_invoice_fk");
             });
 
-            modelBuilder.Entity<LinkRQA>(entity =>
+            modelBuilder.Entity<Notification>(entity =>
             {
-                entity.HasKey(e => e.IdlinkRQA)
+                entity.HasKey(e => e.Idnotification)
                     .HasName("PRIMARY");
 
-                entity.ToTable("link_r_q_a");
+                entity.ToTable("notification");
 
-                entity.HasIndex(e => e.AnswerId)
-                    .HasName("answer_id_idx");
+                entity.HasIndex(e => e.RecieverId)
+                    .HasName("user_reciever_idx");
 
-                entity.HasIndex(e => e.QId)
-                    .HasName("question_id_idx");
+                entity.HasIndex(e => e.SenderId)
+                    .HasName("user_sender_idx");
 
-                entity.HasIndex(e => e.ReportId)
-                    .HasName("report_id_idx");
+                entity.Property(e => e.Idnotification).HasColumnName("idnotification");
 
-                entity.Property(e => e.IdlinkRQA).HasColumnName("idlink_r_q_a");
+                entity.Property(e => e.Message)
+                    .HasColumnName("message")
+                    .HasColumnType("longtext");
 
-                entity.Property(e => e.AnswerId).HasColumnName("answer_id");
+                entity.Property(e => e.RecieverId).HasColumnName("reciever-id");
 
-                entity.Property(e => e.QId).HasColumnName("q_Id");
+                entity.Property(e => e.SenderId).HasColumnName("sender-id");
 
-                entity.Property(e => e.ReportId).HasColumnName("report_id");
+                entity.HasOne(d => d.Reciever)
+                    .WithMany(p => p.NotificationReciever)
+                    .HasForeignKey(d => d.RecieverId)
+                    .HasConstraintName("user_reciever");
 
-                entity.HasOne(d => d.Answer)
-                    .WithMany(p => p.LinkRQA)
-                    .HasForeignKey(d => d.AnswerId)
-                    .HasConstraintName("answer_id");
-
-                entity.HasOne(d => d.Q)
-                    .WithMany(p => p.LinkRQA)
-                    .HasForeignKey(d => d.QId)
-                    .HasConstraintName("q_Id");
-
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.LinkRQA)
-                    .HasForeignKey(d => d.ReportId)
-                    .HasConstraintName("report_id");
-            });
-
-            modelBuilder.Entity<MoneyDelivered>(entity =>
-            {
-                entity.HasKey(e => e.IdmoneyDelivered)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("money_delivered");
-
-                entity.HasIndex(e => e.FId)
-                    .HasName("factory_id_idx");
-
-                entity.HasIndex(e => e.InvoiceId)
-                    .HasName("invoice_id_idx");
-
-                entity.HasIndex(e => e.PId)
-                    .HasName("p_id_idx");
-
-                entity.Property(e => e.IdmoneyDelivered).HasColumnName("idmoney_delivered");
-
-                entity.Property(e => e.Amount).HasColumnName("amount");
-
-                entity.Property(e => e.FId).HasColumnName("f_id");
-
-                entity.Property(e => e.FirstDate)
-                    .HasColumnName("first_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.InvoiceId).HasColumnName("invoice_id");
-
-                entity.Property(e => e.PId).HasColumnName("p_id");
-
-                entity.Property(e => e.State)
-                    .HasColumnName("state")
-                    .HasColumnType("varchar(45)");
-
-                entity.HasOne(d => d.F)
-                    .WithMany(p => p.MoneyDelivered)
-                    .HasForeignKey(d => d.FId)
-                    .HasConstraintName("f_id");
-
-                entity.HasOne(d => d.Invoice)
-                    .WithMany(p => p.MoneyDelivered)
-                    .HasForeignKey(d => d.InvoiceId)
-                    .HasConstraintName("invoice_id");
-
-                entity.HasOne(d => d.P)
-                    .WithMany(p => p.MoneyDelivered)
-                    .HasForeignKey(d => d.PId)
-                    .HasConstraintName("p_id");
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.NotificationSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("user_sender");
             });
 
             modelBuilder.Entity<Photo>(entity =>
@@ -584,13 +417,26 @@ namespace Yamama.Models
 
                 entity.ToTable("photo");
 
+                entity.HasIndex(e => e.ProjectId)
+                    .HasName("project_id");
+
                 entity.Property(e => e.Idphoto).HasColumnName("idphoto");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.Path)
                     .HasColumnName("path")
                     .HasColumnType("varchar(100)");
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Photo)
+                    .HasForeignKey(d => d.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("photo_project_id_fk");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -611,12 +457,41 @@ namespace Yamama.Models
                     .HasColumnType("decimal(10,0)");
             });
 
+            modelBuilder.Entity<Production>(entity =>
+            {
+                entity.HasKey(e => e.Idproduction)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("production");
+
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("product_id");
+
+                entity.Property(e => e.Idproduction).HasColumnName("idproduction");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Production)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("product_production_fk");
+            });
+
             modelBuilder.Entity<Project>(entity =>
             {
                 entity.HasKey(e => e.Idproject)
                     .HasName("PRIMARY");
 
                 entity.ToTable("project");
+
+                entity.HasIndex(e => e.Idproject)
+                    .HasName("idproject_UNIQUE")
+                    .IsUnique();
 
                 entity.Property(e => e.Idproject).HasColumnName("idproject");
 
@@ -665,20 +540,6 @@ namespace Yamama.Models
                     .HasColumnType("varchar(50)");
             });
 
-            modelBuilder.Entity<Questions>(entity =>
-            {
-                entity.HasKey(e => e.IdQuestions)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("questions");
-
-                entity.Property(e => e.IdQuestions).HasColumnName("idQuestions");
-
-                entity.Property(e => e.QuestionText)
-                    .HasColumnName("question_text")
-                    .HasColumnType("text");
-            });
-
             modelBuilder.Entity<RequestInformation>(entity =>
             {
                 entity.HasKey(e => e.IdrequestInformation)
@@ -719,7 +580,73 @@ namespace Yamama.Models
                     .HasConstraintName("task_id_info_fk");
             });
 
-      
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.Idrole)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("role");
+
+                entity.Property(e => e.Idrole).HasColumnName("idrole");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(200)");
+            });
+
+            modelBuilder.Entity<Store>(entity =>
+            {
+                entity.HasKey(e => e.Idstor)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("store");
+
+                entity.HasIndex(e => e.Idstor)
+                    .HasName("idstor_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("product_id");
+
+                entity.Property(e => e.Idstor).HasColumnName("idstor");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Store)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("store_product_id_fk");
+            });
+
+            modelBuilder.Entity<Target>(entity =>
+            {
+                entity.HasKey(e => e.Idtarget)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("target");
+
+                entity.HasIndex(e => e.SalesmanId)
+                    .HasName("user_salesman_id_idx");
+
+                entity.Property(e => e.Idtarget).HasColumnName("idtarget");
+
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Sales).HasColumnName("sales");
+
+                entity.Property(e => e.SalesmanId).HasColumnName("salesmanId");
+
+                entity.Property(e => e.Visits).HasColumnName("visits");
+
+                entity.HasOne(d => d.Salesman)
+                    .WithMany(p => p.Target)
+                    .HasForeignKey(d => d.SalesmanId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("user_salesman_id");
+            });
 
             modelBuilder.Entity<Task>(entity =>
             {
@@ -727,6 +654,12 @@ namespace Yamama.Models
                     .HasName("PRIMARY");
 
                 entity.ToTable("task");
+
+                entity.HasIndex(e => e.FileId)
+                    .HasName("file_task_fk_idx");
+
+                entity.HasIndex(e => e.PhotoId)
+                    .HasName("photo_task_fk_idx");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("status_id");
@@ -746,9 +679,13 @@ namespace Yamama.Models
                     .HasColumnName("end_date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.FileId).HasColumnName("file_id");
+
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasColumnType("varchar(200)");
+
+                entity.Property(e => e.PhotoId).HasColumnName("photo_id");
 
                 entity.Property(e => e.ResponsibleId).HasColumnName("responsible_id");
 
@@ -759,6 +696,18 @@ namespace Yamama.Models
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
                 entity.Property(e => e.TypeId).HasColumnName("type_id");
+
+                entity.HasOne(d => d.File)
+                    .WithMany(p => p.Task)
+                    .HasForeignKey(d => d.FileId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("file_task_fk");
+
+                entity.HasOne(d => d.Photo)
+                    .WithMany(p => p.Task)
+                    .HasForeignKey(d => d.PhotoId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("photo_task_fk");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Task)
@@ -813,13 +762,46 @@ namespace Yamama.Models
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasColumnType("varchar(200)");
-
-                entity.Property(e => e.TransporterNum)
-                    .HasColumnName("transporter_num")
-                    .HasColumnType("varchar(50)");
             });
 
-       
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Iduser)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("user");
+
+                entity.HasIndex(e => e.RoleId)
+                    .HasName("role_id");
+
+                entity.Property(e => e.Iduser).HasColumnName("iduser");
+
+                entity.Property(e => e.EMail)
+                    .HasColumnName("e_mail")
+                    .HasColumnType("varchar(200)");
+
+                entity.Property(e => e.FullName)
+                    .HasColumnName("full_name")
+                    .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasColumnType("varchar(100)");
+
+                entity.Property(e => e.Phone).HasColumnName("phone");
+
+                entity.Property(e => e.RoleId).HasColumnName("role_id");
+
+                entity.Property(e => e.UserName)
+                    .HasColumnName("user_name")
+                    .HasColumnType("varchar(100)");
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.User)
+                    .HasForeignKey(d => d.RoleId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("role_id_fk");
+            });
 
             modelBuilder.Entity<Visit>(entity =>
             {
@@ -843,6 +825,12 @@ namespace Yamama.Models
                 entity.Property(e => e.Idvisit).HasColumnName("idvisit");
 
                 entity.Property(e => e.FactoryId).HasColumnName("factory_id");
+
+                entity.Property(e => e.Gifts).HasColumnName("gifts");
+
+                entity.Property(e => e.Notes)
+                    .HasColumnName("notes")
+                    .HasColumnType("varchar(45)");
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
 
@@ -868,7 +856,11 @@ namespace Yamama.Models
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("task_id_fk");
 
-            
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Visit)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("user_id_fk");
             });
         }
     }

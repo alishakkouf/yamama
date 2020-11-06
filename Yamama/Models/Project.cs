@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama
+namespace Yamama.Models
 {
     public partial class Project
     {
         public Project()
         {
-            CustomerSatisfactionReports = new HashSet<CustomerSatisfactionReports>();
             Invoice = new HashSet<Invoice>();
-            MoneyDelivered = new HashSet<MoneyDelivered>();
+            Photo = new HashSet<Photo>();
             Visit = new HashSet<Visit>();
+            CustomerSatisfactionReports = new HashSet<CustomerSatisfactionReports>();
+            MoneyDelivered = new HashSet<MoneyDelivered>();
+            
         }
 
         public int Idproject { get; set; }
@@ -26,9 +28,20 @@ namespace Yamama
         public string Notes { get; set; }
         public string InformationSource { get; set; }
 
+        
+        public virtual ICollection<Photo> Photo { get; set; }
+        public virtual ICollection<Visit> Visit { get; set; }
         public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
-        public virtual ICollection<Visit> Visit { get; set; }
+       
     }
 }
+      
+       
+
+ 
+      
+
+
+    
