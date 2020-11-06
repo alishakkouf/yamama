@@ -51,8 +51,21 @@ namespace Yamama
                 Options.Password.RequiredLength = 10;
                 //Options.SignIn.RequireConfirmedEmail= true;
 
-            }).AddEntityFrameworkStores<yamamadbContext>()
-            .AddDefaultTokenProviders();
+            }).AddEntityFrameworkStores<yamamadbContext>();
+
+
+            // inject the repositories and services classes
+            services.AddScoped<IFactory, FactoryService>();
+            services.AddScoped<IProject, ProjectService>();
+            services.AddScoped<IPhoto, PhotoService>();
+            services.AddScoped<IProduction, ProductionService>();
+            services.AddScoped<I_ImportInvoce, ImportInvoiceService>();
+            services.AddScoped<I_Invoice, InvoiceService>();
+            services.AddScoped<ICart, CartService>();
+            services.AddScoped<IStore, StoreService>();
+            services.AddScoped<IBalance, BalanceService>();
+
+            services.AddScoped<IProduct, ProductService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
             services.AddScoped<IVisit, VisitServices>();
