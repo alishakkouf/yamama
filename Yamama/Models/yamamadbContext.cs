@@ -718,9 +718,7 @@ namespace Yamama
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("task_id_info_fk");
             });
-
-      
-
+                  
             modelBuilder.Entity<Task>(entity =>
             {
                 entity.HasKey(e => e.Idtask)
@@ -818,9 +816,7 @@ namespace Yamama
                     .HasColumnName("transporter_num")
                     .HasColumnType("varchar(50)");
             });
-
-       
-
+                   
             modelBuilder.Entity<Visit>(entity =>
             {
                 entity.HasKey(e => e.Idvisit)
