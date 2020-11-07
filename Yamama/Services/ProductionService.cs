@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 

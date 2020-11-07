@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -52,11 +53,11 @@ namespace Yamama.Services
                 await _cart.AddCartAsync(impoInvoice, RecentInvoiceID);
                 _db.SaveChanges();
                 //get the last addes cart
-                var RecentCart = _db.Cart.OrderByDescending(c => c.Idcart).FirstOrDefault();
+                var RecentCart = _db.Cart.OrderByDescending(c => c.IdCart).FirstOrDefault();
                 //get the quantity from this cart
-                int qty = RecentCart.Quantity.Value;
+                int qty = RecentCart.Qty;
                 //get the product id from this cart
-                int? id = RecentCart.ProductId.Value;
+                int? id = RecentCart.ProductId;
 
                 //pass the store records and add the quantity for the specific product id
                 foreach (var item in _db.Store)
@@ -98,7 +99,7 @@ namespace Yamama.Services
                     for (int j = 0; j < importNumber.Count; j++)
                     {
                         Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
-                        value += Convert.ToDouble(subresult.FullCost.Value);
+                        value += Convert.ToDouble(subresult.FullCost);
                     }
                     result.Add(value);
                     }
@@ -120,7 +121,7 @@ namespace Yamama.Services
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
-                            value += Convert.ToDouble(subresult.FullCost.Value);
+                            value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
                     }
@@ -141,7 +142,7 @@ namespace Yamama.Services
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
-                            value += Convert.ToDouble(subResult.FullCost.Value);
+                            value += Convert.ToDouble(subResult.FullCost);
                         }
                         result.Add(value);
                     }
@@ -186,7 +187,7 @@ namespace Yamama.Services
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
-                            value += Convert.ToDouble(subresult.FullCost.Value);
+                            value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
                     }
@@ -211,7 +212,7 @@ namespace Yamama.Services
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
-                            value += Convert.ToDouble(subresult.FullCost.Value);
+                            value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
                     }
@@ -237,7 +238,7 @@ namespace Yamama.Services
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
-                            value += Convert.ToDouble(subResult.FullCost.Value);
+                            value += Convert.ToDouble(subResult.FullCost);
                         }
                         result.Add(value);
                     }

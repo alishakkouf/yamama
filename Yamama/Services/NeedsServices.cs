@@ -10,8 +10,8 @@ namespace Yamama.Services
 {
     public class NeedsServices : INeeds
     {
-        private readonly yamamaContext _db;
-        public NeedsServices(yamamaContext db)
+        private readonly yamamadbContext _db;
+        public NeedsServices(yamamadbContext db)
         {
             _db = db;
 

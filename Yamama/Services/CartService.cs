@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Yamama;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -83,25 +85,8 @@ namespace Yamama.Services
                 return result;
             }
         }
-    }
-}
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Yamama.Repository;
-using Yamama.ViewModels;
+    
 
-namespace Yamama.Services
-{
-    public class CartService : ICart
-    {
-
-        private readonly yamamadbContext _db;
-        public CartService(yamamadbContext db)
-        {
-            _db = db;
-        }
 
         // add cart
         public async Task<List<Cart>> AddCartAsync(ImportCartInvoiceViewModel impoInvoice, int id)
@@ -115,9 +100,9 @@ namespace Yamama.Services
 
                     fullcost += Convert.ToDouble(impoInvoice.listcart[i].Price);
 
-                    await _db.Cart.AddAsync(impoInvoice.listcart[i]);
+                    await _yamamadbContext.Cart.AddAsync(impoInvoice.listcart[i]);
 
-                    await _db.SaveChangesAsync();
+                    await _yamamadbContext.SaveChangesAsync();
                 }
                 return impoInvoice.listcart;
             }

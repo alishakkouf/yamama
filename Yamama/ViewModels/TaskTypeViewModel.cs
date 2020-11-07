@@ -9,7 +9,7 @@ namespace Yamama.ViewModels
     public class TaskTypeViewModel
     {
         public Visit visit { get; set; }
-        public Models.Task task { get; set; }
+        public Task task { get; set; }
         public Alert alert { get; set; }
         public RequestInformation reqInfo { get; set; }
         //public Photo photo { get; set; }

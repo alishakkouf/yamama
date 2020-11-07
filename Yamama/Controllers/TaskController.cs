@@ -18,9 +18,9 @@ namespace Yamama.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ITask _task;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
        
-        public TaskController(ITask task, yamamaContext db)
+        public TaskController(ITask task, yamamadbContext db)
         {
             
             _task = task;

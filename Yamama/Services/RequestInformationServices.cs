@@ -11,10 +11,10 @@ namespace Yamama.Services
 {
     public class RequestInformationServices : IRequestInformation
     {
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
 
-        public RequestInformationServices(yamamaContext db)
+        public RequestInformationServices(yamamadbContext db)
         {
             _db = db;
         }

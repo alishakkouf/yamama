@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yamama;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 

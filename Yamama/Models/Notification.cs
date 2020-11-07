@@ -10,7 +10,6 @@ namespace Yamama.Models
         public int? RecieverId { get; set; }
         public string Message { get; set; }
 
-        public virtual User Reciever { get; set; }
-        public virtual User Sender { get; set; }
+
     }
 }

@@ -16,9 +16,9 @@ namespace Yamama.Controllers
     public class IntenciveController : ControllerBase
     {
         private readonly IIntencive _intencive;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public IntenciveController(IIntencive intencive, yamamaContext db)
+        public IntenciveController(IIntencive intencive, yamamadbContext db)
         {
             _intencive = intencive;
             _db = db;

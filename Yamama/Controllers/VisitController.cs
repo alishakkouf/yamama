@@ -17,10 +17,10 @@ namespace Yamama.Controllers
     public class VisitController : ControllerBase
     {
         private readonly IVisit _visit;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
         
 
-        public VisitController(IVisit visit, yamamaContext db)
+        public VisitController(IVisit visit, yamamadbContext db)
         {
             _visit = visit;
             _db = db;

@@ -16,9 +16,9 @@ namespace Yamama.Controllers
     public class TargetController : ControllerBase
     {
         private readonly ITarget _target;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public TargetController(ITarget target, yamamaContext db)
+        public TargetController(ITarget target, yamamadbContext db)
         {
             _target = target;
             _db = db;

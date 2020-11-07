@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Yamama.Models;
 
 namespace Yamama
 {
@@ -28,5 +29,7 @@ namespace Yamama
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Photo> Photo { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
+        public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
+        public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
     }
 }

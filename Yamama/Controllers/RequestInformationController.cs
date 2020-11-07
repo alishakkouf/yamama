@@ -17,9 +17,9 @@ namespace Yamama.Controllers
     public class RequestInformationController : ControllerBase
     {
         private readonly IRequestInformation _requestInfo;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public RequestInformationController(IRequestInformation requestInfo, yamamaContext db)
+        public RequestInformationController(IRequestInformation requestInfo, yamamadbContext db)
         {
             _requestInfo = requestInfo;
             _db = db;

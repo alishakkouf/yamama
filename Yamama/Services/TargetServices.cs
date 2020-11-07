@@ -10,8 +10,8 @@ namespace Yamama.Services
 {
     public class TargetServices : ITarget
     {
-        private readonly yamamaContext _db;
-        public TargetServices(yamamaContext db)
+        private readonly yamamadbContext _db;
+        public TargetServices(yamamadbContext db)
         {
             _db = db;
         }
@@ -97,58 +97,58 @@ namespace Yamama.Services
             }
         }
 
-        public List<Double> EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
-        {
-            try
-            {
-                List<Double> Evaluation = new List<double>();
-                //Evaluate Visits
-                List<Double> result = new List<double>();
-                List<double> resultVisits = new List<double>();
-                VisitServices visitServices = new VisitServices(_db);
+        //public List<Double> EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
+        //{
+        //    try
+        //    {
+        //        List<Double> Evaluation = new List<double>();
+        //        //Evaluate Visits
+        //        List<Double> result = new List<double>();
+        //        List<double> resultVisits = new List<double>();
+        //        VisitServices visitServices = new VisitServices(_db);
 
-                resultVisits = visitServices.GetVisisBySalesmanRepo(salesman, period, start, end);
-                var target = GetVisitTartget(salesman, period, start, end);
-                for (int i = 0; i < target.Count; i++)
-                {
-                    if (target[i] != 0)
-                    {
-                        var n = (resultVisits[i] * 100) / target[i];
-                        result.Add(n);
-                    }
-                    else
-                    {
-                        Console.WriteLine("No Visit Target detected");
-                        return null;
+        //        resultVisits = visitServices.GetVisisBySalesmanRepo(salesman, period, start, end);
+        //        var target = GetVisitTartget(salesman, period, start, end);
+        //        for (int i = 0; i < target.Count; i++)
+        //        {
+        //            if (target[i] != 0)
+        //            {
+        //                var n = (resultVisits[i] * 100) / target[i];
+        //                result.Add(n);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("No Visit Target detected");
+        //                return null;
 
-                    }
-                }
-                //Evaluate Sales
-                List<double> resultSales = new List<double>();
-                var Sales = GetSalesbySalesman(salesman, period, start, end);
-                var Salestarget = GetSalesTarget(salesman, period, start, end);
-                for (int j = 0; j < Salestarget.Count; j++)
-                {
-                    if (Salestarget[j] != 0)
-                    {
-                        var n = (Sales[j] * 100) / Salestarget[j];
-                        result.Add(n);
-                    }
-                    else
-                    {
-                        Console.WriteLine("No Sales Target detected");
-                        return null;
-                    }
-                    return result;
-                }
-                return result;
-            }
-            catch (Exception)
-            {
+        //            }
+        //        }
+        //        //Evaluate Sales
+        //        List<double> resultSales = new List<double>();
+        //        var Sales = GetSalesbySalesman(salesman, period, start, end);
+        //        var Salestarget = GetSalesTarget(salesman, period, start, end);
+        //        for (int j = 0; j < Salestarget.Count; j++)
+        //        {
+        //            if (Salestarget[j] != 0)
+        //            {
+        //                var n = (Sales[j] * 100) / Salestarget[j];
+        //                result.Add(n);
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("No Sales Target detected");
+        //                return null;
+        //            }
+        //            return result;
+        //        }
+        //        return result;
+        //    }
+        //    catch (Exception)
+        //    {
 
-                return null;
-            }
-        }
+        //        return null;
+        //    }
+        //}
         public async Task<int> UpdateTarget(int id, Target target)
         {
             if (_db != null)
@@ -171,60 +171,60 @@ namespace Yamama.Services
         }
 
 
-        public List<Double> GetSalesbySalesman(int salesman,string period, DateTime start, DateTime end)
-        {
-            if (_db != null)
-            {
-                try
-                {
-                    if (period == "monthly")
-                    {
-                        List<Double> result = new List<double>();
-                        Double value = 0;
-                        //get items from invoice table according to salesman_id
-                        for (int month = start.Month; month <= end.Month; month++)
-                        {
-                            //////////Assum factory id is the salesman id
-                            List<int> invoices = _db.Invoice
-                                .Where(x => x.Salesman == salesman && x.Date.Value.Month == month)
-                                .Select(x => x.Idinvoice).ToList();
-                            foreach (var item in invoices)
-                            {
-                                value++;
-                            }
-                            result.Add(value);
-                        }
+        //public List<Double> GetSalesbySalesman(int salesman,string period, DateTime start, DateTime end)
+        //{
+        //    if (_db != null)
+        //    {
+        //        try
+        //        {
+        //            if (period == "monthly")
+        //            {
+        //                List<Double> result = new List<double>();
+        //                Double value = 0;
+        //                //get items from invoice table according to salesman_id
+        //                for (int month = start.Month; month <= end.Month; month++)
+        //                {
+        //                    //////////Assum factory id is the salesman id
+        //                    List<int> invoices = _db.Invoice
+        //                        .Where(x => x.Salesman == salesman && x.Date.Value.Month == month)
+        //                        .Select(x => x.Idinvoice).ToList();
+        //                    foreach (var item in invoices)
+        //                    {
+        //                        value++;
+        //                    }
+        //                    result.Add(value);
+        //                }
 
-                        return result;
-                    }
-                    else if (period == "annual")
-                    {
-                        List<Double> result = new List<double>();
-                        Double value = 0;
-                        //get items from invoice table according to salesman_id
-                        for (int year = start.Year; year < end.Year; year++)
-                        {
-                            List<int> invoices = _db.Invoice
-                                .Where(x => x.Salesman == salesman && x.Date.Value.Year == year)
-                                .Select(x => x.Idinvoice).ToList();
-                            foreach (var item in invoices)
-                            {
-                                value++;
-                            }
-                            result.Add(value);
-                        }
+        //                return result;
+        //            }
+        //            else if (period == "annual")
+        //            {
+        //                List<Double> result = new List<double>();
+        //                Double value = 0;
+        //                //get items from invoice table according to salesman_id
+        //                for (int year = start.Year; year < end.Year; year++)
+        //                {
+        //                    List<int> invoices = _db.Invoice
+        //                        .Where(x => x.Salesman == salesman && x.Date.Value.Year == year)
+        //                        .Select(x => x.Idinvoice).ToList();
+        //                    foreach (var item in invoices)
+        //                    {
+        //                        value++;
+        //                    }
+        //                    result.Add(value);
+        //                }
 
-                        return result;
-                    }
+        //                return result;
+        //            }
                    
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-            }
-            return null;
-        }
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return null;
+        //        }
+        //    }
+        //    return null;
+        //}
         public List<Double> GetSalesTarget(int salesman, string period, DateTime start, DateTime end)
         {
             try
@@ -277,6 +277,11 @@ namespace Yamama.Services
 
                 return null;
             }
+        }
+
+        public List<double> EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
+        {
+            throw new NotImplementedException();
         }
     }
 }

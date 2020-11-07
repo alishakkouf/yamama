@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Yamama.Models;
 
 namespace Yamama
 {
@@ -14,6 +15,6 @@ namespace Yamama
         public virtual Factory Factory { get; set; }
         public virtual Project Project { get; set; }
         public virtual Task Task { get; set; }
-        public virtual User User { get; set; }
+        
     }
 }

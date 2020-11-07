@@ -10,9 +10,9 @@ namespace Yamama.Services
 {
     public class CartServices : ICart
     {
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public CartServices(yamamaContext db)
+        public CartServices(yamamadbContext db)
         {
             _db = db;
         }
@@ -39,6 +39,16 @@ namespace Yamama.Services
                 return null;
             }
 
+        }
+
+        public Task<List<Cart>> AddCartAsync(ImportCartInvoiceViewModel impoInvoice, int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> addMoneyCashes(InvoiceCartViewModel invoiceCart, int recentInvoiceID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

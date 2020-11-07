@@ -16,9 +16,9 @@ namespace Yamama.Controllers
     public class ProductionByTypeController : ControllerBase
     {
         private readonly IProductionByType _prod;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public ProductionByTypeController(IProductionByType prod, yamamaContext db)
+        public ProductionByTypeController(IProductionByType prod, yamamadbContext db)
         {
             _prod = prod;
             _db = db;

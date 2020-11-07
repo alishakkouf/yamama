@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 

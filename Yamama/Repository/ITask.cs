@@ -13,11 +13,11 @@ namespace Yamama.Repository
         Task<int> AddTask(TaskTypeViewModel taskTypeViewModel);
         Task<int> UpdateTask(int id, TaskTypeViewModel taskTypeViewModel);
         Task<int> DeleteTask(int id);
-        Task<List<Models.Task>> GetAllTasks();
+        Task<List<Task>> GetAllTasks();
         //Task<int> AssignTask(Models.Task task);
-        Task<Models.Task> GetTask(int id);
-        Task<List<Models.Task>> NewAssignedTasks();
-        Task<List<Models.Task>> ArchiveTasks();
+        Task<Task> GetTask(int id);
+        Task<List<Task>> NewAssignedTasks();
+        Task<List<Task>> ArchiveTasks();
         
     }
 }

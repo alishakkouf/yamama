@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Yamama.Models;
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -28,5 +29,7 @@ namespace Yamama.Services
         {
             return await _db.Product.Where(p => p.Idproduct == id).Select(p=>p.Price).FirstOrDefaultAsync();
         }
+
+    
     }
 }

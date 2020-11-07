@@ -22,6 +22,10 @@ namespace Yamama.Models
         public string InformationSource { get; set; }
 
         public virtual ICollection<Invoice> Invoice { get; set; }
+        
         public virtual ICollection<Visit> Visit { get; set; }
+        public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
+       
+        public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
     }
 }

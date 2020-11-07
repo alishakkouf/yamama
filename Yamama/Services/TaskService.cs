@@ -19,11 +19,9 @@ namespace Yamama.Services
     public class TaskService : ITask
 
     {
-
-
-   
-        private readonly yamamaContext _db;
-        public TaskService(yamamaContext db)
+        
+        private readonly yamamadbContext _db;
+        public TaskService(yamamadbContext db)
         {
             _db = db;
         }
@@ -68,7 +66,7 @@ namespace Yamama.Services
 
 
         //select all tasks whith status is Done (Assume TaskStatus:1=ToDo, 2=Doing, 3=Done, 4=New)
-        public async Task<List<Models.Task>> ArchiveTasks()
+        public async Task<List<Task>> ArchiveTasks()
         {
             if (_db != null)
             {
@@ -82,7 +80,7 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
-                Models.Task item = await _db.Task.FirstAsync(p => p.Idtask == id);
+                Task item = await _db.Task.FirstAsync(p => p.Idtask == id);
                 if (item != null)
                 {
                     if (item.FileId != null)
@@ -141,7 +139,7 @@ namespace Yamama.Services
            
         
 
-        public async Task<List<Models.Task>> GetAllTasks()
+        public async Task<List<Task>> GetAllTasks()
         {
             if (_db != null)
             {
@@ -151,14 +149,14 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<Models.Task> GetTask(int id)
+        public async Task<Task> GetTask(int id)
         {
             var item = await _db.Task.FirstOrDefaultAsync(v => v.Idtask == id);
             return item;
         }
 
         //select all tasks whith status is Done (Assume TaskStatus:1=ToDo, 2=Doing, 3=Done, 4=New)
-        public async Task<List<Models.Task>> NewAssignedTasks()
+        public async Task<List<Task>> NewAssignedTasks()
         {
             if (_db != null)
             {
@@ -173,7 +171,7 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
-                Models.Task existItem = _db.Task.Where(f => f.Idtask == id).FirstOrDefault();
+               Task existItem = _db.Task.Where(f => f.Idtask == id).FirstOrDefault();
                 if (existItem != null)
                 {
                     existItem.Name = taskTypeViewModel.task.Name;
@@ -186,8 +184,8 @@ namespace Yamama.Services
                             existVisit.UserId = taskTypeViewModel.visit.UserId;
                             existVisit.FactoryId = taskTypeViewModel.visit.FactoryId;
                             existVisit.ProjectId = taskTypeViewModel.visit.ProjectId;
-                            existVisit.Gifts = taskTypeViewModel.visit.Gifts;
-                            existVisit.Notes = taskTypeViewModel.visit.Notes;
+                            //existVisit.Gifts = taskTypeViewModel.visit.Gifts;
+                            //existVisit.Notes = taskTypeViewModel.visit.Notes;
 
                             _db.Visit.Update(existVisit);
                         }

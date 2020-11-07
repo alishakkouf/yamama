@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Yamama.Models;
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -178,13 +179,13 @@ namespace Yamama.Services
                 }
                     return ton;     
             }
-            return default;
+            return 0;
 
             }
 
             catch (Exception)
             {
-                return default;
+                return 0;
             }
         }
     }   

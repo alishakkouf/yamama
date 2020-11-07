@@ -10,9 +10,9 @@ namespace Yamama.Services
 {
     public class ProductionByTypeServices : IProductionByType
     {
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
         
-        public ProductionByTypeServices(yamamaContext db)
+        public ProductionByTypeServices(yamamadbContext db)
         {
             _db = db;
         }

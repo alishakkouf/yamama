@@ -11,10 +11,10 @@ namespace Yamama.Services
 {
     public class AlertServices : IAlert
     {
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
 
-        public AlertServices(yamamaContext db)
+        public AlertServices(yamamadbContext db)
         {
             _db = db;
         }

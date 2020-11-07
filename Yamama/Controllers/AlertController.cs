@@ -17,9 +17,9 @@ namespace Yamama.Controllers
     public class AlertController : ControllerBase
     {
         private readonly IAlert _alert;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public AlertController(IAlert alert, yamamaContext db)
+        public AlertController(IAlert alert, yamamadbContext db)
         {
             _alert = alert;
             _db = db;

@@ -10,9 +10,9 @@ namespace Yamama.Services
 {
     public class InvoiceServices : IInvoice
     {
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public InvoiceServices(yamamaContext db)
+        public InvoiceServices(yamamadbContext db)
         {
             _db = db;
         }

@@ -16,9 +16,9 @@ namespace Yamama.Controllers
     public class NeedsController : ControllerBase
     {
         private readonly INeeds _needs;
-        private readonly yamamaContext _db;
+        private readonly yamamadbContext _db;
 
-        public NeedsController(INeeds needs, yamamaContext db)
+        public NeedsController(INeeds needs, yamamadbContext db)
         {
             _needs = needs;
             _db = db;
