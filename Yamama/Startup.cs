@@ -51,7 +51,8 @@ namespace Yamama
                 Options.Password.RequiredLength = 10;
                 //Options.SignIn.RequireConfirmedEmail= true;
 
-            }).AddEntityFrameworkStores<yamamadbContext>();
+            }).AddEntityFrameworkStores<yamamadbContext>()
+              .AddDefaultTokenProviders();
 
 
             // inject the repositories and services classes

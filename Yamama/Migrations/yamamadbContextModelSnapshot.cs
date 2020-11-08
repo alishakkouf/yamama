@@ -4,8 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Yamama;
-//using Yamama.Models;
-//using Yamama.Models;
 
 namespace Yamama.Migrations
 {
@@ -19,19 +17,153 @@ namespace Yamama.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Yamama.ActualIntencive", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<int>("IdactualIntencive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idactual_intencive");
+
+                    b.Property<int?>("ActualIntencive1")
+                        .HasColumnName("actual_intencive");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("IdUser")
+                        .HasColumnName("id_user")
+                        .HasColumnType("varchar(45)");
+
+                    b.HasKey("IdactualIntencive")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("IdUser")
+                        .HasName("id_user_idx");
+
+                    b.ToTable("actual_intencive");
+                });
+
+            modelBuilder.Entity("Yamama.ActualNeeds", b =>
+                {
+                    b.Property<int>("IdactualNeeds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idactual_needs");
+
+                    b.Property<int?>("ActualNeeds1")
+                        .HasColumnName("actual_needs1");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("IdProduct")
+                        .HasColumnName("id_product");
+
+                    b.HasKey("IdactualNeeds")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("IdProduct")
+                        .HasName("product_id_idx");
+
+                    b.ToTable("actual_needs");
+                });
+
+            modelBuilder.Entity("Yamama.Alert", b =>
+                {
+                    b.Property<int>("Idalert")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idalert");
+
+                    b.Property<int?>("FileId")
+                        .HasColumnName("file_id");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RecieverId")
+                        .HasColumnName("reciever_id");
+
+                    b.Property<int?>("SenderId")
+                        .HasColumnName("sender-id");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnName("task_id");
+
+                    b.HasKey("Idalert")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FileId")
+                        .HasName("file_id");
+
+                    b.HasIndex("TaskId")
+                        .HasName("task_id");
+
+                    b.ToTable("alert");
+                });
+
+            modelBuilder.Entity("Yamama.Answers", b =>
+                {
+                    b.Property<int>("Idanswers")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idanswers");
+
+                    b.Property<string>("AnswerText")
+                        .HasColumnName("answer_text")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AnswerWeight")
+                        .HasColumnName("answer_weight");
+
+                    b.Property<int?>("QuestionId")
+                        .HasColumnName("question_id");
+
+                    b.HasKey("Idanswers")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("QuestionId")
+                        .HasName("question_id_idx");
+
+                    b.ToTable("answers");
+                });
+
+            modelBuilder.Entity("Yamama.Aspnetroleclaims", b =>
+                {
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId")
+                        .HasName("IX_AspNetRoleClaims_RoleId");
+
+                    b.ToTable("aspnetroleclaims");
+                });
+
+            modelBuilder.Entity("Yamama.Aspnetroles", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -39,132 +171,121 @@ namespace Yamama.Migrations
                         .IsUnique()
                         .HasName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("aspnetroles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetuserclaims", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .HasName("IX_AspNetUserClaims_UserId");
+
+                    b.ToTable("aspnetuserclaims");
+                });
+
+            modelBuilder.Entity("Yamama.Aspnetuserlogins", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("LoginProvider", "ProviderKey")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("UserId")
+                        .HasName("IX_AspNetUserLogins_UserId");
+
+                    b.ToTable("aspnetuserlogins");
+                });
+
+            modelBuilder.Entity("Yamama.Aspnetuserroles", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RoleId")
-                        .IsRequired();
+                        .HasColumnType("varchar(255)");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserId", "RoleId")
+                        .HasName("PRIMARY");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleId")
+                        .HasName("IX_AspNetUserRoles_RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("aspnetuserroles");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<string>("ProviderDisplayName");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens");
-                });
-
-            modelBuilder.Entity("Yamama.Models.ExtendedUser", b =>
+            modelBuilder.Entity("Yamama.Aspnetusers", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken();
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<bool>("EmailConfirmed");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit(1)");
 
-                    b.Property<string>("FullName");
+                    b.Property<string>("FullName")
+                        .HasColumnType("longtext");
 
-                    b.Property<bool>("LockoutEnabled");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit(1)");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd");
+                    b.Property<DateTime?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
 
-                    b.Property<bool>("PhoneNumberConfirmed");
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit(1)");
 
-                    b.Property<string>("SecurityStamp");
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
 
-                    b.Property<bool>("TwoFactorEnabled");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit(1)");
 
                     b.Property<string>("UserName")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -175,51 +296,1090 @@ namespace Yamama.Migrations
                         .IsUnique()
                         .HasName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("aspnetusers");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetusertokens", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
-                        .WithMany()
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId", "LoginProvider", "Name")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("aspnetusertokens");
+                });
+
+            modelBuilder.Entity("Yamama.Balance", b =>
+                {
+                    b.Property<int>("Idbalance")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idbalance");
+
+                    b.Property<DateTime?>("DateOfFirst")
+                        .HasColumnName("date_of_first")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("DateOfLast")
+                        .HasColumnName("date_of_last")
+                        .HasColumnType("date");
+
+                    b.Property<int>("FirstPeriod")
+                        .HasColumnName("first_period");
+
+                    b.Property<int>("LastPeriod")
+                        .HasColumnName("last_period");
+
+                    b.Property<int>("ProductId1")
+                        .HasColumnName("product_id1");
+
+                    b.HasKey("Idbalance")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("ProductId1")
+                        .HasName("product_id_idx");
+
+                    b.ToTable("balance");
+                });
+
+            modelBuilder.Entity("Yamama.Cart", b =>
+                {
+                    b.Property<int>("IdCart")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idCart");
+
+                    b.Property<int>("InvoiceId");
+
+                    b.Property<double>("Price")
+                        .HasColumnName("price");
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<int>("Qty")
+                        .HasColumnName("QTY");
+
+                    b.Property<double>("SubCost");
+
+                    b.Property<int>("TransportedId")
+                        .HasColumnName("transported_id");
+
+                    b.HasKey("IdCart")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("InvoiceId")
+                        .HasName("InvoiceId_idx");
+
+                    b.HasIndex("ProductId")
+                        .HasName("ProductId_idx");
+
+                    b.HasIndex("TransportedId")
+                        .HasName("transported_id_idx");
+
+                    b.ToTable("cart");
+                });
+
+            modelBuilder.Entity("Yamama.CustomerSatisfactionReports", b =>
+                {
+                    b.Property<int>("IdcustomerSatisfactionReports")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idcustomer_satisfaction_reports");
+
+                    b.Property<int?>("FactoryId")
+                        .HasColumnName("factory_id");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id");
+
+                    b.Property<double>("SatisfactionEvaluation")
+                        .HasColumnName("satisfaction_evaluation");
+
+                    b.HasKey("IdcustomerSatisfactionReports")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FactoryId")
+                        .HasName("factory_id_idx");
+
+                    b.HasIndex("ProjectId")
+                        .HasName("project_id_idx");
+
+                    b.ToTable("customer_satisfaction_reports");
+                });
+
+            modelBuilder.Entity("Yamama.Efmigrationshistory", b =>
+                {
+                    b.Property<string>("MigrationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(95)");
+
+                    b.Property<string>("ProductVersion")
+                        .IsRequired()
+                        .HasColumnType("varchar(32)");
+
+                    b.HasKey("MigrationId")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("__efmigrationshistory");
+                });
+
+            modelBuilder.Entity("Yamama.ExpectedIntencive", b =>
+                {
+                    b.Property<int>("IdexpectedIntencive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idexpected_intencive");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ExpectedMoney")
+                        .HasColumnName("expected_money");
+
+                    b.Property<string>("UserId")
+                        .HasColumnName("userID")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("IdexpectedIntencive")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("UserId")
+                        .HasName("user_id_idx");
+
+                    b.ToTable("expected_intencive");
+                });
+
+            modelBuilder.Entity("Yamama.ExpectedNeeds", b =>
+                {
+                    b.Property<int>("IdexpectedNeeds")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idexpected_needs");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ExpectedQuantity")
+                        .HasColumnName("expected_quantity");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnName("product_id");
+
+                    b.HasKey("IdexpectedNeeds")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("ProductId")
+                        .HasName("product_id_idx");
+
+                    b.ToTable("expected_needs");
+                });
+
+            modelBuilder.Entity("Yamama.Factory", b =>
+                {
+                    b.Property<int>("Idfactory")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idfactory");
+
+                    b.Property<string>("ActivityNature")
+                        .HasColumnName("activity_nature")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<decimal?>("CementPrice")
+                        .HasColumnName("cement_price")
+                        .HasColumnType("decimal(10,0)");
+
+                    b.Property<string>("InformationSource")
+                        .HasColumnName("information_source")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Location")
+                        .HasColumnName("location")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnName("product_id");
+
+                    b.Property<int?>("TransporterId")
+                        .HasColumnName("transporter_id");
+
+                    b.HasKey("Idfactory")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("factory");
+                });
+
+            modelBuilder.Entity("Yamama.File", b =>
+                {
+                    b.Property<int>("Idfile")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idfile");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnName("parent_id");
+
+                    b.Property<string>("ParentType")
+                        .HasColumnName("parent_type")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Path")
+                        .HasColumnName("path")
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Idfile")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("file");
+                });
+
+            modelBuilder.Entity("Yamama.Invoice", b =>
+                {
+                    b.Property<int>("Idinvoice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idinvoice");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("FactoryId");
+
+                    b.Property<double>("FullCost")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("'0'");
+
+                    b.Property<double>("Paid")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("paid")
+                        .HasDefaultValueSql("'0'");
+
+                    b.Property<int?>("ProjectId");
+
+                    b.Property<double>("RemainForCustomer")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("remainForCustomer")
+                        .HasDefaultValueSql("'0'");
+
+                    b.Property<double>("RemainForYamama")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("remainForYamama")
+                        .HasDefaultValueSql("'0'");
+
+                    b.Property<string>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnName("user_id")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Idinvoice")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FactoryId")
+                        .HasName("FactoryId_idx");
+
+                    b.HasIndex("ProjectId")
+                        .HasName("ProjectId_idx");
+
+                    b.HasIndex("UserId")
+                        .HasName("user_id_idx");
+
+                    b.ToTable("invoice");
+                });
+
+            modelBuilder.Entity("Yamama.LinkRQA", b =>
+                {
+                    b.Property<int>("IdlinkRQA")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idlink_r_q_a");
+
+                    b.Property<int?>("AnswerId")
+                        .HasColumnName("answer_id");
+
+                    b.Property<int?>("QId")
+                        .HasColumnName("q_Id");
+
+                    b.Property<int?>("ReportId")
+                        .HasColumnName("report_id");
+
+                    b.HasKey("IdlinkRQA")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("AnswerId")
+                        .HasName("answer_id_idx");
+
+                    b.HasIndex("QId")
+                        .HasName("question_id_idx");
+
+                    b.HasIndex("ReportId")
+                        .HasName("report_id_idx");
+
+                    b.ToTable("link_r_q_a");
+                });
+
+            modelBuilder.Entity("Yamama.MoneyDelivered", b =>
+                {
+                    b.Property<int>("IdmoneyDelivered")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idmoney_delivered");
+
+                    b.Property<double?>("Amount")
+                        .HasColumnName("amount");
+
+                    b.Property<int?>("FId")
+                        .HasColumnName("f_id");
+
+                    b.Property<DateTime?>("FirstDate")
+                        .HasColumnName("first_date")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("InvoiceId")
+                        .HasColumnName("invoice_id");
+
+                    b.Property<int?>("PId")
+                        .HasColumnName("p_id");
+
+                    b.Property<string>("State")
+                        .HasColumnName("state")
+                        .HasColumnType("varchar(45)");
+
+                    b.HasKey("IdmoneyDelivered")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FId")
+                        .HasName("factory_id_idx");
+
+                    b.HasIndex("InvoiceId")
+                        .HasName("invoice_id_idx");
+
+                    b.HasIndex("PId")
+                        .HasName("p_id_idx");
+
+                    b.ToTable("money_delivered");
+                });
+
+            modelBuilder.Entity("Yamama.Notification", b =>
+                {
+                    b.Property<int>("Idnotification")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idnotification");
+
+                    b.Property<string>("Message")
+                        .HasColumnName("message")
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<string>("ReceiverId")
+                        .HasColumnName("receiver-id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("SenderId")
+                        .HasColumnName("sender-id")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Idnotification")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("ReceiverId")
+                        .HasName("receiver-id_idx");
+
+                    b.HasIndex("SenderId")
+                        .HasName("sender-id_idx");
+
+                    b.ToTable("notification");
+                });
+
+            modelBuilder.Entity("Yamama.Photo", b =>
+                {
+                    b.Property<int>("Idphoto")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idphoto");
+
+                    b.Property<string>("Path")
+                        .HasColumnName("path")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id");
+
+                    b.HasKey("Idphoto")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("photo");
+                });
+
+            modelBuilder.Entity("Yamama.Product", b =>
+                {
+                    b.Property<int>("Idproduct")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idproduct");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnName("price")
+                        .HasColumnType("decimal(10,0)");
+
+                    b.HasKey("Idproduct")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("product");
+                });
+
+            modelBuilder.Entity("Yamama.Production", b =>
+                {
+                    b.Property<int>("Idproduction")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idproduction");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("IdProduct");
+
+                    b.Property<int?>("Quantity");
+
+                    b.HasKey("Idproduction")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("IdProduct")
+                        .HasName("product_id_idx");
+
+                    b.ToTable("production");
+                });
+
+            modelBuilder.Entity("Yamama.Project", b =>
+                {
+                    b.Property<int>("Idproject")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idproject");
+
+                    b.Property<string>("Consultant")
+                        .HasColumnName("consultant")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Contractor")
+                        .HasColumnName("contractor")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<decimal?>("Cost")
+                        .HasColumnName("cost")
+                        .HasColumnType("decimal(10,0)");
+
+                    b.Property<string>("Details")
+                        .HasColumnName("details")
+                        .HasColumnType("text");
+
+                    b.Property<string>("InformationSource")
+                        .HasColumnName("information_source")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Location")
+                        .HasColumnName("location")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Owner")
+                        .HasColumnName("owner")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Space")
+                        .HasColumnName("space")
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("Status")
+                        .HasColumnName("status")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Idproject")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("project");
+                });
+
+            modelBuilder.Entity("Yamama.Questions", b =>
+                {
+                    b.Property<int>("IdQuestions")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idQuestions");
+
+                    b.Property<string>("QuestionText")
+                        .HasColumnName("question_text")
+                        .HasColumnType("text");
+
+                    b.HasKey("IdQuestions")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("questions");
+                });
+
+            modelBuilder.Entity("Yamama.RequestInformation", b =>
+                {
+                    b.Property<int>("IdrequestInformation")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idrequest_information");
+
+                    b.Property<int?>("FileId")
+                        .HasColumnName("file_id");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("RecieverId")
+                        .HasColumnName("reciever_id");
+
+                    b.Property<int?>("SenderId")
+                        .HasColumnName("sender_id");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnName("task_id");
+
+                    b.HasKey("IdrequestInformation")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FileId")
+                        .HasName("file_id");
+
+                    b.HasIndex("TaskId")
+                        .HasName("task_id");
+
+                    b.ToTable("request_information");
+                });
+
+            modelBuilder.Entity("Yamama.Store", b =>
+                {
+                    b.Property<int>("Idstore")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idstore");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(45)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnName("quantity");
+
+                    b.HasKey("Idstore")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("ProductId")
+                        .HasName("product_id");
+
+                    b.ToTable("store");
+                });
+
+            modelBuilder.Entity("Yamama.Target", b =>
+                {
+                    b.Property<int>("Idtarget")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idtarget");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnName("date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("Sales")
+                        .HasColumnName("sales");
+
+                    b.Property<string>("SalesmanId")
+                        .HasColumnName("salesmanId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int?>("Visits")
+                        .HasColumnName("visits");
+
+                    b.HasKey("Idtarget")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("SalesmanId")
+                        .HasName("salesmanId_idx");
+
+                    b.ToTable("target");
+                });
+
+            modelBuilder.Entity("Yamama.Task", b =>
+                {
+                    b.Property<int>("Idtask")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idtask");
+
+                    b.Property<string>("Content")
+                        .HasColumnName("content")
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<int?>("CreatorId")
+                        .HasColumnName("creator_id");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("end_date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("FileId")
+                        .HasColumnName("file_id");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<int?>("PhotoId")
+                        .HasColumnName("photo_id");
+
+                    b.Property<int?>("ResponsibleId")
+                        .HasColumnName("responsible_id");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("start_date")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("StatusId")
+                        .HasColumnName("status_id");
+
+                    b.Property<int?>("TypeId")
+                        .HasColumnName("type_id");
+
+                    b.HasKey("Idtask")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FileId")
+                        .HasName("file_id_idx");
+
+                    b.HasIndex("PhotoId")
+                        .HasName("photo_id_idx");
+
+                    b.HasIndex("StatusId")
+                        .HasName("status_id");
+
+                    b.HasIndex("TypeId")
+                        .HasName("type_id");
+
+                    b.ToTable("task");
+                });
+
+            modelBuilder.Entity("Yamama.TaskStatus", b =>
+                {
+                    b.Property<int>("IdtaskStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idtask_status");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("IdtaskStatus")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("task_status");
+                });
+
+            modelBuilder.Entity("Yamama.TaskType", b =>
+                {
+                    b.Property<int>("IdtaskType")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idtask_type");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("IdtaskType")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("task_type");
+                });
+
+            modelBuilder.Entity("Yamama.Transporter", b =>
+                {
+                    b.Property<int>("Idtransporter")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idtransporter");
+
+                    b.Property<string>("Name")
+                        .HasColumnName("name")
+                        .HasColumnType("varchar(200)");
+
+                    b.Property<string>("TransporterNum")
+                        .HasColumnName("transporter_num")
+                        .HasColumnType("varchar(50)");
+
+                    b.HasKey("Idtransporter")
+                        .HasName("PRIMARY");
+
+                    b.ToTable("transporter");
+                });
+
+            modelBuilder.Entity("Yamama.Visit", b =>
+                {
+                    b.Property<int>("Idvisit")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("idvisit");
+
+                    b.Property<int?>("FactoryId")
+                        .HasColumnName("factory_id");
+
+                    b.Property<int?>("Gifts")
+                        .HasColumnName("gifts");
+
+                    b.Property<string>("Notes")
+                        .HasColumnName("notes")
+                        .HasColumnType("varchar(1000)");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnName("project_id");
+
+                    b.Property<int?>("TaskId")
+                        .HasColumnName("task_id");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Idvisit")
+                        .HasName("PRIMARY");
+
+                    b.HasIndex("FactoryId")
+                        .HasName("factory_id");
+
+                    b.HasIndex("ProjectId")
+                        .HasName("project_id");
+
+                    b.HasIndex("TaskId")
+                        .HasName("task_id");
+
+                    b.HasIndex("UserId")
+                        .HasName("user_id");
+
+                    b.ToTable("visit");
+                });
+
+            modelBuilder.Entity("Yamama.ActualIntencive", b =>
+                {
+                    b.HasOne("Yamama.Aspnetusers", "IdUserNavigation")
+                        .WithMany("ActualIntencive")
+                        .HasForeignKey("IdUser")
+                        .HasConstraintName("id_user");
+                });
+
+            modelBuilder.Entity("Yamama.ActualNeeds", b =>
+                {
+                    b.HasOne("Yamama.Product", "IdProductNavigation")
+                        .WithMany("ActualNeeds")
+                        .HasForeignKey("IdProduct")
+                        .HasConstraintName("id_product");
+                });
+
+            modelBuilder.Entity("Yamama.Alert", b =>
+                {
+                    b.HasOne("Yamama.File", "File")
+                        .WithMany("Alert")
+                        .HasForeignKey("FileId")
+                        .HasConstraintName("file_id_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Task", "Task")
+                        .WithMany("Alert")
+                        .HasForeignKey("TaskId")
+                        .HasConstraintName("task_id_al_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Answers", b =>
+                {
+                    b.HasOne("Yamama.Questions", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .HasConstraintName("question_id");
+                });
+
+            modelBuilder.Entity("Yamama.Aspnetroleclaims", b =>
+                {
+                    b.HasOne("Yamama.Aspnetroles", "Role")
+                        .WithMany("Aspnetroleclaims")
                         .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetuserclaims", b =>
                 {
-                    b.HasOne("Yamama.Models.ExtendedUser")
-                        .WithMany()
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("Aspnetuserclaims")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserClaims_AspNetUsers_UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetuserlogins", b =>
                 {
-                    b.HasOne("Yamama.Models.ExtendedUser")
-                        .WithMany()
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("Aspnetuserlogins")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetuserroles", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
-                        .WithMany()
+                    b.HasOne("Yamama.Aspnetroles", "Role")
+                        .WithMany("Aspnetuserroles")
                         .HasForeignKey("RoleId")
+                        .HasConstraintName("FK_AspNetUserRoles_AspNetRoles_RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Yamama.Models.ExtendedUser")
-                        .WithMany()
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("Aspnetuserroles")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserRoles_AspNetUsers_UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            modelBuilder.Entity("Yamama.Aspnetusertokens", b =>
                 {
-                    b.HasOne("Yamama.Models.ExtendedUser")
-                        .WithMany()
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("Aspnetusertokens")
                         .HasForeignKey("UserId")
+                        .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Balance", b =>
+                {
+                    b.HasOne("Yamama.Product", "ProductId1Navigation")
+                        .WithMany("Balance")
+                        .HasForeignKey("ProductId1")
+                        .HasConstraintName("product_id1")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Cart", b =>
+                {
+                    b.HasOne("Yamama.Invoice", "Invoice")
+                        .WithMany("Cart")
+                        .HasForeignKey("InvoiceId")
+                        .HasConstraintName("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Product", "Product")
+                        .WithMany("Cart")
+                        .HasForeignKey("ProductId")
+                        .HasConstraintName("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Transporter", "Transported")
+                        .WithMany("Cart")
+                        .HasForeignKey("TransportedId")
+                        .HasConstraintName("transported_id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.CustomerSatisfactionReports", b =>
+                {
+                    b.HasOne("Yamama.Factory", "Factory")
+                        .WithMany("CustomerSatisfactionReports")
+                        .HasForeignKey("FactoryId")
+                        .HasConstraintName("factory_id");
+
+                    b.HasOne("Yamama.Project", "Project")
+                        .WithMany("CustomerSatisfactionReports")
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("project_id");
+                });
+
+            modelBuilder.Entity("Yamama.ExpectedIntencive", b =>
+                {
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("ExpectedIntencive")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("userID");
+                });
+
+            modelBuilder.Entity("Yamama.ExpectedNeeds", b =>
+                {
+                    b.HasOne("Yamama.Product", "Product")
+                        .WithMany("ExpectedNeeds")
+                        .HasForeignKey("ProductId")
+                        .HasConstraintName("product_id");
+                });
+
+            modelBuilder.Entity("Yamama.Invoice", b =>
+                {
+                    b.HasOne("Yamama.Factory", "Factory")
+                        .WithMany("Invoice")
+                        .HasForeignKey("FactoryId")
+                        .HasConstraintName("FactoryId");
+
+                    b.HasOne("Yamama.Project", "Project")
+                        .WithMany("Invoice")
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("ProjectId");
+
+                    b.HasOne("Yamama.Aspnetusers", "User")
+                        .WithMany("Invoice")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("user_id");
+                });
+
+            modelBuilder.Entity("Yamama.LinkRQA", b =>
+                {
+                    b.HasOne("Yamama.Answers", "Answer")
+                        .WithMany("LinkRQA")
+                        .HasForeignKey("AnswerId")
+                        .HasConstraintName("answer_id");
+
+                    b.HasOne("Yamama.Questions", "Q")
+                        .WithMany("LinkRQA")
+                        .HasForeignKey("QId")
+                        .HasConstraintName("q_Id");
+
+                    b.HasOne("Yamama.CustomerSatisfactionReports", "Report")
+                        .WithMany("LinkRQA")
+                        .HasForeignKey("ReportId")
+                        .HasConstraintName("report_id");
+                });
+
+            modelBuilder.Entity("Yamama.MoneyDelivered", b =>
+                {
+                    b.HasOne("Yamama.Factory", "F")
+                        .WithMany("MoneyDelivered")
+                        .HasForeignKey("FId")
+                        .HasConstraintName("f_id");
+
+                    b.HasOne("Yamama.Invoice", "Invoice")
+                        .WithMany("MoneyDelivered")
+                        .HasForeignKey("InvoiceId")
+                        .HasConstraintName("invoice_id");
+
+                    b.HasOne("Yamama.Project", "P")
+                        .WithMany("MoneyDelivered")
+                        .HasForeignKey("PId")
+                        .HasConstraintName("p_id");
+                });
+
+            modelBuilder.Entity("Yamama.Notification", b =>
+                {
+                    b.HasOne("Yamama.Aspnetusers", "Receiver")
+                        .WithMany("NotificationReceiver")
+                        .HasForeignKey("ReceiverId")
+                        .HasConstraintName("receiver-id");
+
+                    b.HasOne("Yamama.Aspnetusers", "Sender")
+                        .WithMany("NotificationSender")
+                        .HasForeignKey("SenderId")
+                        .HasConstraintName("sender-id");
+                });
+
+            modelBuilder.Entity("Yamama.Production", b =>
+                {
+                    b.HasOne("Yamama.Product", "IdProductNavigation")
+                        .WithMany("Production")
+                        .HasForeignKey("IdProduct")
+                        .HasConstraintName("IdProduct");
+                });
+
+            modelBuilder.Entity("Yamama.RequestInformation", b =>
+                {
+                    b.HasOne("Yamama.File", "File")
+                        .WithMany("RequestInformation")
+                        .HasForeignKey("FileId")
+                        .HasConstraintName("file_id_info_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Task", "Task")
+                        .WithMany("RequestInformation")
+                        .HasForeignKey("TaskId")
+                        .HasConstraintName("task_id_info_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Store", b =>
+                {
+                    b.HasOne("Yamama.Product", "Product")
+                        .WithMany("Store")
+                        .HasForeignKey("ProductId")
+                        .HasConstraintName("product_store_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Target", b =>
+                {
+                    b.HasOne("Yamama.Aspnetusers", "Salesman")
+                        .WithMany("Target")
+                        .HasForeignKey("SalesmanId")
+                        .HasConstraintName("salesmanId");
+                });
+
+            modelBuilder.Entity("Yamama.Task", b =>
+                {
+                    b.HasOne("Yamama.File", "File")
+                        .WithMany("Task")
+                        .HasForeignKey("FileId")
+                        .HasConstraintName("file_id");
+
+                    b.HasOne("Yamama.Photo", "Photo")
+                        .WithMany("Task")
+                        .HasForeignKey("PhotoId")
+                        .HasConstraintName("photo_id");
+
+                    b.HasOne("Yamama.TaskStatus", "Status")
+                        .WithMany("Task")
+                        .HasForeignKey("StatusId")
+                        .HasConstraintName("status_id_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.TaskType", "Type")
+                        .WithMany("Task")
+                        .HasForeignKey("TypeId")
+                        .HasConstraintName("type_id_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Yamama.Visit", b =>
+                {
+                    b.HasOne("Yamama.Factory", "Factory")
+                        .WithMany("Visit")
+                        .HasForeignKey("FactoryId")
+                        .HasConstraintName("factory_id_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Project", "Project")
+                        .WithMany("Visit")
+                        .HasForeignKey("ProjectId")
+                        .HasConstraintName("project_id_fk")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Yamama.Task", "Task")
+                        .WithMany("Visit")
+                        .HasForeignKey("TaskId")
+                        .HasConstraintName("task_id_fk")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

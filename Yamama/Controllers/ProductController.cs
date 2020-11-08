@@ -27,8 +27,8 @@ namespace Yamama.Controllers
         }
 
         [HttpGet]
-        [Route("/api/getproductprice/{id}")]
-        public async Task<ActionResult<Product>> GetProductPrice(int id)
+        [Route("getproductprice")]
+        public async Task<IActionResult> getproductprice(int id)
         {
             try
             {
@@ -56,8 +56,8 @@ namespace Yamama.Controllers
         // to get product details
 
         [HttpGet]
-        [Route("/api/getproduct/{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        [Route("getproduct")]
+        public async Task<ActionResult<Product>> getproduct(int id)
         {
             try
             {
