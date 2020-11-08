@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,7 +47,7 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
-                var item = await _db.Production.Where(x => x.ProductId == type).ToListAsync();
+                var item = await _db.Production.Where(x => x.IdProduct == type).ToListAsync();
                 return item;
             }
             return null;
@@ -77,7 +77,7 @@ namespace Yamama.Services
 
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Idproduction in each day
-                        List<int> productions = _db.Production.Where(x => x.Date.ToString() == test && x.ProductId == type)
+                        List<int> productions = _db.Production.Where(x => x.Date.ToString() == test && x.IdProduct == type)
                                                                      .Select(x => x.Idproduction).ToList();
 
 
@@ -103,7 +103,7 @@ namespace Yamama.Services
                         Double value = 0;
 
                         //return list of idproduction in each day
-                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Month == month && x.ProductId == type)
+                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Month == month && x.IdProduct == type)
                         .Select(x => x.Idproduction).ToListAsync();
                         for (int j = 0; j < productions.Count; j++)
                         {
@@ -128,7 +128,7 @@ namespace Yamama.Services
                         Double value = 0;
 
                         //return list of id_invoices in each day
-                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Year == year && x.ProductId == type)
+                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Year == year && x.IdProduct == type)
                         .Select(x => x.Idproduction).ToListAsync();
                         for (int j = 0; j < productions.Count; j++)
                         {
@@ -159,7 +159,7 @@ namespace Yamama.Services
                 .Where(f => f.Idproduction == id).FirstOrDefault();
                 if (existItem != null)
                 {
-                    existItem.ProductId = prod.ProductId;
+                    existItem.IdProduct = prod.IdProduct;
                     existItem.Quantity = prod.Quantity;
                     existItem.Date = prod.Date;
                     

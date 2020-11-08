@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -87,7 +87,7 @@ namespace Yamama.Controllers
                     {
                         Path = fileName,
                         ProjectId = model.ProjectId,
-                        Name = model.Name,
+                        //Name = model.Name,
                      
 
                     };

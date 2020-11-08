@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -42,7 +42,7 @@ namespace Yamama.Services
                 //create a new object from balance class
                 Balance newbalance = new Balance
                 {
-                    ProductId = id,
+                    ProductId1 = id,
                     FirstPeriod = qty,
                     LastPeriod = qty,
                     DateOfFirst = date.AddMonths(1).AddDays(-date.Day + 1),
@@ -87,14 +87,14 @@ namespace Yamama.Services
                     //Define list of products to store the result
                     List<(int,Double)> result = new List<(int,double)>();                 
                     //to store the  products that added in this date
-                    List<int> productNumber = _db.Balance.Where(p => p.DateOfLast == date).Select(x => x.ProductId).ToList();
+                    List<int> productNumber = _db.Balance.Where(p => p.DateOfLast == date).Select(x => x.ProductId1).ToList();
                     for (int i = 0; i < productNumber.Count; i++)
                     {
                         //variable to store the total last period  value (qty * price for each product in this month)
                         double value = 0;
                         int id = productNumber[i];
                         //get the value of last period for each product 
-                        int qty = _db.Balance.Where(b => b.ProductId == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
+                        int qty = _db.Balance.Where(b => b.ProductId1 == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
                         //get the price for each product
                         decimal val = await _product.GetProductPrice(productNumber[i]);
 
@@ -124,7 +124,7 @@ namespace Yamama.Services
                 // get the price of the product
                 decimal value = await _product.GetProductPrice(id);
                 // get the last period of the product
-                var qty = await _db.Balance.Where(b => b.ProductId == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
+                var qty = await _db.Balance.Where(b => b.ProductId1 == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
                 ton = Convert.ToDouble(value) * Convert.ToDouble(qty);
                 result.Add(ton);
 
@@ -144,7 +144,7 @@ namespace Yamama.Services
                 //Define list of products to store the result
                 List<Double> result = new List<double>();
                 //get the last period value based on specific product
-                var value = await _db.Balance.Where(b => b.ProductId == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
+                var value = await _db.Balance.Where(b => b.ProductId1 == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
 
                 result.Add (value);
                 return result;
@@ -166,11 +166,11 @@ namespace Yamama.Services
                 //variable to store the total last period  value (qty * price for each product in this month)
                 double ton = 0;
                 //to store the  products that added in this date
-                List<int> productNumber = _db.Balance.Where(p => p.DateOfLast == date).Select(x => x.ProductId).ToList();
+                List<int> productNumber = _db.Balance.Where(p => p.DateOfLast == date).Select(x => x.ProductId1).ToList();
                 for (int i = 0; i < productNumber.Count; i++)
                 {
                     //get the value of last period for each product 
-                    int qty = _db.Balance.Where(b => b.ProductId == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
+                    int qty = _db.Balance.Where(b => b.ProductId1 == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
                     //get the price for each product
                     decimal val = await _product.GetProductPrice(productNumber[i]);
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -36,7 +36,7 @@ namespace Yamama.Services
                 //if the model has values then create a new object from Production model
                 Production prod = new Production
                 {
-                    ProductId = model.production.ProductId,
+                    IdProduct = model.production.IdProduct,
                     Quantity = model.production.Quantity,
                     Date = model.production.Date,
                 };
@@ -47,7 +47,7 @@ namespace Yamama.Services
                 //get the added production and store it in variable
                 var RecentProduction = _db.Production.OrderByDescending(p => p.Idproduction ).FirstOrDefault();
                  // get the product id from this added  production from the RecentProduction variable
-                int? id = RecentProduction.ProductId.Value;
+                int? id = RecentProduction.IdProduct.Value;
 
                 //get the quantity from the added production  from the RecentProduction variable
                 int qty = RecentProduction.Quantity.Value;

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -24,7 +24,7 @@ namespace Yamama.Services
 
         public async Task<ExpectedNeeds> GetDailyExpectedNeeds(int id)
         {
-            var item = await _db.ExpectedNeeds.FirstAsync(v => v.IdexptedNeeds == id);
+            var item = await _db.ExpectedNeeds.FirstAsync(v => v.IdexpectedNeeds == id);
             return item;
         }
         public async Task<int> AddActualNeeds(ActualNeeds actual)
@@ -71,7 +71,7 @@ namespace Yamama.Services
 
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Idactualneeds in each day
-                        List<int> actualneeds = _db.ActualNeeds.Where(x => x.Date.ToString() == test && x.ProductId == type)
+                        List<int> actualneeds = _db.ActualNeeds.Where(x => x.Date.ToString() == test && x.IdProduct == type)
                                                                      .Select(x => x.IdactualNeeds).ToList();
 
 
@@ -97,7 +97,7 @@ namespace Yamama.Services
                         Double value = 0;
 
                         //return list of id actual needs in each day
-                        List<int> actualneeds = await _db.ActualNeeds.Where(x => x.Date.Value.Month == month && x.ProductId == type)
+                        List<int> actualneeds = await _db.ActualNeeds.Where(x => x.Date.Value.Month == month && x.IdProduct == type)
                         .Select(x => x.IdactualNeeds).ToListAsync();
                         
                         for (int j = 0; j < actualneeds.Count; j++)
@@ -123,7 +123,7 @@ namespace Yamama.Services
                         Double value = 0;
 
                         //return list of id_Actual Needs in each day
-                        List<int> actualneeds = await _db.ActualNeeds.Where(x => x.Date.Value.Year == year && x.ProductId == type)
+                        List<int> actualneeds = await _db.ActualNeeds.Where(x => x.Date.Value.Year == year && x.IdProduct == type)
                         .Select(x => x.IdactualNeeds).ToListAsync();
                         
                         for (int j = 0; j < actualneeds.Count; j++)
@@ -170,14 +170,14 @@ namespace Yamama.Services
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Id expectedneeds in each day
                         List<int> expectedneeds = _db.ExpectedNeeds.Where(x => x.Date.ToString() == test && x.ProductId == type)
-                                                                     .Select(x => x.IdexptedNeeds).ToList();
+                                                                     .Select(x => x.IdexpectedNeeds).ToList();
 
 
 
                         for (int j = 0; j < expectedneeds.Count; j++)
                         {
                             ExpectedNeeds subResult = await GetDailyExpectedNeeds(expectedneeds[j]);
-                            value += Convert.ToDouble(subResult.ExpectedNeeds1.Value);
+                            value += Convert.ToDouble(subResult.ExpectedQuantity);
                         }
                         result.Add(value);
 
@@ -196,12 +196,12 @@ namespace Yamama.Services
 
                         //return list of id actual needs in each day
                         List<int> expectedneeds = await _db.ExpectedNeeds.Where(x => x.Date.Value.Month == month && x.ProductId == type)
-                        .Select(x => x.IdexptedNeeds).ToListAsync();
+                        .Select(x => x.IdexpectedNeeds).ToListAsync();
 
                         for (int j = 0; j < expectedneeds.Count; j++)
                         {
                             ExpectedNeeds subResult = await GetDailyExpectedNeeds(expectedneeds[j]);
-                            value += Convert.ToDouble(subResult.ExpectedNeeds1.Value);
+                            value += Convert.ToDouble(subResult.ExpectedQuantity);
 
                         }
                         result.Add(value);
@@ -222,12 +222,12 @@ namespace Yamama.Services
 
                         //return list of id_Actual Needs in each day
                         List<int> expectedneeds = await _db.ExpectedNeeds.Where(x => x.Date.Value.Year == year && x.ProductId == type)
-                        .Select(x => x.IdexptedNeeds).ToListAsync();
+                        .Select(x => x.IdexpectedNeeds).ToListAsync();
 
                         for (int j = 0; j < expectedneeds.Count; j++)
                         {
                             ExpectedNeeds subResult = await GetDailyExpectedNeeds(expectedneeds[j]);
-                            value += Convert.ToDouble(subResult.ExpectedNeeds1.Value);
+                            value += Convert.ToDouble(subResult.ExpectedQuantity);
 
                         }
                         result.Add(value);
@@ -256,7 +256,7 @@ namespace Yamama.Services
                 {
                     existItem.ActualNeeds1 = actual.ActualNeeds1;
                     existItem.Date = actual.Date;
-                    existItem.ProductId  = actual.ProductId;
+                    existItem.IdProduct = actual.IdProduct;
                     }
 
                 _db.ActualNeeds.Update(existItem);
@@ -271,10 +271,10 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
-                ExpectedNeeds existItem = _db.ExpectedNeeds.Where(f => f.IdexptedNeeds == id).FirstOrDefault();
+                ExpectedNeeds existItem = _db.ExpectedNeeds.Where(f => f.IdexpectedNeeds == id).FirstOrDefault();
                 if (existItem != null)
                 {
-                    existItem.ExpectedNeeds1 = expected.ExpectedNeeds1;
+                    existItem.ExpectedQuantity = expected.ExpectedQuantity;
                     existItem.Date = expected.Date;
                     existItem.ProductId = expected.ProductId;
                 }
@@ -307,7 +307,7 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
-                var item = _db.ExpectedNeeds.FirstOrDefault(p => p.IdexptedNeeds == id);
+                var item = _db.ExpectedNeeds.FirstOrDefault(p => p.IdexpectedNeeds == id);
 
                 if (item != null)
                 {

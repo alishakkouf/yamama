@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Yamama;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -22,8 +22,8 @@ namespace YamamaAPI.Controllers
 
         private readonly I_ImportInvoce i_ImportInvoce;
 
-        private readonly I_Invoice _invoice;
-        public ImportInvoiceController(yamamadbContext db, I_ImportInvoce impoin, I_Invoice invoice )
+        private readonly IInvoicecs _invoice;
+        public ImportInvoiceController(yamamadbContext db, I_ImportInvoce impoin, IInvoicecs invoice )
         {
             _db = db;
             i_ImportInvoce = impoin;
@@ -58,7 +58,7 @@ namespace YamamaAPI.Controllers
         {
             try
             {
-                var invoice = await _invoice.GetInvoices();
+                var invoice = await _invoice.GetInvoicesAsync();
                 if (invoice == null)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);

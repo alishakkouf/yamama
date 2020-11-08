@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
+
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -43,7 +43,7 @@ namespace Yamama.Services
             return 0;
         }
 
-        public List<Double> GetVisitTartget(int salesman, string period, DateTime start, DateTime end)
+        public List<Double> GetVisitTartget(string salesman, string period, DateTime start, DateTime end)
         {
             try
             {
@@ -225,7 +225,7 @@ namespace Yamama.Services
         //    }
         //    return null;
         //}
-        public List<Double> GetSalesTarget(int salesman, string period, DateTime start, DateTime end)
+        public List<Double> GetSalesTarget(string salesman, string period, DateTime start, DateTime end)
         {
             try
             {

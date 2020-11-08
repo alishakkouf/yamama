@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -14,8 +14,8 @@ namespace Yamama.Services
     {
         private readonly yamamadbContext _db;
         private readonly ICart _cart;
-        private readonly I_Invoice _invoice;
-        public ImportInvoiceService(yamamadbContext db, ICart cart, I_Invoice invoice)
+        private readonly IInvoicecs _invoice;
+        public ImportInvoiceService(yamamadbContext db, ICart cart, IInvoicecs invoice)
         {
             _db = db;
             _cart = cart;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Yamama.Models;
 
 namespace Yamama
 {
@@ -12,7 +11,7 @@ namespace Yamama
         public int Qty { get; set; }
         public double SubCost { get; set; }
         public int InvoiceId { get; set; }
-        public int? TransportedId { get; set; }
+        public int TransportedId { get; set; }
 
         public virtual Invoice Invoice { get; set; }
         public virtual Product Product { get; set; }

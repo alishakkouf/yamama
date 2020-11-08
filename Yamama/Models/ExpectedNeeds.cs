@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Yamama.Models
+namespace Yamama
 {
     public partial class ExpectedNeeds
     {
-        public int IdexptedNeeds { get; set; }
-        public int? ExpectedNeeds1 { get; set; }
+        public int IdexpectedNeeds { get; set; }
+        public int ExpectedQuantity { get; set; }
         public DateTime? Date { get; set; }
         public int? ProductId { get; set; }
 

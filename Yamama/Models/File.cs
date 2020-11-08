@@ -9,6 +9,7 @@ namespace Yamama
         {
             Alert = new HashSet<Alert>();
             RequestInformation = new HashSet<RequestInformation>();
+            Task = new HashSet<Task>();
         }
 
         public int Idfile { get; set; }
@@ -18,5 +19,6 @@ namespace Yamama
 
         public virtual ICollection<Alert> Alert { get; set; }
         public virtual ICollection<RequestInformation> RequestInformation { get; set; }
+        public virtual ICollection<Task> Task { get; set; }
     }
 }

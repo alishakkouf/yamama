@@ -7,10 +7,16 @@ namespace Yamama
     {
         public Aspnetusers()
         {
+            ActualIntencive = new HashSet<ActualIntencive>();
             Aspnetuserclaims = new HashSet<Aspnetuserclaims>();
             Aspnetuserlogins = new HashSet<Aspnetuserlogins>();
             Aspnetuserroles = new HashSet<Aspnetuserroles>();
             Aspnetusertokens = new HashSet<Aspnetusertokens>();
+            ExpectedIntencive = new HashSet<ExpectedIntencive>();
+            Invoice = new HashSet<Invoice>();
+            NotificationReceiver = new HashSet<Notification>();
+            NotificationSender = new HashSet<Notification>();
+            Target = new HashSet<Target>();
         }
 
         public string Id { get; set; }
@@ -30,9 +36,15 @@ namespace Yamama
         public int AccessFailedCount { get; set; }
         public string FullName { get; set; }
 
+        public virtual ICollection<ActualIntencive> ActualIntencive { get; set; }
         public virtual ICollection<Aspnetuserclaims> Aspnetuserclaims { get; set; }
         public virtual ICollection<Aspnetuserlogins> Aspnetuserlogins { get; set; }
         public virtual ICollection<Aspnetuserroles> Aspnetuserroles { get; set; }
         public virtual ICollection<Aspnetusertokens> Aspnetusertokens { get; set; }
+        public virtual ICollection<ExpectedIntencive> ExpectedIntencive { get; set; }
+        public virtual ICollection<Invoice> Invoice { get; set; }
+        public virtual ICollection<Notification> NotificationReceiver { get; set; }
+        public virtual ICollection<Notification> NotificationSender { get; set; }
+        public virtual ICollection<Target> Target { get; set; }
     }
 }

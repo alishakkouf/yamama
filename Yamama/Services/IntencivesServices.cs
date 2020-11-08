@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 
 namespace Yamama.Services
@@ -205,7 +205,7 @@ namespace Yamama.Services
                     {
                         existItem.ActualIntencive1 = actual.ActualIntencive1;
                         existItem.Date = actual.Date;
-                        existItem.UserId = actual.UserId;
+                        existItem.IdUser = actual.IdUser;
                     }
 
                     _db.ActualIntencive.Update(existItem);
@@ -224,7 +224,7 @@ namespace Yamama.Services
                     .Where(f => f.IdexpectedIntencive == id).FirstOrDefault();
                     if (existItem != null)
                     {
-                        existItem.ExpectedIntencive1 = expected.ExpectedIntencive1;
+                        existItem.ExpectedMoney = expected.ExpectedMoney;
                         existItem.Date = expected.Date;
                         existItem.UserId = expected.UserId;
                     }

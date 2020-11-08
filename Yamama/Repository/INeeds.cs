@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
 namespace Yamama.Repository
 {
     public interface INeeds

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Yamama.Models;
+//using Yamama.Models;
 using Yamama.Repository;
 
 
@@ -38,7 +38,7 @@ namespace Yamama.Services
                 // if not retuen the photos that relate to specifiic project based on project id
                 return await (from ph in _db.Photo
                               where ph.ProjectId == id
-                              select new Photo {Idphoto=ph.Idphoto, Path = ph.Path, Name = ph.Name }
+                              select new Photo {Idphoto=ph.Idphoto, Path = ph.Path/*, Name = ph.Name*/ }
                               ).ToListAsync();
 
             };
