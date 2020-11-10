@@ -34,7 +34,7 @@ namespace Yamama.Controllers
             {
                 var product = await _product.GetProductPrice(id);
                 //check if the item has value if not  return msg no content
-                if (product == null)
+                if (product == 0)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
                     return Ok(Response1);

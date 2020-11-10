@@ -25,7 +25,8 @@ namespace Yamama.Services
            int result = 0;
          // add new factory
            await _db.Factory.AddAsync(factory);
-         //if the operation succecced return 1
+            await _db.SaveChangesAsync();
+            //if the operation succecced return 1
             result += 1;
             return result;
      

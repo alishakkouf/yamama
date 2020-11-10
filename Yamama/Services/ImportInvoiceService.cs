@@ -22,7 +22,7 @@ namespace Yamama.Services
             _invoice = invoice;
         }
         // add new  import invoice (this operation will affect on store quantity where the quantity in the store for specific product will increase with every added invoice)
-        public async Task<Invoice> AddImportInvoceAsync(ImportCartInvoiceViewModel impoInvoice)
+        public async Task<Invoice> AddImportInvoceAsync(InvoiceCartViewModel impoInvoice)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace Yamama.Services
             }
         }
 
-        ///..........Reports for importe based on type product...............
+        ///..........Reports for import based on type product..............
         
 
         public async  Task<List<double>> GetProductImportedReports(string period, DateTime from, DateTime to, int id)

@@ -85,7 +85,7 @@ namespace Yamama.Controllers
         // GET: api/<IntenciveController>
         [HttpGet]
         [Route("GetExpectedIntenciveByUser")]
-            public async Task<IActionResult> GetExpectedIntenciveByUser(int user, string period, DateTime start, DateTime end)
+            public async Task<IActionResult> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end)
             {
                 try
                 {
@@ -112,7 +112,7 @@ namespace Yamama.Controllers
         // GET: api/<IntenciveController>
         [HttpGet]
         [Route("GetActaulIntenciveByUser")]
-            public async Task<IActionResult> GetActaulIntenciveByUser(int user, string period, DateTime start, DateTime end)
+            public async Task<IActionResult> GetActaulIntenciveByUser(string user, string period, DateTime start, DateTime end)
             {
                 try
                 {
@@ -197,8 +197,7 @@ namespace Yamama.Controllers
         // PUT api/<IntenciveController>/
         [HttpPut]
         [Route("UpdateActualIntencive/{id}")]
-
-            public async Task<IActionResult> UpdateActualIntencive(ActualIntencive actual, int id)
+        public async Task<IActionResult> UpdateActualIntencive(ActualIntencive actual, int id)
             {
                 try
                 {
@@ -227,7 +226,7 @@ namespace Yamama.Controllers
         // PUT api/<IntenciveController>/
         [HttpPut("UpdateExpectedIntencive/{id}")]
 
-            public async Task<IActionResult> UpdateExpectedIntencive(ExpectedIntencive expected, int id)
+       public async Task<IActionResult> UpdateExpectedIntencive(ExpectedIntencive expected, int id)
             {
                 try
                 {

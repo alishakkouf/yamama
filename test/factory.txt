@@ -1,0 +1,17 @@
+***add factory ***
+
+"Name" : "syria",
+
+"Location": "syria",
+
+"ActivityNature" :"cement",
+
+"ProductId" :1,
+
+"CementPrice":1000,
+
+"TransporterId":1,
+
+"Notes":"notes",
+
+"InformationSource":"fake"

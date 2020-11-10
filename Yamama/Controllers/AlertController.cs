@@ -29,7 +29,7 @@ namespace Yamama.Controllers
         // POST api/<AlertController>
         [HttpPost]
         [Route("AddAlert")]
-        public async Task<IActionResult> AddAlert([FromBody] TaskTypeViewModel taskTypeViewModel)
+        public async Task<IActionResult> AddAlert([FromBody] Alert taskTypeViewModel)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace Yamama.Controllers
         {
             try
             {
-                var result = await _db.Alert.ToListAsync();
+                var result = await _alert.ArchiveAlert();
 
                 if (result != null)
                 {
@@ -137,7 +137,7 @@ namespace Yamama.Controllers
 
         // GET api/<AlertController>/
         [HttpGet]
-        [Route("GetAlert/{id}")]
+        [Route("GetAlert")]
         public async Task<IActionResult> GetAlert(int id)
         {
             try
@@ -163,9 +163,9 @@ namespace Yamama.Controllers
         }
         // PUT api/<AlertController>/
         [HttpPut]
-        [Route("UpdateAlert/{id}")]
+        [Route("UpdateAlert")]
 
-        public async Task<IActionResult> UpdateAlert(TaskTypeViewModel taskTypeViewModel, int id)
+        public async Task<IActionResult> UpdateAlert(Alert taskTypeViewModel, int id)
         {
             try
             {
@@ -193,7 +193,7 @@ namespace Yamama.Controllers
 
         // DELETE api/<AlertController>/
         [HttpDelete]
-        [Route("DeleteAlert/{id}")]
+        [Route("DeleteAlert")]
         public async Task<IActionResult> DeleteAlert(int id)
         {
             try

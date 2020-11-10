@@ -53,149 +53,149 @@ namespace Yamama.Services
 
 
 
-            //public async Task<List<(string, double)>> GetActualIntenciveByUser(int user, string period, DateTime start, DateTime end)
-            //{
-            
-            ////ali.Add(("ali",1));
-            //try
-            //{
-            //        if (period == "monthly")
-            //        {
-            //        //Define list of Actual intencives to store the result
-            //        List<(string, double)> result = new List<(string, double)>();
-            //        for (var month = start.Month; month <= end.Month; month++)
-            //            {
-            //            //to store the all actual intencives
-            //            Double value = 0;
+        public async Task<List<(string, double)>> GetActualIntenciveByUser(string user, string period, DateTime start, DateTime end)
+        {
 
-            //            //return list of id actual intencives in each month
-            //            List<int> actualintencives = await _db.ActualIntencive
-            //                .Where(x => x.Date.Value.Month == month && x.UserId == user)
-            //                .Select(x => x.IdactualIntencive).ToListAsync();
-            //            var userName = _db.User.Where(x => x.Iduser == user).Select(x => x.FullName).SingleOrDefault();
-            //                for (int j = 0; j < actualintencives.Count; j++)
-            //                {
-            //                    ActualIntencive subResult = await GetDailyActualIntencive(actualintencives[j]);
-            //                    value += Convert.ToDouble(subResult.ActualIntencive1.Value);
+            //ali.Add(("ali",1));
+            try
+            {
+                if (period == "monthly")
+                {
+                    //Define list of Actual intencives to store the result
+                    List<(string, double)> result = new List<(string, double)>();
+                    for (var month = start.Month; month <= end.Month; month++)
+                    {
+                        //to store the all actual intencives
+                        Double value = 0;
 
-            //                }
-            //                result.Add((userName, value));
+                        //return list of id actual intencives in each month
+                        List<int> actualintencives = await _db.ActualIntencive
+                            .Where(x => x.Date.Value.Month == month && x.IdUser == user)
+                            .Select(x => x.IdactualIntencive).ToListAsync();
+                        var userName = _db.Aspnetusers.Where(x => x.Id == user).Select(x => x.FullName).SingleOrDefault();
+                        for (int j = 0; j < actualintencives.Count; j++)
+                        {
+                            ActualIntencive subResult = await GetDailyActualIntencive(actualintencives[j]);
+                            value += Convert.ToDouble(subResult.ActualIntencive1.Value);
 
-            //            }
+                        }
+                        result.Add((userName, value));
 
-
-            //            return result;
-            //        }
-            //    else if (period == "annual")
-            //    {
-            //        //Define list of Actual intencives to store the result
-            //        List<(string, double)> result = new List<(string, double)>();
-            //        var userName = _db.User.Where(x => x.Iduser == user).Select(x => x.FullName).SingleOrDefault();
-            //        for (var year = start.Year; year <= end.Year; year++)
-            //        {
-            //            //to store the full Actual intencives
-            //            Double value = 0;
-
-            //            //return list of id_Actual intencives in each day
-            //            List<int> actualintencives = await _db.ActualIntencive
-            //                .Where(x => x.Date.Value.Year == year && x.UserId == user)
-            //                .Select(x => x.IdactualIntencive).ToListAsync();
-
-            //            for (int j = 0; j < actualintencives.Count; j++)
-            //            {
-            //                ActualIntencive subResult = await GetDailyActualIntencive(actualintencives[j]);
-            //                value += Convert.ToDouble(subResult.ActualIntencive1.Value);
-
-            //            }
-            //            result.Add((userName, value));
-            //        }
+                    }
 
 
-            //        return result;
-            //    }
-            //    return null;
-            //    }
+                    return result;
+                }
+                else if (period == "annual")
+                {
+                    //Define list of Actual intencives to store the result
+                    List<(string, double)> result = new List<(string, double)>();
+                    var userName = _db.Aspnetusers.Where(x => x.Id == user).Select(x => x.FullName).SingleOrDefault();
+                    for (var year = start.Year; year <= end.Year; year++)
+                    {
+                        //to store the full Actual intencives
+                        Double value = 0;
+
+                        //return list of id_Actual intencives in each day
+                        List<int> actualintencives = await _db.ActualIntencive
+                            .Where(x => x.Date.Value.Year == year && x.IdUser == user)
+                            .Select(x => x.IdactualIntencive).ToListAsync();
+
+                        for (int j = 0; j < actualintencives.Count; j++)
+                        {
+                            ActualIntencive subResult = await GetDailyActualIntencive(actualintencives[j]);
+                            value += Convert.ToDouble(subResult.ActualIntencive1.Value);
+
+                        }
+                        result.Add((userName, value));
+                    }
 
 
-            //    catch (Exception)
-            //    {
-
-            //        return null;
-            //    }
-            //}
+                    return result;
+                }
+                return null;
+            }
 
 
+            catch (Exception)
+            {
 
-            //public async Task<List<(string, double)>> GetExpectedIntenciveByUser(int user, string period, DateTime start, DateTime end)
-            //{
-            //    try
-            //    {
-            //    if (period == "monthly")
-            //        {
-            //        //Define list of Expected intencive to store the result
-            //        List<(string, double)> result = new List<(string, double)>();
-            //        var userName = _db.User.Where(x => x.Iduser == user).Select(x => x.FullName).SingleOrDefault();
-            //        for (var month = start.Month; month <= end.Month; month++)
-            //            {
-            //            //to store the all expected intencive
-            //            Double value = 0;
-
-            //            //return list of id expected intencive in each day
-            //            List<int> expectedintencive = await _db.ExpectedIntencive
-            //                .Where(x => x.Date.Value.Month == month && x.UserId == user)
-            //                .Select(x => x.IdexpectedIntencive).ToListAsync();
-
-            //                for (int j = 0; j < expectedintencive.Count; j++)
-            //                {
-            //                    ExpectedIntencive subResult = await GetDailyExpectedIntencive(expectedintencive[j]);
-            //                    value += Convert.ToDouble(subResult.ExpectedIntencive1.Value);
-
-            //                }
-            //                result.Add((userName,value));
-            //            }
+                return null;
+            }
+        }
 
 
-            //            return result;
-            //        }
-            //        else if (period == "annual")
-            //        {
-            //        //Define list of expected intencive to store the result
-            //        List<(string, double)> result = new List<(string, double)>();
-            //        var userName = _db.User.Where(x => x.Iduser == user).Select(x => x.FullName).SingleOrDefault();
-            //        for (var year = start.Year; year <= end.Year; year++)
-            //            {
-            //            //to store the full expected intencive
-            //            Double value = 0;
 
-            //            //return list of id_expected intencive in each day
-            //            List<int> expectedintencive = await _db.ExpectedIntencive
-            //                .Where(x => x.Date.Value.Year == year && x.UserId == user)
-            //                .Select(x => x.IdexpectedIntencive).ToListAsync();
+        public async Task<List<(string, double)>> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end)
+        {
+            try
+            {
+                if (period == "monthly")
+                {
+                    //Define list of Expected intencive to store the result
+                    List<(string, double)> result = new List<(string, double)>();
+                    var userName = _db.Aspnetusers.Where(x => x.Id == user).Select(x => x.FullName).SingleOrDefault();
+                    for (var month = start.Month; month <= end.Month; month++)
+                    {
+                        //to store the all expected intencive
+                        Double value = 0;
 
-            //                for (int j = 0; j < expectedintencive.Count; j++)
-            //                {
-            //                    ExpectedIntencive subResult = await GetDailyExpectedIntencive(expectedintencive[j]);
-            //                    value += Convert.ToDouble(subResult.ExpectedIntencive1.Value);
+                        //return list of id expected intencive in each day
+                        List<int> expectedintencive = await _db.ExpectedIntencive
+                            .Where(x => x.Date.Value.Month == month && x.UserId == user)
+                            .Select(x => x.IdexpectedIntencive).ToListAsync();
 
-            //                }
-            //                result.Add((userName,value));
-            //            }
+                        for (int j = 0; j < expectedintencive.Count; j++)
+                        {
+                            ExpectedIntencive subResult = await GetDailyExpectedIntencive(expectedintencive[j]);
+                            value += Convert.ToDouble(subResult.ExpectedMoney);
 
-
-            //            return result;
-            //        }
-            //        return null;
-            //    }
+                        }
+                        result.Add((userName, value));
+                    }
 
 
-            //    catch (Exception)
-            //    {
+                    return result;
+                }
+                else if (period == "annual")
+                {
+                    //Define list of expected intencive to store the result
+                    List<(string, double)> result = new List<(string, double)>();
+                    var userName = _db.Aspnetusers.Where(x => x.Id == user).Select(x => x.FullName).SingleOrDefault();
+                    for (var year = start.Year; year <= end.Year; year++)
+                    {
+                        //to store the full expected intencive
+                        Double value = 0;
 
-            //        return null;
-            //    }
-            //}
+                        //return list of id_expected intencive in each day
+                        List<int> expectedintencive = await _db.ExpectedIntencive
+                            .Where(x => x.Date.Value.Year == year && x.UserId == user)
+                            .Select(x => x.IdexpectedIntencive).ToListAsync();
 
-            public async Task<int> UpdateActualIntencive(int id, ActualIntencive actual)
+                        for (int j = 0; j < expectedintencive.Count; j++)
+                        {
+                            ExpectedIntencive subResult = await GetDailyExpectedIntencive(expectedintencive[j]);
+                            value += Convert.ToDouble(subResult.ExpectedMoney);
+
+                        }
+                        result.Add((userName, value));
+                    }
+
+
+                    return result;
+                }
+                return null;
+            }
+
+
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public async Task<int> UpdateActualIntencive(int id, ActualIntencive actual)
             {
                 if (_db != null)
                 {
@@ -268,15 +268,6 @@ namespace Yamama.Services
             return 0;
         }
 
-        public Task<List<(string, double)>> GetExpectedIntenciveByUser(int user, string period, DateTime start, DateTime end)
-        {
-            throw new NotImplementedException();
         }
-
-        public Task<List<(string, double)>> GetActualIntenciveByUser(int user, string period, DateTime start, DateTime end)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
 

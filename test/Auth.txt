@@ -1,0 +1,22 @@
+***auth/Register***
+{
+"UserName":"test@gmail.com",
+
+"E_mail" : "test@gmail.com",
+
+"Password" : "Ali@123456789",
+
+"FullName" : "as",
+
+"PhoneNumber" : "0935479586",
+
+"Role":"admin"
+
+}
+
+***auth/login***
+"E_mail" : "test@gmail.com",
+
+"Password" : "Ali@123456789",
+
+"RememberMe" : true

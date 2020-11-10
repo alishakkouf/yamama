@@ -163,12 +163,11 @@ namespace Yamama.Services
                     existItem.Quantity = prod.Quantity;
                     existItem.Date = prod.Date;
                     
+
+                    _db.Production.Update(existItem);
+                    await _db.SaveChangesAsync();
+                    return 1;
                 }
-
-                _db.Production.Update(existItem);
-                await _db.SaveChangesAsync();
-                return 1;
-
             }
             return 0;
         }

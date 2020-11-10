@@ -18,13 +18,13 @@ namespace Yamama.Services
         }
         public async Task<ActualNeeds> GetDailyActualNeeds(int id)
         {
-            var item = await _db.ActualNeeds.FirstAsync(v => v.IdactualNeeds == id);
+            var item = await _db.ActualNeeds.Where(v => v.IdactualNeeds == id).SingleOrDefaultAsync();
             return item;
         }
 
         public async Task<ExpectedNeeds> GetDailyExpectedNeeds(int id)
         {
-            var item = await _db.ExpectedNeeds.FirstAsync(v => v.IdexpectedNeeds == id);
+            var item = await _db.ExpectedNeeds.Where(v => v.IdexpectedNeeds == id).SingleOrDefaultAsync();
             return item;
         }
         public async Task<int> AddActualNeeds(ActualNeeds actual)
@@ -50,9 +50,7 @@ namespace Yamama.Services
             }
             return 0;
         }
-
         
-
         public async Task<List<double>> GetActualNeedsByType(int type, string period, DateTime start, DateTime end)
         {
             try
@@ -148,9 +146,7 @@ namespace Yamama.Services
                 return null;
             }
         }
-
         
-
         public async Task<List<double>> GetExpectedNeedsByType(int type, string period, DateTime start, DateTime end)
         {
             try
@@ -257,10 +253,11 @@ namespace Yamama.Services
                     existItem.ActualNeeds1 = actual.ActualNeeds1;
                     existItem.Date = actual.Date;
                     existItem.IdProduct = actual.IdProduct;
-                    }
 
-                _db.ActualNeeds.Update(existItem);
-                await _db.SaveChangesAsync();
+
+                    _db.ActualNeeds.Update(existItem);
+                    await _db.SaveChangesAsync();
+                }
                 return 1;
 
             }
@@ -277,11 +274,12 @@ namespace Yamama.Services
                     existItem.ExpectedQuantity = expected.ExpectedQuantity;
                     existItem.Date = expected.Date;
                     existItem.ProductId = expected.ProductId;
-                }
 
-                _db.ExpectedNeeds.Update(existItem);
-                await _db.SaveChangesAsync();
-                return 1;
+
+                    _db.ExpectedNeeds.Update(existItem);
+                    await _db.SaveChangesAsync();
+                    return 1;
+                }
 
             }
             return 0;

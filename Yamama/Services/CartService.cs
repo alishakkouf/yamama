@@ -83,29 +83,6 @@ namespace Yamama.Services
         }
 
         // add cart
-        public async Task<List<Cart>> AddCartAsync(ImportCartInvoiceViewModel impoInvoice, int id)
-        {
-            try
-            {
-                Double fullcost = 0;
-                for (int i = 0; i < impoInvoice.listcart.Count; i++)
-                {
-                    impoInvoice.listcart[i].InvoiceId = id;
-
-                    fullcost += Convert.ToDouble(impoInvoice.listcart[i].Price);
-
-                    await _yamamadbContext.Cart.AddAsync(impoInvoice.listcart[i]);
-
-                    await _yamamadbContext.SaveChangesAsync();
-                }
-                return impoInvoice.listcart;
-            }
-            catch (Exception)
-            {
-
-                return null;
-            }
-
-        }      
+       
     }
 }

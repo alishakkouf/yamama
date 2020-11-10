@@ -29,8 +29,8 @@ namespace Yamama.Controllers
 
         // GET: api/<FactoriesController>
         [HttpGet]
-        [Route("/api/getfactories")]
-        public  async Task <ActionResult> GetAll()
+        [Route("getfactories")]
+        public  async Task <ActionResult> getfactories()
         {
             try
             {
@@ -54,9 +54,9 @@ namespace Yamama.Controllers
 
         // GET api/<FactoriesController>/5
         [HttpGet]
-        [Route("/api/getfactory/{id}")]
+        [Route("getfactory")]
 
-        public async  Task<ActionResult<Factory>> GetFactory( int id)
+        public async  Task<ActionResult<Factory>> getfactory( int id)
         {
             try
             {
@@ -78,13 +78,13 @@ namespace Yamama.Controllers
         }
         // POST api/<FactoriesController>
         [HttpPost]
-        [Route("/api/addfactory")]
-        public async Task <ActionResult> Add (Factory factory)
+        [Route("addfactory")]
+        public async Task <IActionResult> addfactory(Factory factory)
         {
             try
             {
                await _factory.AddFactoryAsync(factory);
-                await _db.SaveChangesAsync();
+               
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", factory);
                 return Ok(Response);
                 
@@ -100,13 +100,13 @@ namespace Yamama.Controllers
       
         // PUT api/<FactoriesController>/5
         [HttpPut]
-        [Route("/api/updatefactory/{id}")]
-        public async Task <ActionResult> Update(Factory factory , int id )
+        [Route("updatefactory")]
+        public async Task<IActionResult> updatefactory(Factory factory , int id )
         {
             try
             {
                await  _factory.UpdateFactory(id, factory);
-                await _db.SaveChangesAsync();
+             
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", factory);
                 return Ok(Response);
             }
@@ -120,19 +120,21 @@ namespace Yamama.Controllers
 
         // DELETE api/<FactoriesController>/5
         [HttpDelete]
-        [Route("/api/deletefactory/{id}")]
-        public async Task  <ActionResult> Delete( int id)
+        [Route("deletefactory")]
+        public async Task<ActionResult> deletefactory( int id)
         {
     
-            var factory = await _factory.GetFactory(id);
-            if (factory == null)
+            var factory = await _factory.DeleteFactoryAsync(id);
+            if (factory == 0)
             {
                 var Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
                 return Ok(Response1);
             }
-                  await  _factory.DeleteFactoryAsync(id);
-            var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", null);
-            return Ok(Response);
+            else
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", null);
+                return Ok(Response);
+            }
         }
 
     }

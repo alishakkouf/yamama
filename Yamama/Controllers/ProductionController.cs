@@ -124,7 +124,7 @@ namespace Yamama.Controllers
 
 
 
-        // DELETE api/<ProductionController>/5
+        //DELETE api/<ProductionController>/5
         //request todelete specific production
         //[HttpDelete]
         //[Route("/api/deleteproduction/{id}")]
@@ -142,8 +142,8 @@ namespace Yamama.Controllers
         //}
 
 
-        //// GET: api/<ProductionController>
-        ////request to get all production details 
+        // GET: api/<ProductionController>
+        //request to get all production details 
         //[HttpGet]
         //[Route("/api/getallproduction")]
         //public async Task<ActionResult> GetAll()
@@ -155,7 +155,7 @@ namespace Yamama.Controllers
         //        //check if the returned has value 
         //        if (prod == null)
         //        {
-        //             //if it's null return this message
+        //            //if it's null return this message
         //            ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
         //            return Ok(Response1);
         //        }

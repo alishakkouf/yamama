@@ -27,7 +27,19 @@ namespace Yamama.Services
         ///to get the price of specific product
         public async Task<Decimal> GetProductPrice(int id)
         {
-            return await _db.Product.Where(p => p.Idproduct == id).Select(p=>p.Price).FirstOrDefaultAsync();
+            Decimal result = 0;
+            try
+            {
+                
+                result = await _db.Product.Where(p => p.Idproduct == id).Select(p => p.Price).FirstOrDefaultAsync();
+                return result;
+            }
+            catch (Exception)
+            {
+
+                return result;
+            }
+           
         }
 
     

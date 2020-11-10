@@ -9,12 +9,12 @@ namespace Yamama.Repository
 {
     public interface IAlert
     {
-        Task<int> AddAlert(TaskTypeViewModel taskTypeViewModel);
+        Task<int> AddAlert(Alert taskTypeViewModel);
         Task<Alert> GetAlert(int id);
         Task<List<Alert>> GetAllAlerts();
         Task<List<Alert>> NewAssignedAlerts();
         Task<List<Alert>> ArchiveAlert();
-        Task<int> UpdateAlert(int id, TaskTypeViewModel taskTypeViewModel);
+        Task<int> UpdateAlert(int id, Alert taskTypeViewModel);
         Task<int> DeleteAlert(int id);
     }
 }

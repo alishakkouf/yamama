@@ -53,8 +53,8 @@ namespace Yamama.Controllers
         }
 
         // PUT api/<ProductionByTypeController>/
-        [HttpPut]
-        [Route("UpdateProd/{id}")]
+        [HttpPost]
+        [Route("UpdateProd")]
 
         public async Task<IActionResult> UpdateProd(int id, Production prod )
         {
@@ -84,7 +84,7 @@ namespace Yamama.Controllers
 
         // DELETE api/ProductionByTypeController>/
         [HttpDelete]
-        [Route("DeleteProd/{id}")]
+        [Route("DeleteProd")]
         public async Task<IActionResult> DeleteProd(int id)
         {
             try
@@ -119,7 +119,7 @@ namespace Yamama.Controllers
         //Get Daily Production by Prodution ID
         // GET: api/<ProductionByTypeController>
         [HttpGet]
-        [Route("GetDailyProd/{id}")]
+        [Route("GetDailyProd")]
         public async Task<IActionResult> GetDailyProd(int id)
         {
             try

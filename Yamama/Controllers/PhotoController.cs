@@ -56,7 +56,7 @@ namespace Yamama.Controllers
         // POST api/<PhotoController>
         [HttpPost]
         [Route("/api/addphoto")]
-        public async Task<ActionResult> Add(ImageViewModel model)
+        public async Task<IActionResult> addphoto(ImageViewModel model)
         {
             try
             {

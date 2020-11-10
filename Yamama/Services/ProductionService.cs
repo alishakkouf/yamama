@@ -47,7 +47,7 @@ namespace Yamama.Services
                 //get the added production and store it in variable
                 var RecentProduction = _db.Production.OrderByDescending(p => p.Idproduction ).FirstOrDefault();
                  // get the product id from this added  production from the RecentProduction variable
-                int? id = RecentProduction.IdProduct.Value;
+                int? id = RecentProduction.IdProduct;
 
                 //get the quantity from the added production  from the RecentProduction variable
                 int qty = RecentProduction.Quantity.Value;

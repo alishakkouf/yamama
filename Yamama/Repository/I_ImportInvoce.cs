@@ -10,24 +10,17 @@ namespace Yamama.Repository
        
 
         //Add import invoice
-        Task<Invoice> AddImportInvoceAsync(ImportCartInvoiceViewModel impoInvoice);
+        Task<Invoice> AddImportInvoceAsync(InvoiceCartViewModel impoInvoice);
 
 
         //.................Report for import  for all product................
-
-
-        Task<List<Double>> GetImportedReports(string period , DateTime from, DateTime to);
-
-   
-
-
+         Task<List<Double>> GetImportedReports(string period , DateTime from, DateTime to);
+        
         ///........Report for Import based on product type ...........
         ///
 
         Task<List<Double>> GetProductImportedReports(string period, DateTime from, DateTime to, int id );
-
-
-
+        
 
         //Task<List<Double>> GetDailyTypeImported(DateTime from /*, DateTime to*/, int id);
 

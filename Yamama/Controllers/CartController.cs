@@ -32,12 +32,12 @@ namespace Yamama.Controllers
         // POST api/<ImportInvoiceController>
         [HttpPost]
         [Route("/api/addimportcart")]
-        public async Task<ActionResult> AddCart(ImportCartInvoiceViewModel invoiceCart, int id)
+        public async Task<ActionResult> addimportcart(InvoiceCartViewModel invoiceCart, int id)
         {
             try
             {
                 await _cart.AddCartAsync(invoiceCart, id);
-                await _db.SaveChangesAsync();
+             
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", invoiceCart);
                 return Ok(Response);
 

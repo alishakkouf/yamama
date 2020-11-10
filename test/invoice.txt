@@ -1,0 +1,54 @@
+*** add invoice ***
+{
+"invoice" : {
+
+	"FactoryId":1,
+
+	"Date":"2020-11-9",
+
+	"FullCost":5000,
+
+	"Paid" : 1000,
+
+	"Type" : "purchases",
+
+	"UserId" : "be82b6ca-baac-497a-a6b3-2042425d1a39"
+
+	
+}
+,"listcart" : [{
+
+	"ProductId":1,
+
+	"Price":100,
+
+	"Qty":500,
+
+	"SubCost" : 5000,
+
+	"TransportedId":1
+}]
+,
+"Money":[{
+
+	"Amount" : 1000,
+
+	"FirstDate" : "2020-11-9",
+
+	"State" : "delivered",
+
+	"FId" : 1
+	
+} , 
+                                      {
+
+	"Amount" : 4000,
+
+	"FirstDate" : "2020-12-9",
+
+	"State" : "pending",
+
+	"FId" : 1
+}]
+
+}

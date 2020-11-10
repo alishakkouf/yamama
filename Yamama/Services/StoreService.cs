@@ -34,7 +34,7 @@ namespace Yamama.Services
         //get the existing quantity in store for specific product
         public  int GetProductStore(int id)
         {
-            int qty = 0;//  _db.Store.Where(s => s.ProductId == id).Select(s => s.Quantity).FirstOrDefault();
+            int qty =   _db.Store.Where(s => s.ProductId == id).Select(s => s.Quantity).FirstOrDefault();
 
             return qty;
         }

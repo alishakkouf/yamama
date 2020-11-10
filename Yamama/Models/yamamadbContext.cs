@@ -951,7 +951,7 @@ namespace Yamama
                 entity.ToTable("store");
 
                 entity.HasIndex(e => e.ProductId)
-                    .HasName("product_id");
+                    .HasName("pro_id");
 
                 entity.Property(e => e.Idstore).HasColumnName("idstore");
 
@@ -959,7 +959,7 @@ namespace Yamama
                     .HasColumnName("name")
                     .HasColumnType("varchar(45)");
 
-                entity.Property(e => e.ProductId).HasColumnName("product_id");
+                entity.Property(e => e.ProductId).HasColumnName("pro_id");
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 

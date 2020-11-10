@@ -28,9 +28,9 @@ namespace Yamama.Controllers
         }
 
         [HttpPost]
-        [Route("/api/addbalance/{id}")]
+        [Route("AddBalanceAsync")]
 
-        public async Task<ActionResult> AddBalanceAsync(int id)
+        public async Task<IActionResult> AddBalanceAsync(int id)
        {
             try
             {
@@ -54,7 +54,7 @@ namespace Yamama.Controllers
 
         /// report last period quantity by product 
         [HttpGet]
-        [Route("/api/getproductlastqty")]
+        [Route("GetProductLastByQty")]
         public async Task<ActionResult<Balance>> GetProductLastByQty(DateTime date ,int id)
         {
             try
@@ -81,7 +81,7 @@ namespace Yamama.Controllers
         //report last period value(ton) by product
 
         [HttpGet]
-        [Route("/api/getproductlastprice")]
+        [Route("GetBalanceByPrice")]
         public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date, int id)
         {
             try
@@ -109,7 +109,7 @@ namespace Yamama.Controllers
 
         /// report last period quantity for all products 
         [HttpGet]
-        [Route("/api/getlastallqty")]
+        [Route("GetBalanceByQty")]
         public async Task<ActionResult<Balance>> GetBalanceByQty(DateTime date)
         {
             try
@@ -133,35 +133,35 @@ namespace Yamama.Controllers
             }
         }
         /// report last period Value(ton) for all products 
-        [HttpGet]
-        [Route("/api/getlistlastallprice")]
-        public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date)
-       {
-            try
-            {
-                var balance = await _balance.GetBalancePrice(date);
-                //check if the item has value if not  return msg no content
-                if (balance == null)
-                {
-                    ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
-                    return Ok(Response1);
-                }
-                //if the item has value  return succes
-                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", balance);
-                return Ok(Response);
-            }
-            //if the operation faild cause of syntax errors or servers errors
-            catch (Exception)
-            {
-                var Response = new ResponseViewModel(false, HttpStatusCode.BadRequest, "failed", null);
-                return Ok(Response);
-            }
+       // [HttpGet]
+       // [Route("GetBalanceByPrice")]
+       // public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date)
+       //{
+       //     try
+       //     {
+       //         var balance = await _balance.GetBalancePrice(date);
+       //         //check if the item has value if not  return msg no content
+       //         if (balance == null)
+       //         {
+       //             ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
+       //             return Ok(Response1);
+       //         }
+       //         //if the item has value  return succes
+       //         var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", balance);
+       //         return Ok(Response);
+       //     }
+       //     //if the operation faild cause of syntax errors or servers errors
+       //     catch (Exception)
+       //     {
+       //         var Response = new ResponseViewModel(false, HttpStatusCode.BadRequest, "failed", null);
+       //         return Ok(Response);
+       //     }
 
-        }
+       // }
 
         /// report last period Value(ton) for all products 
         [HttpGet]
-        [Route("/api/getlastallprice")]
+        [Route("GetAllBalanceByPrice")]
         public async Task<ActionResult<Balance>> GetAllBalanceByPrice(DateTime date)
         {
             try

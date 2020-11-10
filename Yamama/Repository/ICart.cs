@@ -15,7 +15,7 @@ namespace Yamama.Repository
         Task<int> addMoneyCashes(InvoiceCartViewModel invoiceCart, int recentInvoiceID);
 
 
-        Task<List<Cart>> AddCartAsync(ImportCartInvoiceViewModel impoInvoice, int id);
+        
        
     }
 }

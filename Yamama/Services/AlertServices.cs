@@ -18,12 +18,12 @@ namespace Yamama.Services
         {
             _db = db;
         }
-        public async Task<int> AddAlert(TaskTypeViewModel taskTypeViewModel)
+        public async Task<int> AddAlert(Alert taskTypeViewModel)
         {
             if (_db != null)
             {
 
-                await _db.Alert.AddAsync(taskTypeViewModel.alert);
+                await _db.Alert.AddAsync(taskTypeViewModel);
                 await _db.SaveChangesAsync();
                 return 1;
             }
@@ -37,8 +37,9 @@ namespace Yamama.Services
             if (_db != null)
             {
 
-
-                List<int> tasks = await _db.Task.Where(x => x.StatusId == 3 && x.TypeId == 2)
+                int status = _db.TaskStatus.Where(x => x.Name == "done").Select(c=>c.IdtaskStatus).FirstOrDefault();
+                int type = _db.TaskType.Where(x => x.Name == "alert").Select(c => c.IdtaskType).FirstOrDefault();
+                List<int> tasks = await _db.Task.Where(x => x.StatusId == status && x.TypeId == type)
                             .Select(x => x.Idtask).ToListAsync();
                 var alerts = new List<Alert>();
                 for (int j = 0; j < tasks.Count; j++)
@@ -90,6 +91,8 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
+                int status = _db.TaskStatus.Where(x => x.Name == "new").Select(c => c.IdtaskStatus).FirstOrDefault();
+                int type = _db.TaskType.Where(x => x.Name == "alert").Select(c => c.IdtaskType).FirstOrDefault();
 
                 List<int> tasks = await _db.Task.Where(x => x.StatusId == 4 && x.TypeId == 2)
                             .Select(x => x.Idtask).ToListAsync();
@@ -105,18 +108,18 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<int> UpdateAlert(int id, TaskTypeViewModel taskTypeViewModel)
+        public async Task<int> UpdateAlert(int id, Alert taskTypeViewModel)
         {
             if (_db != null)
             {
                 Alert existItem = _db.Alert.Where(f => f.Idalert == id).FirstOrDefault();
                 if (existItem != null)
                 {
-                    existItem.SenderId = taskTypeViewModel.alert.SenderId;
-                    existItem.RecieverId = taskTypeViewModel.alert.RecieverId;
-                    existItem.Notes = taskTypeViewModel.alert.Notes;
-                    existItem.FileId = taskTypeViewModel.alert.FileId;
-                    existItem.SenderId = taskTypeViewModel.alert.TaskId;
+                    existItem.SenderId = taskTypeViewModel.SenderId;
+                    existItem.RecieverId = taskTypeViewModel.RecieverId;
+                    existItem.Notes = taskTypeViewModel.Notes;
+                    existItem.FileId = taskTypeViewModel.FileId;
+                    existItem.TaskId = taskTypeViewModel.TaskId;
 
                 }
 

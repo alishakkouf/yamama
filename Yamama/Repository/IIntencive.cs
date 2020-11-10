@@ -15,8 +15,8 @@ namespace Yamama.Repository
         Task<int> UpdateExpectedIntencive(int id, ExpectedIntencive expected);
         Task<int> DeleteActualIntencive(int id);
         Task<int> DeleteExpectedIntencive(int id);
-        Task<List<(string, double)>> GetExpectedIntenciveByUser(int user, string period, DateTime start, DateTime end);
-        Task<List<(string, double)>> GetActualIntenciveByUser(int user, string period, DateTime start, DateTime end);
+        Task<List<(string, double)>> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end);
+        Task<List<(string, double)>> GetActualIntenciveByUser(string user, string period, DateTime start, DateTime end);
         Task<ExpectedIntencive> GetDailyExpectedIntencive(int id);
         Task<ActualIntencive> GetDailyActualIntencive(int id);
         //Task<List<Double>> GetExpectedIntenciveAll(string period, DateTime start, DateTime end);

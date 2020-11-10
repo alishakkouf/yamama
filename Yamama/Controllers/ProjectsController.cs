@@ -30,7 +30,7 @@ namespace Yamama.Controllers
         //method to send get request to get all projects
         [HttpGet]
         [Route("/api/getprojects")]
-        public async Task<ActionResult> GetAll()
+        public async Task<ActionResult> getprojects()
         {
             try
             {

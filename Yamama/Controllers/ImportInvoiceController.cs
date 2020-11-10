@@ -34,7 +34,7 @@ namespace YamamaAPI.Controllers
         // POST api/<ImportInvoiceController>
         [HttpPost]
         [Route("/api/addimportinvoice")]
-        public async Task<ActionResult> AddImportInvoice(ImportCartInvoiceViewModel impoInvoice)
+        public async Task<ActionResult> AddImportInvoice(InvoiceCartViewModel impoInvoice)
         {
             try
             {

@@ -167,9 +167,7 @@ namespace Yamama.Services
                 return null;
             }
         }
-
-       
-
+               
         public async Task<List<Double>> GetSalesReports(string period, DateTime start, DateTime end)
         {
             try

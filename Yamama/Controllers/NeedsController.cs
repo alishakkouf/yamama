@@ -196,7 +196,7 @@ namespace Yamama.Controllers
 
         // PUT api/<NeedsController>/
         [HttpPut]
-        [Route("UpdateActualNeeds/{id}")]
+        [Route("UpdateActualNeeds")]
 
         public async Task<IActionResult> UpdateActualNeeds(ActualNeeds actual, int id)
         {
@@ -226,8 +226,7 @@ namespace Yamama.Controllers
 
         // PUT api/<NeedsController>/
         [HttpPut]
-        [Route("UpdateExpectedNeeds/{id}")]
-
+        [Route("UpdateExpectedNeeds")]
         public async Task<IActionResult> UpdateExpectedNeeds(ExpectedNeeds expected, int id)
         {
             try
@@ -256,7 +255,7 @@ namespace Yamama.Controllers
 
         // DELETE api/<NeedsController>/
         [HttpDelete]
-        [Route("DeleteActualNeeds/{id}")]
+        [Route("DeleteActualNeeds")]
         public async Task<IActionResult> DeleteActualNeeds(int id)
         {
             try
