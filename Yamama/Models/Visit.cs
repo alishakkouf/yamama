@@ -10,10 +10,12 @@ namespace Yamama
         public int? FactoryId { get; set; }
         public int? ProjectId { get; set; }
         public int? TaskId { get; set; }
+        public int? Gifts { get; set; }
+        public string Notes { get; set; }
 
         public virtual Factory Factory { get; set; }
         public virtual Project Project { get; set; }
         public virtual Task Task { get; set; }
-      
+   
     }
 }

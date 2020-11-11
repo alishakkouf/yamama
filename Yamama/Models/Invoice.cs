@@ -20,9 +20,11 @@ namespace Yamama
         public double RemainForYamama { get; set; }
         public double RemainForCustomer { get; set; }
         public string Type { get; set; }
+        public string UserId { get; set; }
 
         public virtual Factory Factory { get; set; }
         public virtual Project Project { get; set; }
+        public virtual Aspnetusers User { get; set; }
         public virtual ICollection<Cart> Cart { get; set; }
         public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
     }

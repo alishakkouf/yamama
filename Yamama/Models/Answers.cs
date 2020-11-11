@@ -13,7 +13,7 @@ namespace Yamama
         public int Idanswers { get; set; }
         public string AnswerText { get; set; }
         public int AnswerWeight { get; set; }
-        public int QuestionId { get; set; }
+        public int? QuestionId { get; set; }
 
         public virtual Questions Question { get; set; }
         public virtual ICollection<LinkRQA> LinkRQA { get; set; }

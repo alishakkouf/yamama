@@ -1,0 +1,20 @@
+***addQuestionnaire***
+
+{
+
+"FactoryId" : 1,
+
+"Notes" : "aaaaaaaa",
+
+"QA" : [{"QID":1,"AID":2},
+
+{"QID":2,"AID":3},
+
+{"QID":3,"AID":1},
+
+{"QID":4,"AID":2}]
+
+}
+
+***get reports***
+factory:1

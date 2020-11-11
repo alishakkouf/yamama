@@ -40,8 +40,8 @@ namespace Yamama.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterInformation userRegisterInformation)
         {
-            try
-            {
+            //try
+            //{
                 //check if the email is in use
                 var user1 = await userManager.FindByEmailAsync(userRegisterInformation.E_mail);
                 if (user1 == null)
@@ -74,11 +74,11 @@ namespace Yamama.Controllers
                 }
                 else { return BadRequest("the email is in use !! try another email"); }
 
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            //}
+            //catch (Exception)
+            //{
+            //    return BadRequest();
+            //}
         }
 
 

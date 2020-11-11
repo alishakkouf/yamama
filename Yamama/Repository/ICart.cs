@@ -13,5 +13,9 @@ namespace Yamama.Repository
 
         //insert cashes into database 
         Task<int> addMoneyCashes(InvoiceCartViewModel invoiceCart, int recentInvoiceID);
+
+
+        
+       
     }
 }

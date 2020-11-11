@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+//using Yamama.Models;
 using Yamama.Repository;
 using Yamama.ViewModels;
 
@@ -166,9 +167,7 @@ namespace Yamama.Services
                 return null;
             }
         }
-
-       
-
+               
         public async Task<List<Double>> GetSalesReports(string period, DateTime start, DateTime end)
         {
             try
@@ -712,5 +711,7 @@ namespace Yamama.Services
 
     }
 }
+
+
 
 

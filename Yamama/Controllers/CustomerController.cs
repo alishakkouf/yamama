@@ -28,7 +28,7 @@ namespace Yamama.Controllers
         {
 
             var result = await _question.AddQuestionnaire(questionnaireViewModel);
-            if (result != null)
+            if (result != 0)
             {
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
                 return Ok(Response);
