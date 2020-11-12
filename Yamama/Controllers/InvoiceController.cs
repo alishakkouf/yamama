@@ -30,7 +30,7 @@ namespace Yamama.Controllers
         public async Task<IActionResult> Create(InvoiceCartViewModel invoiceCartViewModel)
         {
 
-            Invoice result = await _invoice.AddInvoiceAsync(invoiceCartViewModel);
+            var result = await _invoice.AddInvoiceAsync(invoiceCartViewModel);
             if (result != null)
             {
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -47,7 +47,29 @@ namespace Yamama.Controllers
 
         }
 
-        //getInvoiceDetailes
+        //POST api/<InvoiceController>
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        [Route("GetInvoice")]
+        public async Task<IActionResult> GetInvoice(int id)
+        {
+
+            InvoiceViewModel result = await _invoice.GetInvoice(id);
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+
+
+
+
+        }
 
 
         //POST api/<InvoiceController>
@@ -76,13 +98,13 @@ namespace Yamama.Controllers
 
 
         //POST api/<InvoiceController>
-        [HttpPost]
+        [HttpGet]
         //[Authorize(Roles = "Admin  , Employee")]
         [Route("ClientInvoiceDetailes")]
-        public async Task<IActionResult> ClientInvoiceDetailes(int FactoryId, int ProjectId)
+        public async Task<IActionResult> ClientInvoiceDetailes(string FactoryId, string ProjectId)
         {
 
-          List<Invoice> result = await _invoice.GetInvoiceDetailesForClient(FactoryId, ProjectId);
+          List<InvoiceViewModel> result = await _invoice.GetInvoiceDetailesForClient(FactoryId, ProjectId);
             if (result != null)
             {
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -149,7 +171,7 @@ namespace Yamama.Controllers
         //POST api/<InvoiceController>
         [HttpGet]
         [Route("TansportReport")]
-        public async Task<IActionResult> TansportReport(int transporter, int FactoryId, int ProjectId, int product)
+        public async Task<IActionResult> TansportReport(string transporter, int FactoryId, int ProjectId, string product)
         {
             var result = await _invoice.GetReportsAsync(transporter, FactoryId, ProjectId, product);
             if (result != null)

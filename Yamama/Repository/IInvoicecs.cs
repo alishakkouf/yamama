@@ -10,21 +10,21 @@ namespace Yamama.Repository
     {
         Task<List<Invoice>> GetInvoicesAsync();
 
-        Task<Invoice> GetInvoice(int IdInvoice);
+        Task<InvoiceViewModel> GetInvoice(int IdInvoice);
 
-        Task<Invoice> AddInvoiceAsync(InvoiceCartViewModel invoiceCart);
+        Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart);
 
         Task<int> DeleteInvoiceAsync(int IdInvoice);
 
         Task<InvoiceCartViewModel> getInvoiceDetailes(int invoiceId);
 
-        Task<List<Invoice>> GetInvoiceDetailesForClient(int FactoryId, int ProjectId);
+        Task<List<InvoiceViewModel>> GetInvoiceDetailesForClient(string FactoryId, string ProjectId);
 
-        Task<List<Double>> GetSalesReports(string period, DateTime start, DateTime end);
+        Task<List<(string, Double)>> GetSalesReports(string period, DateTime start, DateTime end);
 
-        Task<List<MoneyAndQuantity>> GetSalesReportsClientCement(int factory,int project , string CementType , string period , DateTime from , DateTime end);
+        Task<List<(string, MoneyAndQuantity)>> GetSalesReportsClientCement(int factory,int project , string CementType , string period , DateTime from , DateTime end);
 
-        Task<List<TransporterReports>> GetReportsAsync(int transporter, int FactoryId, int ProjectId, int product);
+        Task<List<TransporterReports>> GetReportsAsync(string transporterName, int FactoryId, int ProjectId, string productName);
 
         Task<List<CustomerMoneyAccountsViewModel>> GetCustomersMoneyReportsAsync(int FactoryId, int ProjectId);
 

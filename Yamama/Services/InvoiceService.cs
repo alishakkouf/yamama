@@ -50,27 +50,51 @@ namespace Yamama.Services
 
         }
         
-        public async Task<Invoice> GetInvoice(int IdInvoice)
+        public async Task<InvoiceViewModel> GetInvoice(int IdInvoice)
         {
-            return await _yamamadbContext.Invoice.FirstOrDefaultAsync(x => x.Idinvoice == IdInvoice);
+            var subResult = await _yamamadbContext.Invoice.Where(x => x.Idinvoice == IdInvoice).FirstOrDefaultAsync();
+            if (subResult == null)
+            {
+                return null;
+            }
+            InvoiceViewModel invoiceViewModel = new InvoiceViewModel();
+
+            invoiceViewModel.FullCost = subResult.FullCost;
+            invoiceViewModel.Date = subResult.Date;
+            invoiceViewModel.Remain_yamama = subResult.RemainForYamama;
+            invoiceViewModel.Remain_customer = subResult.RemainForCustomer;
+            invoiceViewModel.Type = subResult.Type;
+            invoiceViewModel.Paid = subResult.Paid;
+
+            var user = await _yamamadbContext.Aspnetusers.Where(x => x.Id == subResult.UserId).SingleOrDefaultAsync();
+            if (user != null) { invoiceViewModel.FullName = user.FullName; }
+            if (subResult.FactoryId!=null)
+            {
+                var factory = await _yamamadbContext.Factory.Where(x => x.Idfactory == subResult.FactoryId).SingleOrDefaultAsync();
+                invoiceViewModel.factory = factory.Name;
+            }
+            else if (subResult.ProjectId!=null)
+            {
+                var project = await _yamamadbContext.Project.Where(x => x.Idproject == subResult.ProjectId).SingleOrDefaultAsync();
+                invoiceViewModel.project = project.Name;
+            }
+
+            return invoiceViewModel;
         }
 
+        public Invoice GetAbstractInvoice(int id) => _yamamadbContext.Invoice.Where(x => x.Idinvoice == id).SingleOrDefault();
         public async Task<InvoiceCartViewModel> getInvoiceDetailes(int invoiceId)
         {
             if (_yamamadbContext != null)
             {
-
                 InvoiceCartViewModel invoiceCartViewModel = new InvoiceCartViewModel();
-
                 try
                 {
-
-
                     //get items from invoice table according to invoice_id
-                    Invoice invoiceInfo = await GetInvoice(invoiceId);
+                    Invoice invoiceInfo =  GetAbstractInvoice(invoiceId);
 
 
-                    //check if there is invoice with this is
+                    //check if there is invoice with this id
                     if (invoiceInfo == null) return null;
 
                     invoiceCartViewModel.invoice = invoiceInfo;
@@ -89,6 +113,18 @@ namespace Yamama.Services
 
                     invoiceCartViewModel.listcart = cartInfo;
 
+                    List<MoneyDelivered> MoneyList = await (from helper in _yamamadbContext.MoneyDelivered
+                                                            where helper.InvoiceId == invoiceId
+                                                            select new MoneyDelivered
+                                                            {
+                                                               Amount = helper.Amount,
+                                                               FirstDate = helper.FirstDate,
+                                                               FId=helper.FId,
+                                                               PId=helper.PId,
+                                                               State=helper.State
+                                                            }).ToListAsync();
+                    invoiceCartViewModel.Money = MoneyList;
+
                     return invoiceCartViewModel;
                 }
                 catch (Exception)
@@ -101,23 +137,40 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<List<Invoice>> GetInvoiceDetailesForClient(int FactoryId, int ProjectId)
+        public async Task<List<InvoiceViewModel>> GetInvoiceDetailesForClient(string Factory, string Project)
         {
             if (_yamamadbContext != null)
             {
                 try
                 {
+
+                    int FactoryId = _yamamadbContext.Factory.Where(x => x.Name == Factory).Select(c => c.Idfactory).SingleOrDefault();
+
+                    int ProjectId = _yamamadbContext.Project.Where(x => x.Name == Project).Select(c => c.Idproject).SingleOrDefault();
+
+                    List<InvoiceViewModel> result = new List<InvoiceViewModel>();
+                   
                     //get items from invoice table according to Factory_id
                     if (FactoryId != 0)
                     {
-                        List<Invoice> invoiceInfo = _yamamadbContext.Invoice.Where(x => x.FactoryId == FactoryId).ToList();
-                        return invoiceInfo;
+                        List<int> invoiceInfo = _yamamadbContext.Invoice.Where(x => x.FactoryId == FactoryId).Select(c => c.Idinvoice).ToList();
+                        for (int i = 0; i < invoiceInfo.Count; i++)
+                        {
+                            InvoiceViewModel sub =await GetInvoice(invoiceInfo[i]);
+                            result.Add(sub);
+                        }
+                        return result;
                     }
                     else   //get items from invoice table according to Project_id
-                    if (FactoryId != 0)
+                    if (ProjectId != 0)
                     {
-                        List<Invoice> invoiceInfo = _yamamadbContext.Invoice.Where(x => x.ProjectId == ProjectId).ToList();
-                        return invoiceInfo;
+                        List<int> invoiceInfo = _yamamadbContext.Project.Where(x => x.Idproject == FactoryId).Select(c => c.Idproject).ToList();
+                        for (int i = 0; i < invoiceInfo.Count; i++)
+                        {
+                            InvoiceViewModel sub = await GetInvoice(invoiceInfo[i]);
+                            result.Add(sub);
+                        }
+                        return result;
                     }
                 }
                 catch (Exception)
@@ -128,10 +181,25 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<Invoice> AddInvoiceAsync(InvoiceCartViewModel invoiceCart)
+        public async Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart)
         {
             try
             {
+
+                if (invoiceCart.invoice.Type == "sell" || invoiceCart.invoice.Type == "export")
+                {
+                    for (int i = 0; i < invoiceCart.listcart.Count; i++)
+                    {
+                        //get the quantity of this product
+                        int q = _yamamadbContext.Store.Where(x => x.ProductId == invoiceCart.listcart[i].ProductId).Select(c => c.Quantity).SingleOrDefault();
+                        if (q<invoiceCart.listcart[i].Qty)
+                        {
+                            return " ERROR : The quantity in store is less than the invoice quantity !!!!";
+                        }
+                    }
+                  
+                }
+
                 //calculate the remain for yamama and for the customer
                 if (invoiceCart.invoice.Paid < invoiceCart.invoice.FullCost)
                 {
@@ -160,22 +228,22 @@ namespace Yamama.Services
                 var s_result1 =  await _cart.addMoneyCashes(invoiceCart , RecentInvoiceID);
                
 
-                return invoiceCart.invoice;
+                return "SUCCESS : Invoice has been inserted successfuly ";
             }
             catch
             {
-                return null;
+                return "ERROR : please retry with true informations";
             }
         }
                
-        public async Task<List<Double>> GetSalesReports(string period, DateTime start, DateTime end)
+        public async Task<List<(string,Double)>> GetSalesReports(string period, DateTime start, DateTime end)
         {
             try
             {
                 if (period == "daily")
                 {
-                    //Define list of invoices to store the result
-                    List<Double> result = new List<double>();
+                    //Define list of date and valyes to store the result
+                    List<(string, Double)> result = new List<(string,double)>();
                     System.TimeSpan diff = end.Subtract(start);
                     for (var day = start.Date; day <= end; day = day.AddDays(1))
                     {
@@ -192,7 +260,7 @@ namespace Yamama.Services
                             value += Convert.ToDouble(subResult.invoice.FullCost);
 
                         }
-                        result.Add(value);
+                        result.Add((test,value));
                     }
 
 
@@ -200,11 +268,15 @@ namespace Yamama.Services
                 }
                 else if (period == "monthly")
                 {
-                    //Define list of invoices to store the result
-                    List<Double> result = new List<double>();
+                    //Define list of date and valyes to store the result
+                    List<(string, Double)> result = new List<(string, double)>();
                     System.TimeSpan diff = end.Subtract(start);
-                    for (var month = start.Month; month <= end.Month; month++)
+
+
+                    for (var month = start.Month; month <= end.Month ; month++)
                     {
+                        string test = month +"";
+
                         //to store the full sales
                         Double value = 0;
 
@@ -217,7 +289,7 @@ namespace Yamama.Services
                             value += Convert.ToDouble(subResult.invoice.FullCost);
 
                         }
-                        result.Add(value);
+                        result.Add((test,value));
                     }
 
 
@@ -225,11 +297,13 @@ namespace Yamama.Services
                 }
                 else if (period == "annual")
                 {
-                    //Define list of invoices to store the result
-                    List<Double> result = new List<double>();
+                    //Define list of date and valyes to store the result
+                    List<(string, Double)> result = new List<(string, double)>();
                     System.TimeSpan diff = end.Subtract(start);
                     for (var year = start.Year; year <= end.Year; year++)
                     {
+                        string test = year + "";
+
                         //to store the full sales
                         Double value = 0;
 
@@ -242,50 +316,54 @@ namespace Yamama.Services
                             value += Convert.ToDouble(subResult.invoice.FullCost);
 
                         }
-                        result.Add(value);
+                        result.Add((test,value));
                     }
 
 
                     return result;
                 }
-                //else if (period == "weekly")
-                //{
-                //    //Define list of invoices to store the result
-                //    List<Double> result = new List<double>();
-                //    Double diff = (end - start).TotalDays;
+              /*  else if (period == "weekly")
+                {
+                    //Define list of invoices to store the result
+                    List<Double> result = new List<double>();
+                    Double diff = (end - start).TotalDays;
 
-                //    var fromDay = start.DayOfWeek;
-                //    if (fromDay <= DayOfWeek.Saturday)
-                //    { Double duration = DayOfWeek.Saturday - fromDay;
-                //        diff = diff + duration; }
-                //    else
-                //    { Double duration = DayOfWeek.Saturday - fromDay;
-                //        diff = diff + duration; }
-
-
-
-
-
-                //    for (var year = start.Year; year <= end.Year; year++)
-                //    {
-                //        //to store the full sales
-                //        Double value = 0;
-
-                //        //return list of id_invoices in each day
-                //        List<int> invoicesNumbers = _yamamadbContext.Invoice.Where(x => x.Date.Value.Year == year).Select(x => x.Idinvoice).ToList();
-
-                //        for (int j = 0; j < invoicesNumbers.Count; j++)
-                //        {
-                //            InvoiceCartViewModel subResult = await getInvoiceDetailes(invoicesNumbers[j]);
-                //            value += Convert.ToDouble(subResult.invoice.FullCost.Value);
-
-                //        }
-                //        result.Add(value);
-                //    }
+                    var fromDay = start.DayOfWeek;
+                    if (fromDay <= DayOfWeek.Saturday)
+                    {
+                        Double duration = DayOfWeek.Saturday - fromDay;
+                        diff = diff + duration;
+                    }
+                    else
+                    {
+                        Double duration = DayOfWeek.Saturday - fromDay;
+                        diff = diff + duration;
+                    }
 
 
-                //    return result;
-                //}
+
+
+
+                    for (var year = start.Year; year <= end.Year; year++)
+                    {
+                        //to store the full sales
+                        Double value = 0;
+
+                        //return list of id_invoices in each day
+                        List<int> invoicesNumbers = _yamamadbContext.Invoice.Where(x => x.Date.Value.Year == year).Select(x => x.Idinvoice).ToList();
+
+                        for (int j = 0; j < invoicesNumbers.Count; j++)
+                        {
+                            InvoiceCartViewModel subResult = await getInvoiceDetailes(invoicesNumbers[j]);
+                            value += Convert.ToDouble(subResult.invoice.FullCost.Value);
+
+                        }
+                        result.Add(value);
+                    }
+
+
+                    return result;
+                }*/
 
                 return null;
             }
@@ -296,18 +374,15 @@ namespace Yamama.Services
             }
         }
 
-        public async Task<List<MoneyAndQuantity>> GetSalesReportsClientCement(int factory, int project, string CementType, string period, DateTime from, DateTime end)
+        public async Task<List<(string,MoneyAndQuantity)>> GetSalesReportsClientCement(int factory, int project, string CementType, string period, DateTime from, DateTime end)
         {
             if (_yamamadbContext != null)
             {
                 try
                 {
-                    //int client = 0;
-                    //if(factory != 0) { client = factory; } else { client = project; }
                     //get the id for the CementType
                     int Cement_ID = _yamamadbContext.Product.Where(x => x.Name == CementType).Select(x => x.Idproduct).SingleOrDefault();
-
-
+                    
 
                     List<InvoiceAndQuantity> InvoiceAndQty = new List<InvoiceAndQuantity>();
 
@@ -325,11 +400,12 @@ namespace Yamama.Services
 
                     if (period == "daily")
                     {
-                        //Define list of Double to store the result
-                        List<MoneyAndQuantity> result = new List<MoneyAndQuantity>();
+                        //Define list of date and values to store the result
+                        List<(string,MoneyAndQuantity)> result = new List<(string, MoneyAndQuantity)>();
 
                         for (var day = from.Date; day <= end; day = day.AddDays(1))
                         {
+                           
                             //to store the full sales for each day
                             Double value = 0;
                             //to store the full Quantities for each day
@@ -364,7 +440,7 @@ namespace Yamama.Services
 
                             for (int j = 0; j < invoicesNumbers.Count; j++)
                             {
-                                Invoice subResult = await GetInvoice(invoicesNumbers[j]);
+                                Invoice subResult =  GetAbstractInvoice(invoicesNumbers[j]);
                                 value += Convert.ToDouble(subResult.FullCost);
 
                                 for (int a = 0; a < InvoiceAndQty.Count; a++)
@@ -380,7 +456,7 @@ namespace Yamama.Services
                             MoneyAndQuantity moneyAndQuantity = new MoneyAndQuantity();
                             moneyAndQuantity.Money = value;
                             moneyAndQuantity.Quantity = Quantity;
-                            result.Add(moneyAndQuantity);
+                            result.Add((test,moneyAndQuantity));
 
                         }
 
@@ -389,11 +465,13 @@ namespace Yamama.Services
                     }
                     if (period == "monthly")
                     {
-                        //Define list of Double to store the result
-                        List<MoneyAndQuantity> result = new List<MoneyAndQuantity>();
+                        //Define list of date and values to store the result
+                        List<(string, MoneyAndQuantity)> result = new List<(string, MoneyAndQuantity)>();
 
                         for (var month = from.Month; month <= end.Month; month++)
                         {
+                            string m = month + "";
+
                             //to store the full sales
                             Double value = 0;
                             //to store the full Quantities for each day
@@ -428,7 +506,7 @@ namespace Yamama.Services
 
                             for (int j = 0; j < invoicesNumbers.Count; j++)
                             {
-                                Invoice subResult = await GetInvoice(invoicesNumbers[j]);
+                                Invoice subResult = GetAbstractInvoice(invoicesNumbers[j]);
                                 value += Convert.ToDouble(subResult.FullCost);
 
                                 for (int a = 0; a < InvoiceAndQty.Count; a++)
@@ -444,10 +522,8 @@ namespace Yamama.Services
                             MoneyAndQuantity moneyAndQuantity = new MoneyAndQuantity();
                             moneyAndQuantity.Money = value;
                             moneyAndQuantity.Quantity = Quantity;
-                            result.Add(moneyAndQuantity);
-
-
-
+                            result.Add((m,moneyAndQuantity));
+                            
                         }
 
 
@@ -456,10 +532,12 @@ namespace Yamama.Services
                     if (period == "annual")
                     {
                         //Define list of Double to store the result
-                        List<MoneyAndQuantity> result = new List<MoneyAndQuantity>();
+                        List<(string,MoneyAndQuantity)> result = new List<(string, MoneyAndQuantity)>();
 
                         for (var year = from.Year; year <= end.Year; year++)
                         {
+                            string y = year + "";
+
                             //to store the full sales
                             Double value = 0;
                             //to store the full Quantities for each day
@@ -495,7 +573,7 @@ namespace Yamama.Services
 
                             for (int j = 0; j < invoicesNumbers.Count; j++)
                             {
-                                Invoice subResult = await GetInvoice(invoicesNumbers[j]);
+                                Invoice subResult = GetAbstractInvoice(invoicesNumbers[j]);
                                 value += Convert.ToDouble(subResult.FullCost);
 
                                 for (int a = 0; a < InvoiceAndQty.Count; a++)
@@ -511,7 +589,7 @@ namespace Yamama.Services
                             MoneyAndQuantity moneyAndQuantity = new MoneyAndQuantity();
                             moneyAndQuantity.Money = value;
                             moneyAndQuantity.Quantity = Quantity;
-                            result.Add(moneyAndQuantity);
+                            result.Add((y,moneyAndQuantity));
 
                         }
 
@@ -527,8 +605,13 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<List<TransporterReports>> GetReportsAsync(int transporter, int FactoryId, int ProjectId, int product)
+        public async Task<List<TransporterReports>> GetReportsAsync(string transporterName, int FactoryId, int ProjectId, string productName)
         {
+
+            int transporter = _yamamadbContext.Transporter.Where(x => x.Name == transporterName).Select(x => x.Idtransporter).SingleOrDefault();
+            int product = _yamamadbContext.Product.Where(x => x.Name == productName).Select(x => x.Idproduct).SingleOrDefault();
+
+
             List<TransporterReports> reports = new List<TransporterReports>();
             List<TransporterReports> FinalReport = new List<TransporterReports>();
             List<Invoice> invoices = new List<Invoice>();
@@ -545,9 +628,14 @@ namespace Yamama.Services
             }
 
 
-            int client1 = 0;
+            string client1 = "";
 
-            if (FactoryId != 0) { client1 = FactoryId; } else { client1 = ProjectId; }
+            if (FactoryId != 0)
+            {
+                client1 = _yamamadbContext.Factory.Where(x => x.Idfactory == FactoryId).Select(x => x.Name).SingleOrDefault();
+            } else {
+            client1 = _yamamadbContext.Project.Where(x => x.Idproject == ProjectId).Select(x => x.Name).SingleOrDefault();
+            }
             int sum = 0;
             for (int i = 0; i < InvoicesID.Count; i++)
             {
@@ -555,8 +643,7 @@ namespace Yamama.Services
                 int stop = invoiceRow;
                 if (invoiceRow == stop)
                 {
-
-
+                    
                     DateTime dateTime = Convert.ToDateTime(invoices[i].Date);
                     sum = InvoicesID[i].Qty;
                     for (int j = 1; j <= InvoicesID.Count; j++)
@@ -572,10 +659,10 @@ namespace Yamama.Services
                     }
                     TransporterReports Subreports = new TransporterReports
                     {
-                        TransporterClient = transporter,
+                        TransporterClient = transporterName,
                         Qty = sum,
                         client = client1,
-                        product = product,
+                        product = productName,
                         date = dateTime,
                         ID_invoice = invoiceRow
 

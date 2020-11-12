@@ -98,7 +98,7 @@ namespace Yamama.Services
                     
                     for (int j = 0; j < importNumber.Count; j++)
                     {
-                        Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subresult = await _invoice.GetInvoice(importNumber[j]);
                         value += Convert.ToDouble(subresult.FullCost);
                     }
                     result.Add(value);
@@ -120,7 +120,7 @@ namespace Yamama.Services
                         List<int> importNumber = _db.Invoice.Where(p => p.Date.Value.Month == month).Select(p => p.Idinvoice).ToList();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
-                            Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subresult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
@@ -141,7 +141,7 @@ namespace Yamama.Services
                         List<int> importNumber = _db.Invoice.Where(x => x.Date.Value.Year == year).Select(x => x.Idinvoice).ToList();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
-                            Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subResult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subResult.FullCost);
                         }
                         result.Add(value);
@@ -186,7 +186,7 @@ namespace Yamama.Services
 
                         for (int j = 0; j < importNumber.Count; j++)
                         {
-                            Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subresult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
@@ -211,7 +211,7 @@ namespace Yamama.Services
                                                        select import.Idinvoice).ToListAsync();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
-                            Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subresult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subresult.FullCost);
                         }
                         result.Add(value);
@@ -237,7 +237,7 @@ namespace Yamama.Services
                      
                         for (int j = 0; j < importNumber.Count; j++)
                         {
-                            Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
+                            InvoiceViewModel subResult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subResult.FullCost);
                         }
                         result.Add(value);

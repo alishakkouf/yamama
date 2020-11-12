@@ -22,11 +22,11 @@ namespace Yamama.Controllers
         private readonly SignInManager<ExtendedUser> signInManager;
         private readonly ILogger<AuthController> logger;
         private readonly ISmsSender smsSender;
-        private readonly IEmailSender _emailSender ;
+        private readonly IEmailSender _emailSender;
 
         public AuthController(UserManager<ExtendedUser> userManager,
                                      SignInManager<ExtendedUser> signInManager,
-                                     ILogger<AuthController> logger, ISmsSender smsSender , IEmailSender emailSender)
+                                     ILogger<AuthController> logger, ISmsSender smsSender, IEmailSender emailSender)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
@@ -42,37 +42,37 @@ namespace Yamama.Controllers
         {
             //try
             //{
-                //check if the email is in use
-                var user1 = await userManager.FindByEmailAsync(userRegisterInformation.E_mail);
-                if (user1 == null)
+            //check if the email is in use
+            var user1 = await userManager.FindByEmailAsync(userRegisterInformation.E_mail);
+            if (user1 == null)
+            {
+
+                var user = new ExtendedUser
+                {
+                    UserName = userRegisterInformation.UserName,
+                    Email = userRegisterInformation.E_mail,
+                    FullName = userRegisterInformation.FullName,
+                    PhoneNumber = userRegisterInformation.PhoneNumber
+                };
+                var result = await userManager.CreateAsync(user, userRegisterInformation.Password);
+
+                if (result.Succeeded)
                 {
 
-                    var user = new ExtendedUser
-                    {
-                        UserName = userRegisterInformation.UserName,
-                        Email = userRegisterInformation.E_mail,
-                        FullName = userRegisterInformation.FullName,
-                        PhoneNumber = userRegisterInformation.PhoneNumber
-                    };
-                    var result = await userManager.CreateAsync(user, userRegisterInformation.Password);
 
-                    if (result.Succeeded)
-                    {
+                    //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var confirmationlink = Url.Action("ConfirmEmail", "Auth", new { userId = user.Id, Token = token }, Request.Scheme);
 
-
-                        //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                        //var confirmationlink = Url.Action("ConfirmEmail", "Auth", new { userId = user.Id, Token = token }, Request.Scheme);
-
-                        //logger.Log(LogLevel.Warning, confirmationlink);
-                        await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
-                        return Ok("successful");
-                    }
-                    else
-                    {
-                        return BadRequest();
-                    }
+                    //logger.Log(LogLevel.Warning, confirmationlink);
+                    await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
+                    return Ok("successful");
                 }
-                else { return BadRequest("the email is in use !! try another email"); }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else { return BadRequest("the email is in use !! try another email"); }
 
             //}
             //catch (Exception)
@@ -133,7 +133,7 @@ namespace Yamama.Controllers
 
         //    var test = await smsSender.SendSmsAsync(twoFactor.number, message);
         //    return Ok();
-        
+
         //}
 
         [HttpGet]
@@ -248,13 +248,12 @@ namespace Yamama.Controllers
                 throw new Exception("Error in base64Decode" + ex.Message);
             }
         }
-
-
+        
 
         //Email module is 80% ready , it needs some configurations
         [HttpPost]
         [Route("sendEmail")]
-        public async Task<IActionResult> sendEmail(string pass , string to_email, string subject, string message, string attachement)
+        public async Task<IActionResult> sendEmail(string pass, string to_email, string subject, string message, string attachement)
         {
             try
             {
@@ -275,10 +274,48 @@ namespace Yamama.Controllers
                     var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", result);
                     return Ok(Response);
                 }
-                
+
 
             }
             catch { return BadRequest(); }
+        }
+
+        [HttpPost]
+        [Route("ForgotPassword")]
+        public async Task<string> ForgotPassword(string Email)
+        {
+            var usr = await userManager.FindByEmailAsync(Email);
+            if (usr != null /*&& await userManager.IsEmailConfirmedAsync(usr)*/)
+            {
+                var token = await userManager.GeneratePasswordResetTokenAsync(usr);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Auth", new { email = Email, token = token }, Request.Scheme);
+                logger.Log(LogLevel.Warning, passwordResetLink);
+
+                return passwordResetLink;
+            }
+            return null; 
+        }
+        [HttpPost]
+        [Route("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPassViewModel resetPassViewModel)
+        {
+            var user = await userManager.FindByEmailAsync(resetPassViewModel.Email);
+            if (user != null)
+            {
+                var result = await userManager.ResetPasswordAsync(user, resetPassViewModel.Token, resetPassViewModel.Password);
+                if (result.Succeeded)
+                {
+                    var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                    return Ok(Response);
+                }
+                else
+                {
+                    var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                    return Ok(Response);
+                }
+            }
+            return null;
         }
     }
 }

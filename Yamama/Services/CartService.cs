@@ -21,18 +21,56 @@ namespace Yamama.Services
             try
             {
                 //store invoice full_cost
-                Double fullcost = 0;
+                //Double fullcost = 0;
 
                 for (int i = 0; i < invoiceCart.listcart.Count; i++)
                 {
                     //assign every item in the invoice with it's invoice_id
                     invoiceCart.listcart[i].InvoiceId = id;
 
-                    fullcost += Convert.ToDouble(invoiceCart.listcart[i].Price);
+                    //fullcost += Convert.ToDouble(invoiceCart.listcart[i].Price);
 
                     await _yamamadbContext.Cart.AddAsync(invoiceCart.listcart[i]);
 
                     await _yamamadbContext.SaveChangesAsync();
+
+                    var store = _yamamadbContext.Store.Where(x => x.ProductId == invoiceCart.listcart[i].ProductId).SingleOrDefault();
+                    if (invoiceCart.invoice.Type == "Purchses" || invoiceCart.invoice.Type == "import")
+                    {
+
+                        if (store != null)
+                        {
+                            store.Quantity += invoiceCart.listcart[i].Qty;
+                            _yamamadbContext.Store.Update(store);
+                            _yamamadbContext.SaveChanges();
+                        }
+                        else
+                        {
+                            Store newStore = new Store
+                            {
+                                ProductId = invoiceCart.listcart[i].ProductId,
+                                Quantity = invoiceCart.listcart[i].Qty,
+                                Name = _yamamadbContext.Product.Where(x => x.Idproduct == invoiceCart.listcart[i].ProductId).Select(x => x.Name).SingleOrDefault()
+                            };
+                            _yamamadbContext.Store.Add(store);
+                            _yamamadbContext.SaveChanges();
+                        }
+
+                    }
+                    else if(invoiceCart.invoice.Type == "sell" || invoiceCart.invoice.Type == "export")
+                    {
+                        if (store != null)
+                        {
+
+                            store.Quantity -= invoiceCart.listcart[i].Qty;
+                            _yamamadbContext.Store.Update(store);
+                            _yamamadbContext.SaveChanges();
+                        }
+                    
+                         
+                    }
+
+
                 }
                 return invoiceCart.listcart;
             }
