@@ -1,17 +1,11 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Yamama.Repository;
 using Microsoft.EntityFrameworkCore;
 using Yamama.ViewModels;
-using Alexa.NET.Notifications;
 
-using Microsoft.AspNetCore.SignalR;
-using Yamama.Controllers;
-using System.IO;
-using Microsoft.AspNetCore.Hosting;
 
 
 namespace Yamama.Services
@@ -32,11 +26,13 @@ namespace Yamama.Services
         {
             if (_db != null)
             {
+                
                 await _db.Task.AddAsync(taskTypeViewModel.task);
-
+                
                 //if the type is 1=visit so add visit
                 if (taskTypeViewModel.task.TypeId == 1)
                 {
+                    
                     await _db.Visit.AddAsync(taskTypeViewModel.visit);
 
                     await _db.SaveChangesAsync();
@@ -63,15 +59,20 @@ namespace Yamama.Services
             return 0;
         }
 
-
-
         //select all tasks whith status is Done (Assume TaskStatus:1=ToDo, 2=Doing, 3=Done, 4=New)
-        public async Task<List<Task>> ArchiveTasks()
+        public async Task<List<(string,Task)>> ArchiveTasks()
         {
             if (_db != null)
             {
+                List<(string, Task)> result = new List<(string, Task)>();
+                var taskName = string.Empty;
                 var item = await _db.Task.Where(f => f.StatusId == 3).ToListAsync();
-                return item;
+                foreach (var task in item)
+                {
+                    taskName = _db.Task.Select(x => x.Name).SingleOrDefault().ToString();
+                    result.Add((taskName,task));
+                }
+                return result;
             }
             return null;
         }
@@ -156,12 +157,19 @@ namespace Yamama.Services
         }
 
         //select all tasks whith status is Done (Assume TaskStatus:1=ToDo, 2=Doing, 3=Done, 4=New)
-        public async Task<List<Task>> NewAssignedTasks()
+        public async Task<List<(string, Task)>> NewAssignedTasks()
         {
             if (_db != null)
             {
+                List<(string, Task)> result = new List<(string, Task)>();
+                var taskName = string.Empty;
                 var item = await _db.Task.Where(f => f.StatusId == 4).ToListAsync();
-                return item;
+                foreach (var task in item)
+                {
+                    taskName = _db.Task.Select(x => x.Name).SingleOrDefault().ToString();
+                    result.Add((taskName, task));
+                }
+                return result;
             }
             return null;
         }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Yamama.Repository;
+using Yamama.ViewModels;
 
 namespace Yamama.Services
 {
@@ -51,10 +52,10 @@ namespace Yamama.Services
                 { 
                     //Define list of visits to store the result
                     List<Double> result = new List<double>();
-
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
-                        var one = _db.Target.Where(x => x.SalesmanId == salesman && x.Date.Value.Month == month)
+                        var one = _db.Target.Where(x => x.SalesmanId == userId && x.Date.Value.Month == month)
                                     .Select(x => x.Visits).SingleOrDefault();
                         if (one != null)
                         {
@@ -64,7 +65,12 @@ namespace Yamama.Services
                             }
                             else { result.Add(0); }
                         }
-                        continue;
+                        else
+                        {
+                            Console.WriteLine("No Sales Target detected");
+                            return null;
+                        }
+
                     }
 
 
@@ -73,17 +79,22 @@ namespace Yamama.Services
                 else if (period == "annual")
                 {
                     List<Double> result = new List<double>();
-
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
-                        var one = _db.Target.Where(x => x.SalesmanId == salesman && x.Date.Value.Year == year)
+                        var one = _db.Target.Where(x => x.SalesmanId == userId && x.Date.Value.Year == year)
                                     .Select(x => x.Visits).SingleOrDefault();
                         if (one !=0 && one!=null)
                         {
                            
                             result.Add(Convert.ToDouble(one));
                         }
-                        
+                        else
+                        {
+                            Console.WriteLine("No Sales Target detected");
+                            return null;
+                        }
+
                     }
                     return result;
                 }
@@ -97,58 +108,7 @@ namespace Yamama.Services
             }
         }
 
-        //public List<Double> EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
-        //{
-        //    try
-        //    {
-        //        List<Double> Evaluation = new List<double>();
-        //        //Evaluate Visits
-        //        List<Double> result = new List<double>();
-        //        List<double> resultVisits = new List<double>();
-        //        VisitServices visitServices = new VisitServices(_db);
-
-        //        resultVisits = visitServices.GetVisisBySalesmanRepo(salesman, period, start, end);
-        //        var target = GetVisitTartget(salesman, period, start, end);
-        //        for (int i = 0; i < target.Count; i++)
-        //        {
-        //            if (target[i] != 0)
-        //            {
-        //                var n = (resultVisits[i] * 100) / target[i];
-        //                result.Add(n);
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("No Visit Target detected");
-        //                return null;
-
-        //            }
-        //        }
-        //        //Evaluate Sales
-        //        List<double> resultSales = new List<double>();
-        //        var Sales = GetSalesbySalesman(salesman, period, start, end);
-        //        var Salestarget = GetSalesTarget(salesman, period, start, end);
-        //        for (int j = 0; j < Salestarget.Count; j++)
-        //        {
-        //            if (Salestarget[j] != 0)
-        //            {
-        //                var n = (Sales[j] * 100) / Salestarget[j];
-        //                result.Add(n);
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("No Sales Target detected");
-        //                return null;
-        //            }
-        //            return result;
-        //        }
-        //        return result;
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        return null;
-        //    }
-        //}
+        
         public async Task<int> UpdateTarget(int id, Target target)
         {
             if (_db != null)
@@ -171,60 +131,62 @@ namespace Yamama.Services
         }
 
 
-        //public List<Double> GetSalesbySalesman(int salesman,string period, DateTime start, DateTime end)
-        //{
-        //    if (_db != null)
-        //    {
-        //        try
-        //        {
-        //            if (period == "monthly")
-        //            {
-        //                List<Double> result = new List<double>();
-        //                Double value = 0;
-        //                //get items from invoice table according to salesman_id
-        //                for (int month = start.Month; month <= end.Month; month++)
-        //                {
-        //                    //////////Assum factory id is the salesman id
-        //                    List<int> invoices = _db.Invoice
-        //                        .Where(x => x.Salesman == salesman && x.Date.Value.Month == month)
-        //                        .Select(x => x.Idinvoice).ToList();
-        //                    foreach (var item in invoices)
-        //                    {
-        //                        value++;
-        //                    }
-        //                    result.Add(value);
-        //                }
+        public List<Double> GetSalesbySalesman(string salesman, string period, DateTime start, DateTime end)
+        {
+            if (_db != null)
+            {
+                try
+                {
+                    if (period == "monthly")
+                    {
+                        List<Double> result = new List<double>();
+                        Double value = 0;
+                        var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+                        //get items from invoice table according to salesman_id
+                        for (int month = start.Month; month <= end.Month; month++)
+                        {
+                            //////////Assum factory id is the salesman id
+                            List<int> invoices = _db.Invoice
+                                .Where(x => x.UserId == userId && x.Date.Value.Month == month)
+                                .Select(x => x.Idinvoice).ToList();
+                            foreach (var item in invoices)
+                            {
+                                value++;
+                            }
+                            result.Add(value);
+                        }
 
-        //                return result;
-        //            }
-        //            else if (period == "annual")
-        //            {
-        //                List<Double> result = new List<double>();
-        //                Double value = 0;
-        //                //get items from invoice table according to salesman_id
-        //                for (int year = start.Year; year < end.Year; year++)
-        //                {
-        //                    List<int> invoices = _db.Invoice
-        //                        .Where(x => x.Salesman == salesman && x.Date.Value.Year == year)
-        //                        .Select(x => x.Idinvoice).ToList();
-        //                    foreach (var item in invoices)
-        //                    {
-        //                        value++;
-        //                    }
-        //                    result.Add(value);
-        //                }
+                        return result;
+                    }
+                    else if (period == "annual")
+                    {
+                        List<Double> result = new List<double>();
+                        Double value = 0;
+                        var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+                        //get items from invoice table according to salesman_id
+                        for (int year = start.Year; year < end.Year; year++)
+                        {
+                            List<int> invoices = _db.Invoice
+                                .Where(x => x.UserId == userId && x.Date.Value.Year == year)
+                                .Select(x => x.Idinvoice).ToList();
+                            foreach (var item in invoices)
+                            {
+                                value++;
+                            }
+                            result.Add(value);
+                        }
 
-        //                return result;
-        //            }
-                   
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    return null;
-        //}
+                        return result;
+                    }
+
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+            return null;
+        }
         public List<Double> GetSalesTarget(string salesman, string period, DateTime start, DateTime end)
         {
             try
@@ -233,10 +195,10 @@ namespace Yamama.Services
                 {
                     //Define list of sales to store the result
                     List<Double> result = new List<double>();
-
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
-                        var one = _db.Target.Where(x => x.SalesmanId == salesman && x.Date.Value.Month == month)
+                        var one = _db.Target.Where(x => x.SalesmanId == userId && x.Date.Value.Month == month)
                                     .Select(x => x.Sales).SingleOrDefault();
                         if (one != null)
                         {
@@ -246,7 +208,12 @@ namespace Yamama.Services
                             }
                             else { result.Add(0); }
                         }
-                        continue;
+
+                        else
+                        {
+                            Console.WriteLine("No Sales Target detected");
+                            return null;
+                        }
                     }
 
 
@@ -255,17 +222,21 @@ namespace Yamama.Services
                 else if (period == "annual")
                 {
                     List<Double> result = new List<double>();
-
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
-                        var one = _db.Target.Where(x => x.SalesmanId == salesman && x.Date.Value.Year == year)
+                        var one = _db.Target.Where(x => x.SalesmanId == userId && x.Date.Value.Year == year)
                                     .Select(x => x.Sales).SingleOrDefault();
                         if (one != 0 && one != null)
                         {
 
                             result.Add(Convert.ToDouble(one));
                         }
-
+                        else
+                        {
+                            Console.WriteLine("No Sales Target detected");
+                            return null;
+                        }
                     }
                     return result;
                 }
@@ -279,9 +250,61 @@ namespace Yamama.Services
             }
         }
 
-        public List<double> EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
+        public List<TargetViewModel> EvaluateSalesman(string salesman, string period, DateTime start, DateTime end)
         {
-            throw new NotImplementedException();
+            try
+            {
+                List<Double> Evaluation = new List<double>();
+                //Evaluate Visits
+                TargetViewModel n = new TargetViewModel();
+                List<TargetViewModel> result = new List<TargetViewModel>();
+                List<double> resultVisits = new List<double>();
+                VisitServices visitServices = new VisitServices(_db);
+                var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+                resultVisits = visitServices.GetVistisBySalesmanRepo(salesman, period, start, end);
+                var target = GetVisitTartget(salesman, period, start, end);
+                for (int i = 0; i < target.Count; i++)
+                {
+                    if (target[i] != 0)
+                    {
+                       
+                       n.Visits = (resultVisits[i] * 100) / target[i];
+                        
+                        result.Add(n);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Visit Target detected");
+                        return null;
+
+                    }
+                }
+                //Evaluate Sales
+                List<double> resultSales = new List<double>();
+                var Sales = GetSalesbySalesman(salesman, period, start, end);
+                var Salestarget = GetSalesTarget(salesman, period, start, end);
+                for (int j = 0; j < Salestarget.Count; j++)
+                {
+                    if (Salestarget[j] != 0)
+                    {
+                        n.Sales = (Sales[j] * 100) / Salestarget[j];
+                        result.Add(n);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No Sales Target detected");
+                        return null;
+                    }
+                    
+                    //return result;
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
     }
 }

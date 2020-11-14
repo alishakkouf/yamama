@@ -43,11 +43,12 @@ namespace Yamama.Services
             return 0;
         }
 
-        public async Task<List<Production>> GetAllDailyProd(int type)
+        public async Task<List<Production>> GetAllDailyProd(string type)
         {
             if (_db != null)
             {
-                var item = await _db.Production.Where(x => x.IdProduct == type).ToListAsync();
+                var productId = _db.Product.Where(x => x.Name == type).Select(x => x.Idproduct).SingleOrDefault();
+                var item = await _db.Production.Where(x => x.IdProduct == productId).ToListAsync();
                 return item;
             }
             return null;
@@ -59,7 +60,7 @@ namespace Yamama.Services
             return item;
         }
 
-        public async Task<List<double>> GetProductionReports(int type,string period, DateTime start, DateTime end)
+        public async Task<List<double>> GetProductionReports(string type,string period, DateTime start, DateTime end)
         {
             try
             {
@@ -67,8 +68,8 @@ namespace Yamama.Services
                 {
                     //Define list of production each day to store the result
                     List<Double> result = new List<double>();
-                   
-                    TimeSpan diff = end.Subtract(start);
+                    var productId = _db.Product.Where(x => x.Name == type).Select(x => x.Idproduct).SingleOrDefault();
+                    
                     for (var day = start.Date; day <= end.Date; day = day.AddDays(1))
                     {
                         //to store the full productions
@@ -77,7 +78,7 @@ namespace Yamama.Services
 
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Idproduction in each day
-                        List<int> productions = _db.Production.Where(x => x.Date.ToString() == test && x.IdProduct == type)
+                        List<int> productions = _db.Production.Where(x => x.Date.ToString() == test && x.IdProduct == productId)
                                                                      .Select(x => x.Idproduction).ToList();
 
 
@@ -96,14 +97,14 @@ namespace Yamama.Services
                 {
                     //Define list of productions to store the result
                     List<Double> result = new List<double>();
-                    TimeSpan diff = end.Subtract(start);
+                    var productId = _db.Product.Where(x => x.Name == type).Select(x => x.Idproduct).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
                         //to store the full sales
                         Double value = 0;
 
                         //return list of idproduction in each day
-                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Month == month && x.IdProduct == type)
+                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Month == month && x.IdProduct == productId)
                         .Select(x => x.Idproduction).ToListAsync();
                         for (int j = 0; j < productions.Count; j++)
                         {
@@ -121,14 +122,14 @@ namespace Yamama.Services
                 {
                     //Define list of invoices to store the result
                     List<Double> result = new List<double>();
-                    System.TimeSpan diff = end.Subtract(start);
+                    var productId = _db.Product.Where(x => x.Name == type).Select(x => x.Idproduct).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
                         //to store the full sales
                         Double value = 0;
 
                         //return list of id_invoices in each day
-                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Year == year && x.IdProduct == type)
+                        List<int> productions = await _db.Production.Where(x => x.Date.Value.Year == year && x.IdProduct == productId)
                         .Select(x => x.Idproduction).ToListAsync();
                         for (int j = 0; j < productions.Count; j++)
                         {

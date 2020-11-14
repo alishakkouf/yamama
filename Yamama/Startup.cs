@@ -14,9 +14,6 @@ using Yamama.ViewModels;
 using IEmailSender = Yamama.Repository.IEmailSender;
 //using Yamama.Models.AppYamamaContext;
 
-
-using Yamama.Repository;
-using Yamama.Services;
 namespace Yamama
 {
     public class Startup
@@ -69,7 +66,7 @@ namespace Yamama
             services.AddScoped<IProduct, ProductService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR();
-            //services.AddScoped<IVisit, VisitServices>();
+            services.AddScoped<IVisit, VisitServices>();
             services.AddScoped<ITask, TaskService>();
             services.AddScoped<IAlert, AlertServices>();
             services.AddScoped<IRequestInformation, RequestInformationServices>();

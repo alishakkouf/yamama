@@ -11,9 +11,9 @@ namespace Yamama.Repository
     {
         Task<int> AddVisit(TaskTypeViewModel taskTypeViewModel);
         Task<Visit> GetVisitbyID(int id);
-        Task<List<(string, string, double)>> GetVisitReports(int salesman, int? projectId, int? factoryId, string period, DateTime start, DateTime end);
-        Task<List<(string, double)>> GetVisisBySalesman(int salesman, string period, DateTime start, DateTime end);
-        Task<List<(string, double)>> GetVisitsByClient(int? projectId, int? factoryId, string period, DateTime start, DateTime end);
+        Task<List<(string, string, double)>> GetVisitReports(string salesman, string projectName, string factoryName, string period, DateTime start, DateTime end);
+        Task<List<(string, double)>> GetVisisBySalesman(string salesman, string period, DateTime start, DateTime end);
+        Task<List<(string, double)>> GetVisitsByClient(string projectName, string factoryName, string period, DateTime start, DateTime end);
         Task<List<Visit>> GetAllVisits();
         Task<List<Visit>> NewAssignedVisits();
         Task<List<Visit>> ArchiveVisit();
