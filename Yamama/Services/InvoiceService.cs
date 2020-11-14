@@ -374,12 +374,18 @@ namespace Yamama.Services
             }
         }
 
-        public async Task<List<(string,MoneyAndQuantity)>> GetSalesReportsClientCement(int factory, int project, string CementType, string period, DateTime from, DateTime end)
+        public async Task<List<(string,MoneyAndQuantity)>> GetSalesReportsClientCement(string factoryName, string projectName, string CementType, string period, DateTime from, DateTime end)
         {
             if (_yamamadbContext != null)
             {
                 try
                 {
+
+                    int factory = _yamamadbContext.Factory.Where(x => x.Name == factoryName).Select(c => c.Idfactory).SingleOrDefault();
+
+                    int project = _yamamadbContext.Project.Where(x => x.Name == projectName).Select(c => c.Idproject).SingleOrDefault();
+
+
                     //get the id for the CementType
                     int Cement_ID = _yamamadbContext.Product.Where(x => x.Name == CementType).Select(x => x.Idproduct).SingleOrDefault();
                     
@@ -605,8 +611,16 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<List<TransporterReports>> GetReportsAsync(string transporterName, int FactoryId, int ProjectId, string productName)
+        public async Task<List<TransporterReports>> GetReportsAsync(string transporterName, string FactoryName, string ProjectName, string productName)
         {
+            try
+            {
+
+                int FactoryId = _yamamadbContext.Factory.Where(x => x.Name == FactoryName).Select(c => c.Idfactory).SingleOrDefault();
+
+                int ProjectId = _yamamadbContext.Project.Where(x => x.Name == ProjectName).Select(c => c.Idproject).SingleOrDefault();
+
+           
 
             int transporter = _yamamadbContext.Transporter.Where(x => x.Name == transporterName).Select(x => x.Idtransporter).SingleOrDefault();
             int product = _yamamadbContext.Product.Where(x => x.Name == productName).Select(x => x.Idproduct).SingleOrDefault();
@@ -679,27 +693,40 @@ namespace Yamama.Services
             }
             return FinalReport;
 
-            //var result = (from cart in _yamamadbContext.Cart join
-            //                   invoice in _yamamadbContext.Invoice on
-            //                   cart.InvoiceId equals invoice.Idinvoice join
-            //              goal in _yamamadbContext.Transporter on
-            //              cart.TransportedId equals goal.Idtransporter select
-            //              new TransporterReports
-            //              {
-            //                  TransporterClient = goal.Name,
-            //                  date = Convert.ToDateTime(invoice.Date),
-            //                  Factory = Convert.ToInt32(invoice.FactoryId),
-            //                  project = Convert.ToInt32(invoice.ProjectId),
-            //                  product = Convert.ToInt32(cart.ProductId),
-            //                  Qty = Convert.ToInt32(cart.Qty),
-            //              }).ToListAsync();
+                //var result = (from cart in _yamamadbContext.Cart join
+                //                   invoice in _yamamadbContext.Invoice on
+                //                   cart.InvoiceId equals invoice.Idinvoice join
+                //              goal in _yamamadbContext.Transporter on
+                //              cart.TransportedId equals goal.Idtransporter select
+                //              new TransporterReports
+                //              {
+                //                  TransporterClient = goal.Name,
+                //                  date = Convert.ToDateTime(invoice.Date),
+                //                  Factory = Convert.ToInt32(invoice.FactoryId),
+                //                  project = Convert.ToInt32(invoice.ProjectId),
+                //                  product = Convert.ToInt32(cart.ProductId),
+                //                  Qty = Convert.ToInt32(cart.Qty),
+                //              }).ToListAsync();
 
 
-            //return result;
+                //return result;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
-        public async Task<List<CustomerMoneyAccountsViewModel>> GetCustomersMoneyReportsAsync(int FactoryId, int ProjectId)
+        public async Task<List<CustomerMoneyAccountsViewModel>> GetCustomersMoneyReportsAsync(string FactoryName, string ProjectName)
         {
+
+            try
+            {
+                int FactoryId = _yamamadbContext.Factory.Where(x => x.Name == FactoryName).Select(c => c.Idfactory).SingleOrDefault();
+
+                int ProjectId = _yamamadbContext.Project.Where(x => x.Name == ProjectName).Select(c => c.Idproject).SingleOrDefault();
+
             List<CustomerMoneyAccountsViewModel> customerMoneyAccounts = new List<CustomerMoneyAccountsViewModel>();
             List<Invoice> Invoices = new List<Invoice>();
             string client;
@@ -733,6 +760,14 @@ namespace Yamama.Services
             SubResult.MoneyForYamama = RemainForYamama;
             customerMoneyAccounts.Add(SubResult);
             return customerMoneyAccounts;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
 
         public async Task<List<(string, Double)>> IndebtednessReportsAsync()

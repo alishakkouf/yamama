@@ -148,7 +148,7 @@ namespace Yamama.Controllers
         //POST api/<InvoiceController>
         [HttpGet]
         [Route("CementSales")]
-        public async Task<IActionResult> CementSales(int factory, int project, string CementType, string period, DateTime from, DateTime end)
+        public async Task<IActionResult> CementSales(string factory, string project, string CementType, string period, DateTime from, DateTime end)
         {
 
             var result = await _invoice.GetSalesReportsClientCement(factory, project, CementType, period,  from, end);
@@ -171,7 +171,7 @@ namespace Yamama.Controllers
         //POST api/<InvoiceController>
         [HttpGet]
         [Route("TansportReport")]
-        public async Task<IActionResult> TansportReport(string transporter, int FactoryId, int ProjectId, string product)
+        public async Task<IActionResult> TansportReport(string transporter, string FactoryId, string ProjectId, string product)
         {
             var result = await _invoice.GetReportsAsync(transporter, FactoryId, ProjectId, product);
             if (result != null)
@@ -191,7 +191,7 @@ namespace Yamama.Controllers
         //POST api/<InvoiceController>
         [HttpGet]
         [Route("GetCustomersMoneyReports")]
-        public async Task<IActionResult> GetCustomersMoneyReports( int FactoryId, int ProjectId)
+        public async Task<IActionResult> GetCustomersMoneyReports( string FactoryId, string ProjectId)
         {
             var result = await _invoice.GetCustomersMoneyReportsAsync(FactoryId, ProjectId);
             if (result != null)

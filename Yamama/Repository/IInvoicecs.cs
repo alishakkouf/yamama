@@ -22,11 +22,11 @@ namespace Yamama.Repository
 
         Task<List<(string, Double)>> GetSalesReports(string period, DateTime start, DateTime end);
 
-        Task<List<(string, MoneyAndQuantity)>> GetSalesReportsClientCement(int factory,int project , string CementType , string period , DateTime from , DateTime end);
+        Task<List<(string, MoneyAndQuantity)>> GetSalesReportsClientCement(string factory,string project , string CementType , string period , DateTime from , DateTime end);
 
-        Task<List<TransporterReports>> GetReportsAsync(string transporterName, int FactoryId, int ProjectId, string productName);
+        Task<List<TransporterReports>> GetReportsAsync(string transporterName, string factory, string project, string productName);
 
-        Task<List<CustomerMoneyAccountsViewModel>> GetCustomersMoneyReportsAsync(int FactoryId, int ProjectId);
+        Task<List<CustomerMoneyAccountsViewModel>> GetCustomersMoneyReportsAsync(string factory, string project);
 
         Task<List<(string, Double)>> IndebtednessReportsAsync();
 

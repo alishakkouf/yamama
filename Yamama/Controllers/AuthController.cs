@@ -317,6 +317,44 @@ namespace Yamama.Controllers
             }
             return null;
         }
+
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePasswordViewModel)
+        {
+
+            try
+            {
+                var user = await userManager.GetUserAsync(User);
+
+                if (user == null)
+                {
+                    return BadRequest("The user isn't exsist !!");
+                }
+                else
+                {
+                    var result = await userManager.ChangePasswordAsync(user, changePasswordViewModel.CurrentPass, changePasswordViewModel.NewPass);
+                    if (result.Succeeded)
+                    {
+                        var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                        return Ok(Response);
+                    }
+                    else
+                    {
+                        var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                        return Ok(Response);
+                    }
+                }
+
+              
+            }
+            catch (Exception)
+            {
+                return BadRequest("please check your  Password !!");
+            }
+        }
+
     }
 }
 
