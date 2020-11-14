@@ -52,7 +52,7 @@ namespace Yamama.Controllers
         {
             try
             {
-                int prodStore =  _store.GetProductStore(id);
+                int prodStore = _store.GetProductStore(id);
                 if (prodStore == null)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
