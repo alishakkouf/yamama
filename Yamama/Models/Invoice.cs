@@ -21,6 +21,7 @@ namespace Yamama
         public double RemainForCustomer { get; set; }
         public string Type { get; set; }
         public string UserId { get; set; }
+        public string Supplier { get; set; }
 
         public virtual Factory Factory { get; set; }
         public virtual Project Project { get; set; }

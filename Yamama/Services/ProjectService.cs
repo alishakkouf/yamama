@@ -24,6 +24,7 @@ namespace Yamama.Services
             int result = 0;
             // add new project
             await _db.Project.AddAsync(project);
+            await _db.SaveChangesAsync();
             //if the operation succecced return 1
             result += 1;
             return result;
@@ -44,7 +45,7 @@ namespace Yamama.Services
                 // if it not null delete the specified project
                  _db.Project.Remove(project);
                 //commit the changes on database
-                _db.SaveChanges();
+                await  _db.SaveChangesAsync();
                 //if the operation succecced return 1
                 result += 1;
                 return result;
@@ -57,9 +58,13 @@ namespace Yamama.Services
         //function to get specific project by id
         public async Task <Project> GetProject(int id)
         {
-            //get all projects
-            var project = await _db.Project.FirstOrDefaultAsync(f => f.Idproject == id);
-            return project;
+            if (_db != null)
+            {
+                //get all projects
+                return await _db.Project.FirstOrDefaultAsync(f => f.Idproject == id);
+                 
+            }
+            return null;
         }
 
         // function to get all projects
@@ -101,7 +106,7 @@ namespace Yamama.Services
                 //edit the returned object 
                 _db.Project.Update(existProject);
                 //commit changes
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 result += 1;
                 return result;
 

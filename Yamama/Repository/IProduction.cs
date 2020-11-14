@@ -11,13 +11,13 @@ namespace Yamama.Repository
     public interface IProduction
     {
         //add new production during a day
-        Task<int> AddProductionAsync(StoreViewModel production);
+        Task<int> AddProductionAsync(Production prouction);
 
         //gedt production according to the production_id
         Task<Production> GetProduction(int id);
 
         // Reports of  the production for all products (daily- monthly- annual)
-        Task<List<Double>> GetProductinReports(string period , DateTime from, DateTime to);
+        Task<List<double>> GetProductinReports(string period , DateTime from, DateTime to);
 
 
 

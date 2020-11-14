@@ -28,15 +28,15 @@ namespace Yamama.Controllers
         }
 
         [HttpPost]
-        [Route("AddBalanceAsync")]
+        [Route("/api/AddBalance")]
 
-        public async Task<IActionResult> AddBalanceAsync(int id)
+        public async Task<IActionResult> AddBalance(string  name)
        {
             try
             {
-                int blnce = await _balance.AddBalanceAsync(id);
+                var blnce = await _balance.AddBalanceAsync(name);
 
-                if (blnce == null)
+                if (blnce == 0)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
                     return Ok(Response1);
@@ -54,12 +54,12 @@ namespace Yamama.Controllers
 
         /// report last period quantity by product 
         [HttpGet]
-        [Route("GetProductLastByQty")]
-        public async Task<ActionResult<Balance>> GetProductLastByQty(DateTime date ,int id)
+        [Route("/api/GetProductLastByQty")]
+        public async Task<ActionResult<Balance>> GetProductLastByQty(DateTime date ,string name)
         {
             try
             {
-                var balance =await  _balance.GetProductBalanceQty(date, id);
+                var balance =await  _balance.GetProductBalanceQty(date, name);
                 //check if the item has value if not  return msg no content
                 if (balance == null)
                 {
@@ -81,12 +81,12 @@ namespace Yamama.Controllers
         //report last period value(ton) by product
 
         [HttpGet]
-        [Route("GetBalanceByPrice")]
-        public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date, int id)
+        [Route("/api/GetBalanceByPrice")]
+        public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date, string name)
         {
             try
             {
-                var balance = await _balance.GetProductBalancePrice(date, id);
+                var balance = await _balance.GetProductBalancePrice(date, name);
                 //check if the item has value if not  return msg no content
                 if (balance == null)
                 {
@@ -109,7 +109,7 @@ namespace Yamama.Controllers
 
         /// report last period quantity for all products 
         [HttpGet]
-        [Route("GetBalanceByQty")]
+        [Route("/api/GetBalanceByQty")]
         public async Task<ActionResult<Balance>> GetBalanceByQty(DateTime date)
         {
             try
@@ -161,14 +161,14 @@ namespace Yamama.Controllers
 
         /// report last period Value(ton) for all products 
         [HttpGet]
-        [Route("GetAllBalanceByPrice")]
+        [Route("/api/GetAllBalanceByPrice")]
         public async Task<ActionResult<Balance>> GetAllBalanceByPrice(DateTime date)
         {
             try
             {
                 var balance = await _balance.GetAllBalancePrice(date);
                 //check if the item has value if not  return msg no content
-                if (balance == null)
+                if (balance == 0)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
                     return Ok(Response1);

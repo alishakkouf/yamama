@@ -29,7 +29,7 @@ namespace Yamama.Controllers
 
         // GET: api/<FactoriesController>
         [HttpGet]
-        [Route("getfactories")]
+        [Route("/api/getfactories")]
         public  async Task <ActionResult> getfactories()
         {
             try
@@ -54,7 +54,7 @@ namespace Yamama.Controllers
 
         // GET api/<FactoriesController>/5
         [HttpGet]
-        [Route("getfactory")]
+        [Route("/api/getfactory")]
 
         public async  Task<ActionResult<Factory>> getfactory( int id)
         {
@@ -78,7 +78,7 @@ namespace Yamama.Controllers
         }
         // POST api/<FactoriesController>
         [HttpPost]
-        [Route("addfactory")]
+        [Route("/api/addfactory")]
         public async Task <IActionResult> addfactory(Factory factory)
         {
             try
@@ -100,12 +100,12 @@ namespace Yamama.Controllers
       
         // PUT api/<FactoriesController>/5
         [HttpPut]
-        [Route("updatefactory")]
+        [Route("/api/updatefactory")]
         public async Task<IActionResult> updatefactory(Factory factory , int id )
         {
             try
             {
-               await  _factory.UpdateFactory(id, factory);
+                await  _factory.UpdateFactory(id, factory);
              
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", factory);
                 return Ok(Response);
@@ -120,15 +120,15 @@ namespace Yamama.Controllers
 
         // DELETE api/<FactoriesController>/5
         [HttpDelete]
-        [Route("deletefactory")]
+        [Route("/api/deletefactory")]
         public async Task<ActionResult> deletefactory( int id)
         {
     
             var factory = await _factory.DeleteFactoryAsync(id);
             if (factory == 0)
             {
-                var Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
-                return Ok(Response1);
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
             }
             else
             {

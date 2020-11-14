@@ -54,14 +54,14 @@ namespace Yamama
         //public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Visit> Visit { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -633,6 +633,10 @@ namespace Yamama
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
                     .HasColumnType("varchar(255)");
+
+                entity.Property(e => e.Supplier)
+                    .HasColumnName("supplier")
+                    .HasColumnType("varchar(100)");
 
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Invoice)

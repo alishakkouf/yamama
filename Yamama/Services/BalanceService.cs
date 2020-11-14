@@ -31,28 +31,29 @@ namespace Yamama.Services
         the store and  create a new object from balance class and fill the last period and first period with
         this quantity and  let the date of last period as the current date
        and the date of first is the first day of the next month and the product id is the passed parameter*/
-        public async Task<int> AddBalanceAsync(int id)
+        public async Task<int> AddBalanceAsync(string  name)
         {
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
 
-                //get quantity of this product in store
-                int qty = _store.GetProductStore(id);
-                //get the current date
-                var dateandtime = DateTime.Now;
-                var date = dateandtime.Date;
-                //create a new object from balance class
-                Balance newbalance = new Balance
-                {
-                    ProductId1 = id,
-                    FirstPeriod = qty,
-                    LastPeriod = qty,
-                    DateOfFirst = date.AddMonths(1).AddDays(-date.Day + 1),
-                    DateOfLast = date,
-                };
-                //add the balance record to database
-                await _db.Balance.AddAsync(newbalance);
-                //save changes
-                await _db.SaveChangesAsync();
-                return qty;                    
+            //get quantity of this product in store
+            var qty = _db.Store.Where(s=>s.ProductId==prodid).Select(s=>s.Quantity).FirstOrDefault();
+            //get the current date
+            var dateandtime = DateTime.Now;
+            var date = dateandtime.Date;
+            //create a new object from balance class
+            Balance newbalance = new Balance
+            {
+                ProductId1 = prodid,
+                FirstPeriod = qty,
+                LastPeriod = qty,
+                DateOfFirst = date.AddMonths(1).AddDays(-date.Day + 1),
+                DateOfLast = date,
+            };
+            //add the balance record to database
+            await _db.Balance.AddAsync(newbalance);
+            //save changes
+            await _db.SaveChangesAsync();
+            return qty;
            
         }
 
@@ -93,10 +94,11 @@ namespace Yamama.Services
                         //variable to store the total last period  value (qty * price for each product in this month)
                         double value = 0;
                         int id = productNumber[i];
+                        string prod = _db.Product.Where(x => x.Idproduct == productNumber[i]).Select(x => x.Name).FirstOrDefault();
                         //get the value of last period for each product 
                         int qty = _db.Balance.Where(b => b.ProductId1 == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
                         //get the price for each product
-                        decimal val = await _product.GetProductPrice(productNumber[i]);
+                        decimal val = await _product.GetProductPrice(prod);
 
                         value += Convert.ToDouble(val) * qty;
                         result.Add((id, value));
@@ -113,40 +115,20 @@ namespace Yamama.Services
 
             
         }
-        //report last period  by value(ton) based on  product id and the date of last period 
-        public async Task<List<double>> GetProductBalancePrice(DateTime date, int id)
-        {
-            try
-            {
-                //Define list of products to store the result
-                List<Double> result = new List<double>();
-                double ton = 0;
-                // get the price of the product
-                decimal value = await _product.GetProductPrice(id);
-                // get the last period of the product
-                var qty = await _db.Balance.Where(b => b.ProductId1 == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
-                ton = Convert.ToDouble(value) * Convert.ToDouble(qty);
-                result.Add(ton);
-
-                return result;
-            }
-            catch(Exception)
-            {
-                return null;
-            }
-        }
+      
 
         // report last period quantity based on  product id and the date of last period 
-        public async Task<List<double>> GetProductBalanceQty(DateTime date, int id)
+        public async Task<List<(string, double)>> GetProductBalanceQty(DateTime date, string name)
         {
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
             try
             {
                 //Define list of products to store the result
-                List<Double> result = new List<double>();
+                List<(string, double)> result = new List<(string, double)>();
                 //get the last period value based on specific product
-                var value = await _db.Balance.Where(b => b.ProductId1 == id && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
+                var value = await _db.Balance.Where(b => b.ProductId1 == prodid && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
 
-                result.Add (value);
+                result.Add((name, value));
                 return result;
             }
             catch(Exception)
@@ -169,10 +151,11 @@ namespace Yamama.Services
                 List<int> productNumber = _db.Balance.Where(p => p.DateOfLast == date).Select(x => x.ProductId1).ToList();
                 for (int i = 0; i < productNumber.Count; i++)
                 {
-                    //get the value of last period for each product 
-                    int qty = _db.Balance.Where(b => b.ProductId1 == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
-                    //get the price for each product
-                    decimal val = await _product.GetProductPrice(productNumber[i]);
+                        string prod = _db.Product.Where(x => x.Idproduct == productNumber[i]).Select(x => x.Name).FirstOrDefault();
+                        //get the value of last period for each product 
+                        int qty = _db.Balance.Where(b => b.ProductId1 == productNumber[i]).Select(b => b.LastPeriod).FirstOrDefault();
+                     //get the price for each product
+                      decimal val = await _product.GetProductPrice(prod);
 
                     ton += Convert.ToDouble(val) * qty;
                    
@@ -188,5 +171,33 @@ namespace Yamama.Services
                 return 0;
             }
         }
+
+
+        //report last period  by value(ton) based on  product id and the date of last period 
+        public async Task<List<(string, double)>> GetProductBalancePrice(DateTime date, string name)
+        {
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
+            try
+            {
+                //Define list of products to store the result
+                List<(string, double)> result = new List<(string, double)>();
+                double ton = 0;
+                // get the price of the product
+                decimal value = await _product.GetProductPrice(name);
+                // get the last period of the product
+                var qty = await _db.Balance.Where(b => b.ProductId1 == prodid && b.DateOfLast == date).Select(b => b.LastPeriod).FirstOrDefaultAsync();
+                ton = Convert.ToDouble(value) * Convert.ToDouble(qty);
+                result.Add((name, ton));
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
     }   
+
+
+
 }

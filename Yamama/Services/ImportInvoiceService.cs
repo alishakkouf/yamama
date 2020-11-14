@@ -79,7 +79,7 @@ namespace Yamama.Services
         }
         ///...............Report for Import for all products................
         ///
-        public async Task<List<double>> GetImportedReports(string period, DateTime from, DateTime to)
+        public async Task<List<double>> GetImportedReports(string period, DateTime from, DateTime to, string invoType)
         {
             try
             {
@@ -94,7 +94,7 @@ namespace Yamama.Services
                       Double value = 0;
                     string dateday = day.ToString("yyyy-MM-dd");
                      //return list of id_invoices in each day
-                    List<int> importNumber = _db.Invoice.Where(p => p.Date.ToString() == dateday).Select(p => p.Idinvoice).ToList();
+                    List<int> importNumber = _db.Invoice.Where(p => p.Date.ToString() == dateday && p.Type == invoType).Select(p => p.Idinvoice).ToList();
                     
                     for (int j = 0; j < importNumber.Count; j++)
                     {
@@ -117,7 +117,7 @@ namespace Yamama.Services
                         //to store the full imports
                         Double value = 0;
                         //return list of id_invoices in each day
-                        List<int> importNumber = _db.Invoice.Where(p => p.Date.Value.Month == month).Select(p => p.Idinvoice).ToList();
+                        List<int> importNumber = _db.Invoice.Where(p => p.Date.Value.Month == month && p.Type == invoType).Select(p => p.Idinvoice).ToList();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
@@ -138,7 +138,7 @@ namespace Yamama.Services
                         //to store the full imports
                         Double value = 0;
                         //return list of id_invoices in each day
-                        List<int> importNumber = _db.Invoice.Where(x => x.Date.Value.Year == year).Select(x => x.Idinvoice).ToList();
+                        List<int> importNumber = _db.Invoice.Where(x => x.Date.Value.Year == year && x.Type == invoType).Select(x => x.Idinvoice).ToList();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
@@ -162,14 +162,18 @@ namespace Yamama.Services
         ///..........Reports for import based on type product..............
         
 
-        public async  Task<List<double>> GetProductImportedReports(string period, DateTime from, DateTime to, int id)
+        public async  Task<List<(string, double)>> GetProductImportedReports(string period, DateTime from, DateTime to, string  name, string invoType)
         {
+
+            //get the id for the entered product name
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
             try
             {
                 if (period == "daily")
                 {
                     //Define list of invoices to store the result
-                    List<Double> result = new List<double>();
+                    List<(string, Double)> result = new List<(string, double)>();
+              
                     System.TimeSpan diff = to.Subtract(from);
                     for (var day = from.Date; day <= to; day.AddDays(1))
                     {
@@ -180,7 +184,7 @@ namespace Yamama.Services
                         List<int> importNumber = await(from import in _db.Invoice
                                                        from cart in _db.Cart
                                                        where import.Idinvoice == cart.InvoiceId
-                                                       && import.Date.ToString() == dateday && cart.ProductId == id 
+                                                       && import.Date.ToString() == dateday && cart.ProductId == prodid && import.Type==invoType
                                                        select import.Idinvoice).ToListAsync();
 
 
@@ -189,15 +193,17 @@ namespace Yamama.Services
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subresult.FullCost);
                         }
-                        result.Add(value);
+                        result.Add((name,value));
                     }
                     return result;
                 }
 
                 else if (period == "monthly")
                 {
+                    
                     //Define list of invoices to store the result
-                    List<Double> result = new List<double>();
+                    List<(string, Double)> result = new List<(string, double)>();
+                  
                     System.TimeSpan diff = to.Subtract(from);
                     for (var month = from.Month; month <= to.Month; month++)
                     {
@@ -207,21 +213,21 @@ namespace Yamama.Services
                         List<int> importNumber = await(from import in _db.Invoice
                                                        from cart in _db.Cart
                                                        where import.Idinvoice == cart.InvoiceId
-                                                       && import.Date.Value.Month == month && cart.ProductId == id
+                                                       && import.Date.Value.Month == month && cart.ProductId == prodid && import.Type == invoType
                                                        select import.Idinvoice).ToListAsync();
                         for (int j = 0; j < importNumber.Count; j++)
                         {
                             Invoice subresult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subresult.FullCost);
                         }
-                        result.Add(value);
+                        result.Add((name,value));
                     }
                     return result;
                 }
 
                 else if (period == "annual")
                 {
-                    List<Double> result = new List<double>();
+                    List<(string, Double)> result = new List<(string, double)>();                
                     System.TimeSpan diff = to.Subtract(from);
                     for (var year = from.Year; year <= to.Year; year++)
                     {
@@ -232,7 +238,7 @@ namespace Yamama.Services
                         List<int> importNumber = await(from import in _db.Invoice
                                                        from cart in _db.Cart
                                                        where import.Idinvoice == cart.InvoiceId
-                                                       && import.Date.Value.Year == year && cart.ProductId == id
+                                                       && import.Date.Value.Year == year && cart.ProductId == prodid && import.Type == invoType
                                                        select import.Idinvoice).ToListAsync();
                      
                         for (int j = 0; j < importNumber.Count; j++)
@@ -240,7 +246,7 @@ namespace Yamama.Services
                             Invoice subResult = await _invoice.GetInvoice(importNumber[j]);
                             value += Convert.ToDouble(subResult.FullCost);
                         }
-                        result.Add(value);
+                        result.Add((name, value));
                     }
                     return result;
                 }
