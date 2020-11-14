@@ -8,6 +8,8 @@ namespace Yamama
         public Aspnetusers()
         {
             ActualIntencive = new HashSet<ActualIntencive>();
+            AlertReciever = new HashSet<Alert>();
+            AlertSender = new HashSet<Alert>();
             Aspnetuserclaims = new HashSet<Aspnetuserclaims>();
             Aspnetuserlogins = new HashSet<Aspnetuserlogins>();
             Aspnetuserroles = new HashSet<Aspnetuserroles>();
@@ -16,7 +18,12 @@ namespace Yamama
             Invoice = new HashSet<Invoice>();
             NotificationReceiver = new HashSet<Notification>();
             NotificationSender = new HashSet<Notification>();
+            RequestInformationReciever = new HashSet<RequestInformation>();
+            RequestInformationSender = new HashSet<RequestInformation>();
             Target = new HashSet<Target>();
+            TaskCreator = new HashSet<Task>();
+            TaskResponsible = new HashSet<Task>();
+            Visit = new HashSet<Visit>();
         }
 
         public string Id { get; set; }
@@ -37,6 +44,8 @@ namespace Yamama
         public string FullName { get; set; }
 
         public virtual ICollection<ActualIntencive> ActualIntencive { get; set; }
+        public virtual ICollection<Alert> AlertReciever { get; set; }
+        public virtual ICollection<Alert> AlertSender { get; set; }
         public virtual ICollection<Aspnetuserclaims> Aspnetuserclaims { get; set; }
         public virtual ICollection<Aspnetuserlogins> Aspnetuserlogins { get; set; }
         public virtual ICollection<Aspnetuserroles> Aspnetuserroles { get; set; }
@@ -45,6 +54,11 @@ namespace Yamama
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<Notification> NotificationReceiver { get; set; }
         public virtual ICollection<Notification> NotificationSender { get; set; }
+        public virtual ICollection<RequestInformation> RequestInformationReciever { get; set; }
+        public virtual ICollection<RequestInformation> RequestInformationSender { get; set; }
         public virtual ICollection<Target> Target { get; set; }
+        public virtual ICollection<Task> TaskCreator { get; set; }
+        public virtual ICollection<Task> TaskResponsible { get; set; }
+        public virtual ICollection<Visit> Visit { get; set; }
     }
 }

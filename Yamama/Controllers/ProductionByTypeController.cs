@@ -149,7 +149,7 @@ namespace Yamama.Controllers
         // GET: api/<ProductionByTypeController>
         [HttpGet]
         [Route("GetAllDailyProd")]
-        public async Task<IActionResult> GetAllDailyProd(int type)
+        public async Task<IActionResult> GetAllDailyProd(string type)
         {
             try
             {
@@ -176,7 +176,7 @@ namespace Yamama.Controllers
         // GET: api/<ProductionByTypeController>
         [HttpGet]
         [Route("GetProductionReports")]
-        public async Task<IActionResult> GetProductionReports(int type,string period,DateTime start, DateTime end)
+        public async Task<IActionResult> GetProductionReports(string type,string period,DateTime start, DateTime end)
         {
             try
             {

@@ -13,6 +13,8 @@ namespace Yamama
         public int? TaskId { get; set; }
 
         public virtual File File { get; set; }
+        public virtual Aspnetusers Reciever { get; set; }
+        public virtual Aspnetusers Sender { get; set; }
         public virtual Task Task { get; set; }
     }
 }

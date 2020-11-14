@@ -168,13 +168,13 @@ namespace Yamama.Controllers
         // GET api/<VisitController>/
         [HttpGet]
         [Route("GetVisitReports")]
-        public async Task<IActionResult> GetVisitReports(int salesman, int? projectId, int? factoryId, string period, DateTime start, DateTime end)
+        public async Task<IActionResult> GetVisitReports(string salesman, string projectName, string factoryName, string period, DateTime start, DateTime end)
         {
 
 
             try
             {
-                var result = await _visit.GetVisitReports(salesman, projectId, factoryId, period, start, end);
+                var result = await _visit.GetVisitReports(salesman, projectName, factoryName, period, start, end);
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -196,7 +196,7 @@ namespace Yamama.Controllers
         // GET api/<VisitController>/
         [HttpGet]
         [Route("GetVisisBySalesman")]
-        public async Task<IActionResult> GetVisisBySalesman(int salesman, string period, DateTime start, DateTime end)
+        public async Task<IActionResult> GetVisisBySalesman(string salesman, string period, DateTime start, DateTime end)
         {
 
 
@@ -224,13 +224,13 @@ namespace Yamama.Controllers
         // GET api/<VisitController>/
         [HttpGet]
         [Route("GetVisitsByClient")]
-        public async Task<IActionResult> GetVisitsByClient(int? projectId, int? factoryId, string period, DateTime start, DateTime end)
+        public async Task<IActionResult> GetVisitsByClient(string projectName, string factoryName, string period, DateTime start, DateTime end)
         {
 
 
             try
             {
-                var result = await _visit.GetVisitsByClient(projectId, factoryId, period, start, end);
+                var result = await _visit.GetVisitsByClient(projectName, factoryName, period, start, end);
                 if (result != null)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);

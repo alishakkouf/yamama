@@ -100,7 +100,7 @@ namespace Yamama.Services
         }
 
         //Get All Visits By the salesman and the client who could be either project or factory
-        public async Task<List<(string, string, double)>> GetVisitReports(int salesman, int? projectId, int? factoryId, string period, DateTime start, DateTime end)
+        public async Task<List<(string, string, double)>> GetVisitReports(string salesman, string projectName, string factoryName, string period, DateTime start, DateTime end)
         {
             try
             {
@@ -108,39 +108,40 @@ namespace Yamama.Services
                 {
                     //Define list of visits to store the result
                     List<(string, string, Double)> result = new List<(string, string, double)>();
-                    var clientName = string.Empty;
-                   // var userName = _db.User.Where(x => x.Iduser == salesman).Select(x => x.FullName).SingleOrDefault();
+                   var clientName = string.Empty;
+                   var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
                         //to store the all visits
                         Double value = 0;
 
                         //return list of id tasks in each month which the salesman was responsible for
-                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == salesman)
+                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToListAsync();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
                         {
-                            if (factoryId != null)
+                            if (factoryName != null)
                             {
-                                var one = _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
-                                     .Select(x => x.Idvisit).SingleOrDefault();
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x => x.Idfactory).FirstOrDefault();
+                                var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
+                                    .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Factory.Where(x => x.Idfactory == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = factoryName;
                             }
-                            else if (projectId != null)
+                            else if (projectName != null)
                             {
-                                var one = _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
-                                    .Select(x => x.Idvisit).SingleOrDefault();
+                                var projectId = _db.Project.Where(x => x.Name == projectName).Select(x => x.Idproject).FirstOrDefault();
+                                var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
+                                    .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Project.Where(x => x.Idproject == factoryId).Select(x => x.Name).SingleOrDefault();
-
+                                clientName = projectName;
                             }
                         }
                         for (int j = 0; j < visits.Count; j++)
@@ -149,7 +150,7 @@ namespace Yamama.Services
                         }
 
 
-                       // result.Add((userName, clientName, value));
+                       result.Add((salesman, clientName, value));
                     }
 
 
@@ -160,38 +161,40 @@ namespace Yamama.Services
                     //Define list of visits to store the result
                     List<(string, string, Double)> result = new List<(string, string, double)>();
                     var clientName = string.Empty;
-                   // var userName = _db.User.Where(x => x.Iduser == salesman).Select(x => x.FullName).SingleOrDefault();
+                   var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
                         //to store the full sales
                         Double value = 0;
 
                         //return list of id tasks in each year
-                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == salesman)
+                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToListAsync();
                         //return list of id visits in each year
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
                         {
-                            if (factoryId != null)
+                            if (factoryName != null)
                             {
-                                var one = _db.Visit.Where(x => x.TaskId == tasks[j] && x.UserId == salesman && x.FactoryId == factoryId)
-                                    .Select(x => x.Idvisit).SingleOrDefault();
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x => x.Idfactory).FirstOrDefault();
+                                var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
+                                    .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Factory.Where(x => x.Idfactory == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = factoryName;
                             }
-                            else if (projectId != null)
+                            else if (projectName != null)
                             {
-                                var one = _db.Visit.Where(x => x.TaskId == tasks[j] && x.UserId == salesman && x.ProjectId == projectId)
-                                    .Select(x => x.Idvisit).SingleOrDefault();
+                                var projectId = _db.Project.Where(x => x.Name == projectName).Select(x => x.Idproject).FirstOrDefault();
+                                var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
+                                    .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Project.Where(x => x.Idproject == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = projectName;
                             }
                         }
                         for (int j = 0; j < visits.Count; j++)
@@ -199,7 +202,7 @@ namespace Yamama.Services
                             value++;
                         }
 
-                      //  result.Add((userName, clientName, value));
+                        result.Add((userId, clientName, value));
                     }
 
 
@@ -213,7 +216,7 @@ namespace Yamama.Services
                 return null;
             }
         }
-        public async Task<List<(string, Double)>> GetVisisBySalesman(int salesman, string period, DateTime start, DateTime end)
+        public async Task<List<(string, Double)>> GetVisisBySalesman(string salesman, string period, DateTime start, DateTime end)
         {
             try
             {
@@ -221,7 +224,7 @@ namespace Yamama.Services
                 {
                     //Define list of visits each day to store the result
                     List<(string, Double)> result = new List<(string, double)>();
-                   // var userName = _db.User.Where(x => x.Iduser == salesman).Select(x => x.FullName).SingleOrDefault();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
 
                     for (var day = start.Date; day <= end.Date; day = day.AddDays(1))
                     {
@@ -232,7 +235,7 @@ namespace Yamama.Services
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Idvisits in each day
 
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == salesman)
+                        List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToList();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
@@ -248,7 +251,7 @@ namespace Yamama.Services
                         {
                             value++;
                         }
-                      //  result.Add((userName, value));
+                        result.Add((salesman, value));
 
                     }
                     return result;
@@ -257,14 +260,14 @@ namespace Yamama.Services
                 {
                     //Define list of productions to store the result
                     List<(string, Double)> result = new List<(string, double)>();
-                   // var userName = _db.User.Where(x => x.Iduser == salesman).Select(x => x.FullName).SingleOrDefault();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
                         //to store the full visits
                         Double value = 0;
 
                         //return list of idvisit in each day
-                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == salesman)
+                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToListAsync();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
@@ -282,7 +285,7 @@ namespace Yamama.Services
                         }
 
 
-                       // result.Add((userName, value));
+                        result.Add((salesman, value));
                     }
 
 
@@ -292,7 +295,7 @@ namespace Yamama.Services
                 {
                     //Define list of visits to store the result
                     List<(string, Double)> result = new List<(string, double)>();
-                   // var userName = _db.Aspnetusers.Where(x => x.Id == salesman).Select(x => x.FullName).SingleOrDefault();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
 
                     for (var year = start.Year; year <= end.Year; year++)
                     {
@@ -300,7 +303,7 @@ namespace Yamama.Services
                         Double value = 0;
 
                         //return list of idvisit in each day
-                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == salesman)
+                        List<int> tasks = await _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToListAsync();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
@@ -317,7 +320,7 @@ namespace Yamama.Services
                             value++;
                         }
 
-                       // result.Add((userName, value));
+                        result.Add((salesman, value));
                     }
 
 
@@ -331,7 +334,9 @@ namespace Yamama.Services
                 return null;
             }
         }
-        public async Task<List<(string, Double)>> GetVisitsByClient(int? projectId, int? factoryId, string period, DateTime start, DateTime end)
+        public async Task<List<(string, Double)>> GetVisitsByClient(string projectName, string factoryName, string period, DateTime start, DateTime end)
+
+
         {
             try
             {
@@ -354,25 +359,27 @@ namespace Yamama.Services
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
                         {
-                            if (factoryId != null)
+                            if (factoryName != null)
                             {
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x=>x.Idfactory).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Factory.Where(x => x.Idfactory == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = factoryName;
                             }
-                            else if (projectId != null)
+                            else if (projectName != null)
                             {
+                                var projectId = _db.Project.Where(x => x.Name == projectName).Select(x => x.Idproject).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Project.Where(x => x.Idproject == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = projectName;
                             }
                         }
                         for (int j = 0; j < visits.Count; j++)
@@ -400,25 +407,27 @@ namespace Yamama.Services
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
                         {
-                            if (factoryId != null)
+                            if (factoryName != null)
                             {
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x => x.Idfactory).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Factory.Where(x => x.Idfactory == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = factoryName;
                             }
-                            else if (projectId != null)
+                            else if (projectName != null)
                             {
+                                var projectId = _db.Project.Where(x => x.Name == projectName).Select(x => x.Idproject).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Project.Where(x => x.Idproject == projectId).Select(x => x.Name).SingleOrDefault();
+                                clientName = projectName;
                             }
                         }
                         for (int j = 0; j < visits.Count; j++)
@@ -449,25 +458,27 @@ namespace Yamama.Services
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
                         {
-                            if (factoryId != null)
+                            if (factoryName != null)
                             {
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x => x.Idfactory).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Factory.Where(x => x.Idfactory == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = factoryName;
                             }
-                            else if (projectId != null)
+                            else if (projectName != null)
                             {
+                                var projectId = _db.Project.Where(x => x.Name == projectName).Select(x => x.Idproject).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.ProjectId == projectId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
                                 {
                                     visits.Add(one);
                                 }
-                                clientName = _db.Project.Where(x => x.Idproject == factoryId).Select(x => x.Name).SingleOrDefault();
+                                clientName = projectName;
                             }
                         }
                         for (int j = 0; j < visits.Count; j++)
@@ -531,8 +542,8 @@ namespace Yamama.Services
             return 0;
         }
 
-        ////////////with no async
-        public List<Double> GetVisisBySalesmanRepo(int salesman, string period, DateTime start, DateTime end)
+        ////////////with no async just for calculation in target service
+        public List<Double> GetVistisBySalesmanRepo(string salesman, string period, DateTime start, DateTime end)
         {
             try
             {
@@ -540,7 +551,7 @@ namespace Yamama.Services
                 {
                     //Define list of visits each day to store the result
                     List<Double> result = new List<double>();
-
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var day = start.Date; day <= end.Date; day = day.AddDays(1))
                     {
                         //to store the all visits
@@ -550,7 +561,7 @@ namespace Yamama.Services
                         string test = day.ToString("yyyy-MM-dd");
                         //return list of Idvisits in each day
 
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == salesman)
+                        List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToList();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
@@ -575,13 +586,14 @@ namespace Yamama.Services
                 {
                     //Define list of productions to store the result
                     List<Double> result = new List<double>();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
                         //to store the full visits
                         Double value = 0;
 
                         //return list of idvisit in each day
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == salesman)
+                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToList();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)
@@ -613,13 +625,14 @@ namespace Yamama.Services
                 {
                     //Define list of visits to store the result
                     List<Double> result = new List<double>();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
                         //to store the all visits
                         Double value = 0;
 
                         //return list of idvisit in each day
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == salesman)
+                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
                             .Select(x => x.Idtask).ToList();
                         List<int> visits = new List<int>();
                         for (int j = 0; j < tasks.Count; j++)

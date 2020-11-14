@@ -43,6 +43,7 @@ namespace Yamama.Services
             {
                 if (_db != null)
                 {
+                
 
                     await _db.ExpectedIntencive.AddAsync(expected);
                     await _db.SaveChangesAsync();
@@ -56,7 +57,7 @@ namespace Yamama.Services
         public async Task<List<(string, double)>> GetActualIntenciveByUser(string user, string period, DateTime start, DateTime end)
         {
 
-            //ali.Add(("ali",1));
+            
             try
             {
                 if (period == "monthly")

@@ -118,7 +118,7 @@ namespace Yamama.Controllers
         // GET api/<TargetController>/
         [HttpGet]
         [Route("EvaluateSalesman")]
-        public IActionResult EvaluateSalesman(int salesman, string period, DateTime start, DateTime end)
+        public IActionResult EvaluateSalesman(string salesman, string period, DateTime start, DateTime end)
         {
             try
             {
