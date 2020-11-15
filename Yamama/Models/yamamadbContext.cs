@@ -11,7 +11,7 @@ namespace Yamama
         //{
         //}
 
-    public yamamadbContext(DbContextOptions<yamamadbContext> options)
+        public yamamadbContext(DbContextOptions<yamamadbContext> options)
             : base(options)
         {
         }
@@ -51,17 +51,16 @@ namespace Yamama
         public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<TaskType> TaskType { get; set; }
         public virtual DbSet<Transporter> Transporter { get; set; }
-        //public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Visit> Visit { get; set; }
 
-//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//        {
-//            if (!optionsBuilder.IsConfigured)
-//            {
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
-//            }
-//        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
+            }
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,7 +86,7 @@ namespace Yamama
 
                 entity.Property(e => e.IdUser)
                     .HasColumnName("id_user")
-                    .HasColumnType("varchar(45)");
+                    .HasColumnType("varchar(255)");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.ActualIntencive)
@@ -131,6 +130,12 @@ namespace Yamama
                 entity.HasIndex(e => e.FileId)
                     .HasName("file_id");
 
+                entity.HasIndex(e => e.RecieverId)
+                    .HasName("reciever_id");
+
+                entity.HasIndex(e => e.SenderId)
+                    .HasName("sender_id");
+
                 entity.HasIndex(e => e.TaskId)
                     .HasName("task_id");
 
@@ -142,23 +147,35 @@ namespace Yamama
                     .HasColumnName("notes")
                     .HasColumnType("longtext");
 
-                entity.Property(e => e.RecieverId).HasColumnName("reciever_id");
+                entity.Property(e => e.RecieverId)
+                    .HasColumnName("reciever_id")
+                    .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.SenderId).HasColumnName("sender-id");
+                entity.Property(e => e.SenderId)
+                    .HasColumnName("sender_id")
+                    .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
                 entity.HasOne(d => d.File)
                     .WithMany(p => p.Alert)
                     .HasForeignKey(d => d.FileId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("file_id_fk");
+                    .HasConstraintName("alert_file_fk");
+
+                entity.HasOne(d => d.Reciever)
+                    .WithMany(p => p.AlertReciever)
+                    .HasForeignKey(d => d.RecieverId)
+                    .HasConstraintName("alert_receiver_fk");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.AlertSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("alert_sender_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Alert)
                     .HasForeignKey(d => d.TaskId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("task_id_al_fk");
+                    .HasConstraintName("alert_task_fk");
             });
 
             modelBuilder.Entity<Answers>(entity =>
@@ -205,7 +222,8 @@ namespace Yamama
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.Aspnetroleclaims)
                     .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_AspNetRoleClaims_AspNetRoles_RoleId");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AspNetRoleClaims_Role");
             });
 
             modelBuilder.Entity<Aspnetroles>(entity =>
@@ -220,9 +238,9 @@ namespace Yamama
 
                 entity.Property(e => e.ConcurrencyStamp).HasColumnType("longtext");
 
-                entity.Property(e => e.Name).HasColumnType("varchar(256)");
+                entity.Property(e => e.Name).HasColumnType("varchar(255)");
 
-                entity.Property(e => e.NormalizedName).HasColumnType("varchar(256)");
+                entity.Property(e => e.NormalizedName).HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<Aspnetuserclaims>(entity =>
@@ -243,7 +261,8 @@ namespace Yamama
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Aspnetuserclaims)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserClaims_AspNetUsers_UserId");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AspNetuserClaims_user");
             });
 
             modelBuilder.Entity<Aspnetuserlogins>(entity =>
@@ -312,7 +331,7 @@ namespace Yamama
 
                 entity.Property(e => e.ConcurrencyStamp).HasColumnType("longtext");
 
-                entity.Property(e => e.Email).HasColumnType("varchar(256)");
+                entity.Property(e => e.Email).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.EmailConfirmed).HasColumnType("bit(1)");
 
@@ -320,9 +339,9 @@ namespace Yamama
 
                 entity.Property(e => e.LockoutEnabled).HasColumnType("bit(1)");
 
-                entity.Property(e => e.NormalizedEmail).HasColumnType("varchar(256)");
+                entity.Property(e => e.NormalizedEmail).HasColumnType("varchar(255)");
 
-                entity.Property(e => e.NormalizedUserName).HasColumnType("varchar(256)");
+                entity.Property(e => e.NormalizedUserName).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.PasswordHash).HasColumnType("longtext");
 
@@ -334,7 +353,7 @@ namespace Yamama
 
                 entity.Property(e => e.TwoFactorEnabled).HasColumnType("bit(1)");
 
-                entity.Property(e => e.UserName).HasColumnType("varchar(256)");
+                entity.Property(e => e.UserName).HasColumnType("varchar(255)");
             });
 
             modelBuilder.Entity<Aspnetusertokens>(entity =>
@@ -355,7 +374,8 @@ namespace Yamama
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Aspnetusertokens)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserTokens_AspNetUsers_UserId");
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AspNetuserToken_User");
             });
 
             modelBuilder.Entity<Balance>(entity =>
@@ -505,7 +525,7 @@ namespace Yamama
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.ExpectedIntencive)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("userID");
+                    .HasConstraintName("user_id");
             });
 
             modelBuilder.Entity<ExpectedNeeds>(entity =>
@@ -541,15 +561,19 @@ namespace Yamama
 
                 entity.ToTable("factory");
 
+                entity.HasIndex(e => e.ProductId)
+                    .HasName("product_id");
+
+                entity.HasIndex(e => e.TransporterId)
+                    .HasName("transporter");
+
                 entity.Property(e => e.Idfactory).HasColumnName("idfactory");
 
                 entity.Property(e => e.ActivityNature)
                     .HasColumnName("activity_nature")
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.CementPrice)
-                    .HasColumnName("cement_price")
-                    .HasColumnType("decimal(10,0)");
+                entity.Property(e => e.CementPrice).HasColumnName("cement_price");
 
                 entity.Property(e => e.InformationSource)
                     .HasColumnName("information_source")
@@ -570,6 +594,16 @@ namespace Yamama
                 entity.Property(e => e.ProductId).HasColumnName("product_id");
 
                 entity.Property(e => e.TransporterId).HasColumnName("transporter_id");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Factory)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("product_factory_id_fk");
+
+                entity.HasOne(d => d.Transporter)
+                    .WithMany(p => p.Factory)
+                    .HasForeignKey(d => d.TransporterId)
+                    .HasConstraintName("transporter_factory_id_fk");
             });
 
             modelBuilder.Entity<File>(entity =>
@@ -589,7 +623,7 @@ namespace Yamama
 
                 entity.Property(e => e.Path)
                     .HasColumnName("path")
-                    .HasColumnType("varchar(100)");
+                    .HasColumnType("varchar(1000)");
             });
 
             modelBuilder.Entity<Invoice>(entity =>
@@ -626,6 +660,10 @@ namespace Yamama
                     .HasColumnName("remainForYamama")
                     .HasDefaultValueSql("'0'");
 
+                entity.Property(e => e.Supplier)
+                    .HasColumnName("supplier")
+                    .HasColumnType("varchar(100)");
+
                 entity.Property(e => e.Type)
                     .HasColumnName("type")
                     .HasColumnType("varchar(100)");
@@ -633,10 +671,6 @@ namespace Yamama
                 entity.Property(e => e.UserId)
                     .HasColumnName("user_id")
                     .HasColumnType("varchar(255)");
-
-                entity.Property(e => e.Supplier)
-                    .HasColumnName("supplier")
-                    .HasColumnType("varchar(100)");
 
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Invoice)
@@ -651,7 +685,7 @@ namespace Yamama
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Invoice)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("user_id");
+                    .HasConstraintName("user_invoice_id_fk");
             });
 
             modelBuilder.Entity<LinkRQA>(entity =>
@@ -774,12 +808,12 @@ namespace Yamama
                 entity.HasOne(d => d.Receiver)
                     .WithMany(p => p.NotificationReceiver)
                     .HasForeignKey(d => d.ReceiverId)
-                    .HasConstraintName("receiver-id");
+                    .HasConstraintName("reciever_not_id");
 
                 entity.HasOne(d => d.Sender)
                     .WithMany(p => p.NotificationSender)
                     .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("sender-id");
+                    .HasConstraintName("sender_not_id");
             });
 
             modelBuilder.Entity<Photo>(entity =>
@@ -789,13 +823,21 @@ namespace Yamama
 
                 entity.ToTable("photo");
 
+                entity.HasIndex(e => e.ProjectId)
+                    .HasName("project_id");
+
                 entity.Property(e => e.Idphoto).HasColumnName("idphoto");
 
                 entity.Property(e => e.Path)
                     .HasColumnName("path")
-                    .HasColumnType("varchar(100)");
+                    .HasColumnType("varchar(1000)");
 
                 entity.Property(e => e.ProjectId).HasColumnName("project_id");
+
+                entity.HasOne(d => d.Project)
+                    .WithMany(p => p.Photo)
+                    .HasForeignKey(d => d.ProjectId)
+                    .HasConstraintName("photo_project_id_fk");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -811,11 +853,8 @@ namespace Yamama
                     .HasColumnName("name")
                     .HasColumnType("varchar(100)");
 
-                entity.Property(e => e.Price)
-                    .HasColumnName("price")
-                    .HasColumnType("decimal(10,0)");
+                entity.Property(e => e.Price).HasColumnName("price");
             });
-
 
             modelBuilder.Entity<Production>(entity =>
             {
@@ -856,9 +895,7 @@ namespace Yamama
                     .HasColumnName("contractor")
                     .HasColumnType("varchar(100)");
 
-                entity.Property(e => e.Cost)
-                    .HasColumnName("cost")
-                    .HasColumnType("decimal(10,0)");
+                entity.Property(e => e.Cost).HasColumnName("cost");
 
                 entity.Property(e => e.Details)
                     .HasColumnName("details")
@@ -917,6 +954,12 @@ namespace Yamama
                 entity.HasIndex(e => e.FileId)
                     .HasName("file_id");
 
+                entity.HasIndex(e => e.RecieverId)
+                    .HasName("reciever_id");
+
+                entity.HasIndex(e => e.SenderId)
+                    .HasName("sender_id");
+
                 entity.HasIndex(e => e.TaskId)
                     .HasName("task_id");
 
@@ -928,9 +971,13 @@ namespace Yamama
                     .HasColumnName("notes")
                     .HasColumnType("longtext");
 
-                entity.Property(e => e.RecieverId).HasColumnName("reciever_id");
+                entity.Property(e => e.RecieverId)
+                    .HasColumnName("reciever_id")
+                    .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.SenderId).HasColumnName("sender_id");
+                entity.Property(e => e.SenderId)
+                    .HasColumnName("sender_id")
+                    .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
@@ -939,6 +986,16 @@ namespace Yamama
                     .HasForeignKey(d => d.FileId)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("file_id_info_fk");
+
+                entity.HasOne(d => d.Reciever)
+                    .WithMany(p => p.RequestInformationReciever)
+                    .HasForeignKey(d => d.RecieverId)
+                    .HasConstraintName("reciever_info_fk");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.RequestInformationSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("sender_info_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.RequestInformation)
@@ -954,8 +1011,8 @@ namespace Yamama
 
                 entity.ToTable("store");
 
-                entity.HasIndex(e => e.ProductId)
-                    .HasName("pro_id");
+                entity.HasIndex(e => e.ProId)
+                    .HasName("product_id");
 
                 entity.Property(e => e.Idstore).HasColumnName("idstore");
 
@@ -963,17 +1020,14 @@ namespace Yamama
                     .HasColumnName("name")
                     .HasColumnType("varchar(45)");
 
-                entity.Property(e => e.ProductId).HasColumnName("pro_id");
+                entity.Property(e => e.ProId).HasColumnName("pro_id");
 
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.HasOne(d => d.Product)
+                entity.HasOne(d => d.Pro)
                     .WithMany(p => p.Store)
-                    .HasForeignKey(d => d.ProductId)
+                    .HasForeignKey(d => d.ProId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("product_store_fk");
+                    .HasConstraintName("FK_Product_store");
             });
-
 
             modelBuilder.Entity<Target>(entity =>
             {
@@ -1002,7 +1056,7 @@ namespace Yamama
                 entity.HasOne(d => d.Salesman)
                     .WithMany(p => p.Target)
                     .HasForeignKey(d => d.SalesmanId)
-                    .HasConstraintName("salesmanId");
+                    .HasConstraintName("salesmanId_fk");
             });
 
             modelBuilder.Entity<Task>(entity =>
@@ -1012,11 +1066,17 @@ namespace Yamama
 
                 entity.ToTable("task");
 
+                entity.HasIndex(e => e.CreatorId)
+                    .HasName("creator_id");
+
                 entity.HasIndex(e => e.FileId)
                     .HasName("file_id_idx");
 
                 entity.HasIndex(e => e.PhotoId)
                     .HasName("photo_id_idx");
+
+                entity.HasIndex(e => e.ResponsibleId)
+                    .HasName("responsible_id");
 
                 entity.HasIndex(e => e.StatusId)
                     .HasName("status_id");
@@ -1030,7 +1090,9 @@ namespace Yamama
                     .HasColumnName("content")
                     .HasColumnType("varchar(1000)");
 
-                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
+                entity.Property(e => e.CreatorId)
+                    .HasColumnName("creator_id")
+                    .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.EndDate)
                     .HasColumnName("end_date")
@@ -1044,7 +1106,9 @@ namespace Yamama
 
                 entity.Property(e => e.PhotoId).HasColumnName("photo_id");
 
-                entity.Property(e => e.ResponsibleId).HasColumnName("responsible_id");
+                entity.Property(e => e.ResponsibleId)
+                    .HasColumnName("responsible_id")
+                    .HasColumnType("varchar(255)");
 
                 entity.Property(e => e.StartDate)
                     .HasColumnName("start_date")
@@ -1053,6 +1117,11 @@ namespace Yamama
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
                 entity.Property(e => e.TypeId).HasColumnName("type_id");
+
+                entity.HasOne(d => d.Creator)
+                    .WithMany(p => p.TaskCreator)
+                    .HasForeignKey(d => d.CreatorId)
+                    .HasConstraintName("task_creator_fk");
 
                 entity.HasOne(d => d.File)
                     .WithMany(p => p.Task)
@@ -1063,6 +1132,11 @@ namespace Yamama
                     .WithMany(p => p.Task)
                     .HasForeignKey(d => d.PhotoId)
                     .HasConstraintName("photo_id");
+
+                entity.HasOne(d => d.Responsible)
+                    .WithMany(p => p.TaskResponsible)
+                    .HasForeignKey(d => d.ResponsibleId)
+                    .HasConstraintName("task_responsible_fk");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Task)
@@ -1123,8 +1197,6 @@ namespace Yamama
                     .HasColumnType("varchar(50)");
             });
 
-       
-
             modelBuilder.Entity<Visit>(entity =>
             {
                 entity.HasKey(e => e.Idvisit)
@@ -1158,7 +1230,9 @@ namespace Yamama
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
+                entity.Property(e => e.UserId)
+                    .HasColumnName("User_id")
+                    .HasColumnType("varchar(255)");
 
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Visit)
@@ -1178,7 +1252,10 @@ namespace Yamama
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("task_id_fk");
 
-            
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Visit)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("user_visit_fk");
             });
         }
     }

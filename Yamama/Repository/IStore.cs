@@ -13,8 +13,8 @@ namespace Yamama.Repository
 
         ///***** reporting for stores based on product type ...................
 
-        List<(string,int)> GetProductStore(string  name);
-        Task <int> GetTotalStore();
+        List<(string,Double)> GetProductStore(string  name);
+        Task <Double> GetTotalStore();
 
     }
 }

@@ -8,6 +8,6 @@ namespace Yamama.ViewModels
     public class InvoiceAndQuantity
     {
         public int CartInvoiceId { get; set; }
-        public int Qty { get; set; }
+        public Double Qty { get; set; }
     }
 }

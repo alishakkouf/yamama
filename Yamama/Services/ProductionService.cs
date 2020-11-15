@@ -43,7 +43,7 @@ namespace Yamama.Services
                 // creat a loop to pass the store records and update the product quantity according to the product id 
                 foreach (var item in _db.Store)
                 {
-                    if (item.ProductId==id)
+                    if (item.ProId==id)
                     {
                         item.Quantity += qty;
                     }

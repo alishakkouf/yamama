@@ -23,10 +23,10 @@ DROP TABLE IF EXISTS `__efmigrationshistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `__efmigrationshistory` (
-  `MigrationId` varchar(95) NOT NULL,
-  `ProductVersion` varchar(32) NOT NULL,
+  `MigrationId` varchar(95) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `ProductVersion` varchar(32) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`MigrationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -50,11 +50,11 @@ CREATE TABLE `actual_intencive` (
   `idactual_intencive` int NOT NULL AUTO_INCREMENT,
   `actual_intencive` int DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `id_user` varchar(45) DEFAULT NULL,
+  `id_user` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idactual_intencive`),
   KEY `id_user_idx` (`id_user`),
   CONSTRAINT `id_user` FOREIGN KEY (`id_user`) REFERENCES `aspnetusers` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -81,7 +81,7 @@ CREATE TABLE `actual_needs` (
   PRIMARY KEY (`idactual_needs`),
   KEY `product_id_idx` (`id_product`),
   CONSTRAINT `id_product` FOREIGN KEY (`id_product`) REFERENCES `product` (`idproduct`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,17 +102,21 @@ DROP TABLE IF EXISTS `alert`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `alert` (
   `idalert` int NOT NULL AUTO_INCREMENT,
-  `sender-id` int DEFAULT NULL,
-  `reciever_id` int DEFAULT NULL,
-  `notes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `sender_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `reciever_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `notes` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   `file_id` int DEFAULT NULL,
   `task_id` int DEFAULT NULL,
   PRIMARY KEY (`idalert`),
-  KEY `file_id` (`file_id`),
-  KEY `task_id` (`task_id`),
-  CONSTRAINT `file_id_fk` FOREIGN KEY (`file_id`) REFERENCES `file` (`idfile`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `task_id_al_fk` FOREIGN KEY (`task_id`) REFERENCES `task` (`idtask`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  KEY `file_id` (`file_id`) /*!80000 INVISIBLE */,
+  KEY `task_id` (`task_id`) /*!80000 INVISIBLE */,
+  KEY `sender_id` (`sender_id`) /*!80000 INVISIBLE */,
+  KEY `reciever_id` (`reciever_id`),
+  CONSTRAINT `alert_file_fk` FOREIGN KEY (`file_id`) REFERENCES `file` (`idfile`),
+  CONSTRAINT `alert_receiver_fk` FOREIGN KEY (`reciever_id`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `alert_sender_fk` FOREIGN KEY (`sender_id`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `alert_task_fk` FOREIGN KEY (`task_id`) REFERENCES `task` (`idtask`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,13 +137,13 @@ DROP TABLE IF EXISTS `answers`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `answers` (
   `idanswers` int NOT NULL AUTO_INCREMENT,
-  `answer_text` text,
+  `answer_text` text CHARACTER SET utf8 COLLATE utf8_bin,
   `answer_weight` int DEFAULT NULL,
   `question_id` int DEFAULT NULL,
   PRIMARY KEY (`idanswers`),
   KEY `question_id_idx` (`question_id`),
   CONSTRAINT `question_id` FOREIGN KEY (`question_id`) REFERENCES `questions` (`idQuestions`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -161,13 +165,13 @@ DROP TABLE IF EXISTS `aspnetroleclaims`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetroleclaims` (
   `Id` int NOT NULL AUTO_INCREMENT,
-  `RoleId` varchar(255) NOT NULL,
-  `ClaimType` longtext,
-  `ClaimValue` longtext,
+  `RoleId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `ClaimType` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `ClaimValue` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetRoleClaims_RoleId` (`RoleId`),
-  CONSTRAINT `FK_AspNetRoleClaims_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_AspNetRoleClaims_Role` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,13 +191,13 @@ DROP TABLE IF EXISTS `aspnetroles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetroles` (
-  `Id` varchar(255) NOT NULL,
-  `Name` varchar(256) DEFAULT NULL,
-  `NormalizedName` varchar(256) DEFAULT NULL,
-  `ConcurrencyStamp` longtext,
+  `Id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `NormalizedName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `ConcurrencyStamp` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `RoleNameIndex` (`NormalizedName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,13 +219,13 @@ DROP TABLE IF EXISTS `aspnetuserclaims`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserclaims` (
   `Id` int NOT NULL AUTO_INCREMENT,
-  `UserId` varchar(255) NOT NULL,
-  `ClaimType` longtext,
-  `ClaimValue` longtext,
+  `UserId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `ClaimType` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `ClaimValue` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`Id`),
   KEY `IX_AspNetUserClaims_UserId` (`UserId`),
-  CONSTRAINT `FK_AspNetUserClaims_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_AspNetuserClaims_user` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -241,14 +245,14 @@ DROP TABLE IF EXISTS `aspnetuserlogins`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserlogins` (
-  `LoginProvider` varchar(255) NOT NULL,
-  `ProviderKey` varchar(255) NOT NULL,
-  `ProviderDisplayName` longtext,
-  `UserId` varchar(255) NOT NULL,
+  `LoginProvider` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `ProviderKey` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `ProviderDisplayName` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `UserId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`LoginProvider`,`ProviderKey`),
   KEY `IX_AspNetUserLogins_UserId` (`UserId`),
-  CONSTRAINT `FK_AspNetUserLogins_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_AspNetUserLogins_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -268,13 +272,13 @@ DROP TABLE IF EXISTS `aspnetuserroles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetuserroles` (
-  `UserId` varchar(255) NOT NULL,
-  `RoleId` varchar(255) NOT NULL,
+  `UserId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `RoleId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`UserId`,`RoleId`),
   KEY `IX_AspNetUserRoles_RoleId` (`RoleId`),
   CONSTRAINT `FK_AspNetUserRoles_AspNetRoles_RoleId` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON DELETE CASCADE,
   CONSTRAINT `FK_AspNetUserRoles_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -295,26 +299,26 @@ DROP TABLE IF EXISTS `aspnetusers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetusers` (
-  `Id` varchar(255) NOT NULL,
-  `UserName` varchar(256) DEFAULT NULL,
-  `NormalizedUserName` varchar(256) DEFAULT NULL,
-  `Email` varchar(256) DEFAULT NULL,
-  `NormalizedEmail` varchar(256) DEFAULT NULL,
+  `Id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `UserName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `NormalizedUserName` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `Email` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `NormalizedEmail` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `EmailConfirmed` bit(1) NOT NULL,
-  `PasswordHash` longtext,
-  `SecurityStamp` longtext,
-  `ConcurrencyStamp` longtext,
-  `PhoneNumber` longtext,
+  `PasswordHash` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `SecurityStamp` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `ConcurrencyStamp` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `PhoneNumber` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   `PhoneNumberConfirmed` bit(1) NOT NULL,
   `TwoFactorEnabled` bit(1) NOT NULL,
   `LockoutEnd` datetime(6) DEFAULT NULL,
   `LockoutEnabled` bit(1) NOT NULL,
   `AccessFailedCount` int NOT NULL,
-  `FullName` longtext,
+  `FullName` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `UserNameIndex` (`NormalizedUserName`),
   KEY `EmailIndex` (`NormalizedEmail`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -335,13 +339,13 @@ DROP TABLE IF EXISTS `aspnetusertokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `aspnetusertokens` (
-  `UserId` varchar(255) NOT NULL,
-  `LoginProvider` varchar(255) NOT NULL,
-  `Name` varchar(255) NOT NULL,
-  `Value` longtext,
+  `UserId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `LoginProvider` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Name` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin NOT NULL,
+  `Value` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`UserId`,`LoginProvider`,`Name`),
-  CONSTRAINT `FK_AspNetUserTokens_AspNetUsers_UserId` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `FK_AspNetuserToken_User` FOREIGN KEY (`UserId`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -370,7 +374,7 @@ CREATE TABLE `balance` (
   PRIMARY KEY (`idbalance`),
   KEY `product_id_idx` (`product_id1`),
   CONSTRAINT `product_id1` FOREIGN KEY (`product_id1`) REFERENCES `product` (`idproduct`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -379,6 +383,7 @@ CREATE TABLE `balance` (
 
 LOCK TABLES `balance` WRITE;
 /*!40000 ALTER TABLE `balance` DISABLE KEYS */;
+INSERT INTO `balance` VALUES (1,1,30,'2020-12-01',30,'2020-11-13'),(2,2,40,'2020-12-01',40,'2020-11-13'),(3,3,20,'2020-12-01',20,'2020-11-13'),(4,4,50,'2020-12-01',50,'2020-11-13'),(5,4,80,'2020-12-01',80,'2020-11-13'),(6,3,65,'2020-12-01',65,'2020-11-14'),(7,2,165,'2020-12-01',165,'2020-11-14');
 /*!40000 ALTER TABLE `balance` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,7 +409,7 @@ CREATE TABLE `cart` (
   CONSTRAINT `InvoiceId` FOREIGN KEY (`InvoiceId`) REFERENCES `invoice` (`idinvoice`),
   CONSTRAINT `ProductId` FOREIGN KEY (`ProductId`) REFERENCES `product` (`idproduct`),
   CONSTRAINT `transported_id` FOREIGN KEY (`transported_id`) REFERENCES `transporter` (`idtransporter`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +418,7 @@ CREATE TABLE `cart` (
 
 LOCK TABLES `cart` WRITE;
 /*!40000 ALTER TABLE `cart` DISABLE KEYS */;
-INSERT INTO `cart` VALUES (1,1,100,25,2500,5,1),(2,1,100,25,2500,5,1),(3,1,100,25,2500,6,1),(4,1,100,25,2500,6,NULL),(5,1,10,30,300,15,1),(6,1,10,30,300,15,NULL),(38,1,100,50,5000,37,NULL),(39,1,100,50,5000,38,NULL);
+INSERT INTO `cart` VALUES (1,1,100,25,2500,5,1),(2,1,100,25,2500,5,1),(3,1,100,25,2500,6,1),(4,1,100,25,2500,6,NULL),(5,1,10,30,300,15,1),(6,1,10,30,300,15,NULL),(38,1,100,50,5000,37,NULL),(39,1,100,50,5000,38,NULL),(51,2,100,40,4000,44,1),(52,1,100,500,5000,45,1);
 /*!40000 ALTER TABLE `cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -427,7 +432,7 @@ DROP TABLE IF EXISTS `customer_satisfaction_reports`;
 CREATE TABLE `customer_satisfaction_reports` (
   `idcustomer_satisfaction_reports` int NOT NULL AUTO_INCREMENT,
   `project_id` int DEFAULT NULL,
-  `notes` text,
+  `notes` text CHARACTER SET utf8 COLLATE utf8_bin,
   `satisfaction_evaluation` double DEFAULT NULL,
   `factory_id` int DEFAULT NULL,
   PRIMARY KEY (`idcustomer_satisfaction_reports`),
@@ -435,7 +440,7 @@ CREATE TABLE `customer_satisfaction_reports` (
   KEY `project_id_idx` (`project_id`),
   CONSTRAINT `factory_id` FOREIGN KEY (`factory_id`) REFERENCES `factory` (`idfactory`),
   CONSTRAINT `project_id` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -457,13 +462,13 @@ DROP TABLE IF EXISTS `expected_intencive`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `expected_intencive` (
   `idexpected_intencive` int NOT NULL AUTO_INCREMENT,
-  `expected_money` int DEFAULT NULL,
+  `expected_money` double DEFAULT NULL,
   `date` date DEFAULT NULL,
-  `userID` varchar(255) DEFAULT NULL,
+  `userID` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idexpected_intencive`),
   KEY `user_id_idx` (`userID`),
-  CONSTRAINT `userID` FOREIGN KEY (`userID`) REFERENCES `aspnetusers` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `user_id` FOREIGN KEY (`userID`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -490,7 +495,7 @@ CREATE TABLE `expected_needs` (
   PRIMARY KEY (`idexpected_needs`),
   KEY `product_id_idx` (`product_id`),
   CONSTRAINT `product_id` FOREIGN KEY (`product_id`) REFERENCES `product` (`idproduct`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -511,16 +516,20 @@ DROP TABLE IF EXISTS `factory`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `factory` (
   `idfactory` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `activity_nature` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `activity_nature` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `product_id` int DEFAULT NULL,
-  `cement_price` decimal(10,0) DEFAULT NULL,
+  `cement_price` double DEFAULT NULL,
   `transporter_id` int DEFAULT NULL,
-  `notes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `information_source` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`idfactory`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  `notes` longtext CHARACTER SET utf8 COLLATE utf8_bin,
+  `information_source` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`idfactory`),
+  KEY `product_id` (`product_id`) /*!80000 INVISIBLE */,
+  KEY `transporter` (`transporter_id`),
+  CONSTRAINT `product_factory_id_fk` FOREIGN KEY (`product_id`) REFERENCES `product` (`idproduct`),
+  CONSTRAINT `transporter_factory_id_fk` FOREIGN KEY (`transporter_id`) REFERENCES `transporter` (`idtransporter`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -542,11 +551,11 @@ DROP TABLE IF EXISTS `file`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `file` (
   `idfile` int NOT NULL AUTO_INCREMENT,
-  `parent_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `parent_type` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `parent_id` int DEFAULT NULL,
-  `path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `path` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idfile`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -574,16 +583,17 @@ CREATE TABLE `invoice` (
   `paid` double DEFAULT '0',
   `remainForYamama` double DEFAULT '0',
   `remainForCustomer` double DEFAULT '0',
-  `type` varchar(100) DEFAULT NULL,
-  `user_id` varchar(255) DEFAULT NULL,
+  `type` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `user_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `supplier` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idinvoice`),
   KEY `ProjectId_idx` (`ProjectId`),
   KEY `FactoryId_idx` (`FactoryId`),
   KEY `user_id_idx` (`user_id`),
   CONSTRAINT `FactoryId` FOREIGN KEY (`FactoryId`) REFERENCES `factory` (`idfactory`),
   CONSTRAINT `ProjectId` FOREIGN KEY (`ProjectId`) REFERENCES `project` (`idproject`),
-  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `aspnetusers` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `user_invoice_id_fk` FOREIGN KEY (`user_id`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -592,7 +602,7 @@ CREATE TABLE `invoice` (
 
 LOCK TABLES `invoice` WRITE;
 /*!40000 ALTER TABLE `invoice` DISABLE KEYS */;
-INSERT INTO `invoice` VALUES (5,1,'2020-10-19',5000,NULL,7000,0,2000,NULL,NULL),(6,1,'2020-11-22',5000,NULL,100,4900,0,'purchases',NULL),(15,1,'2020-12-27',1000,NULL,500,500,0,'purchases',NULL),(17,1,'2020-12-10',400,NULL,200,200,0,'Purchses',NULL),(18,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(19,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(20,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(21,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(22,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(23,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(24,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(25,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(26,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(27,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(28,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(29,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(30,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(31,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(32,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(33,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(34,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(35,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(36,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(37,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL),(38,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL);
+INSERT INTO `invoice` VALUES (5,1,'2020-10-19',5000,NULL,7000,0,2000,NULL,NULL,NULL),(6,1,'2020-11-22',5000,NULL,100,4900,0,'purchases',NULL,NULL),(15,1,'2020-12-27',1000,NULL,500,500,0,'purchases',NULL,NULL),(17,1,'2020-12-10',400,NULL,200,200,0,'Purchses',NULL,NULL),(18,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(19,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(20,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(21,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(22,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(23,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(24,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(25,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(26,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(27,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(28,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(29,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(30,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(31,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(32,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(33,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(34,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(35,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(36,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(37,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(38,1,'2020-12-10',5000,NULL,2500,2500,0,'Purchses',NULL,NULL),(39,NULL,'2020-11-13',5000,NULL,1000,4000,0,'Import',NULL,NULL),(40,NULL,'2020-11-13',5000,NULL,1000,4000,0,'Import',NULL,NULL),(41,NULL,'2020-11-13',5000,NULL,1000,4000,0,'Import',NULL,NULL),(42,NULL,'2020-11-13',5000,NULL,1000,4000,0,'Import',NULL,NULL),(43,NULL,'2020-11-13',5000,NULL,1000,4000,0,'Import',NULL,NULL),(44,NULL,'2020-11-13',4000,NULL,1000,3000,0,'Import',NULL,NULL),(45,NULL,'2020-11-14',5000,NULL,1000,4000,0,'Import',NULL,NULL);
 /*!40000 ALTER TABLE `invoice` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -616,7 +626,7 @@ CREATE TABLE `link_r_q_a` (
   CONSTRAINT `answer_id` FOREIGN KEY (`answer_id`) REFERENCES `answers` (`idanswers`),
   CONSTRAINT `q_Id` FOREIGN KEY (`q_Id`) REFERENCES `questions` (`idQuestions`),
   CONSTRAINT `report_id` FOREIGN KEY (`report_id`) REFERENCES `customer_satisfaction_reports` (`idcustomer_satisfaction_reports`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -643,7 +653,7 @@ CREATE TABLE `money_delivered` (
   `invoice_id` int DEFAULT NULL,
   `f_id` int DEFAULT NULL,
   `p_id` int DEFAULT NULL,
-  `state` varchar(45) DEFAULT NULL,
+  `state` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idmoney_delivered`),
   KEY `invoice_id_idx` (`invoice_id`),
   KEY `factory_id_idx` (`f_id`),
@@ -651,7 +661,7 @@ CREATE TABLE `money_delivered` (
   CONSTRAINT `f_id` FOREIGN KEY (`f_id`) REFERENCES `factory` (`idfactory`),
   CONSTRAINT `invoice_id` FOREIGN KEY (`invoice_id`) REFERENCES `invoice` (`idinvoice`),
   CONSTRAINT `p_id` FOREIGN KEY (`p_id`) REFERENCES `project` (`idproject`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -673,15 +683,15 @@ DROP TABLE IF EXISTS `notification`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `notification` (
   `idnotification` int NOT NULL AUTO_INCREMENT,
-  `sender-id` varchar(255) DEFAULT NULL,
-  `receiver-id` varchar(255) DEFAULT NULL,
-  `message` varchar(1000) DEFAULT NULL,
+  `sender-id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `receiver-id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `message` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idnotification`),
   KEY `sender-id_idx` (`sender-id`),
   KEY `receiver-id_idx` (`receiver-id`),
-  CONSTRAINT `receiver-id` FOREIGN KEY (`receiver-id`) REFERENCES `aspnetusers` (`Id`),
-  CONSTRAINT `sender-id` FOREIGN KEY (`sender-id`) REFERENCES `aspnetusers` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `reciever_not_id` FOREIGN KEY (`receiver-id`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `sender_not_id` FOREIGN KEY (`sender-id`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -702,10 +712,12 @@ DROP TABLE IF EXISTS `photo`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `photo` (
   `idphoto` int NOT NULL AUTO_INCREMENT,
-  `path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `path` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `project_id` int DEFAULT NULL,
-  PRIMARY KEY (`idphoto`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  PRIMARY KEY (`idphoto`),
+  KEY `project_id` (`project_id`),
+  CONSTRAINT `photo_project_id_fk` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -726,10 +738,10 @@ DROP TABLE IF EXISTS `product`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `product` (
   `idproduct` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `price` decimal(10,0) DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `price` double DEFAULT NULL,
   PRIMARY KEY (`idproduct`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -738,7 +750,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'OPC BULK',10);
+INSERT INTO `product` VALUES (1,'OPC BULK',10),(2,'PMC BAG',100),(3,'OPC BAG',200),(4,'SRC BULK',300);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -757,7 +769,7 @@ CREATE TABLE `production` (
   PRIMARY KEY (`idproduction`),
   KEY `product_id_idx` (`IdProduct`),
   CONSTRAINT `IdProduct` FOREIGN KEY (`IdProduct`) REFERENCES `product` (`idproduct`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -766,6 +778,7 @@ CREATE TABLE `production` (
 
 LOCK TABLES `production` WRITE;
 /*!40000 ALTER TABLE `production` DISABLE KEYS */;
+INSERT INTO `production` VALUES (1,1,45,'2020-10-20'),(2,1,45,'2020-10-20'),(3,1,45,'2020-10-20'),(4,NULL,45,'2020-10-20'),(5,1,45,'2020-10-20'),(6,1,45,'2020-10-20'),(7,1,45,'2020-10-20'),(8,1,45,'2020-10-20'),(9,2,45,'2020-11-20'),(10,3,45,'2020-12-20'),(11,4,45,'2020-09-20'),(12,2,40,'2020-11-14');
 /*!40000 ALTER TABLE `production` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -778,19 +791,19 @@ DROP TABLE IF EXISTS `project`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `project` (
   `idproject` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `owner` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `location` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `space` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `cost` decimal(10,0) DEFAULT NULL,
-  `contractor` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `consultant` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
-  `information_source` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `owner` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `location` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `space` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `cost` double DEFAULT NULL,
+  `contractor` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `consultant` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `status` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `details` text CHARACTER SET utf8 COLLATE utf8_bin,
+  `notes` text CHARACTER SET utf8 COLLATE utf8_bin,
+  `information_source` varchar(100) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idproject`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -811,9 +824,9 @@ DROP TABLE IF EXISTS `questions`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `questions` (
   `idQuestions` int NOT NULL AUTO_INCREMENT,
-  `question_text` text,
+  `question_text` text CHARACTER SET utf8 COLLATE utf8_bin,
   PRIMARY KEY (`idQuestions`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -835,17 +848,21 @@ DROP TABLE IF EXISTS `request_information`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `request_information` (
   `idrequest_information` int NOT NULL AUTO_INCREMENT,
-  `sender_id` int DEFAULT NULL,
-  `reciever_id` int DEFAULT NULL,
-  `notes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `notes` longtext CHARACTER SET utf8 COLLATE utf8_bin,
   `file_id` int DEFAULT NULL,
   `task_id` int DEFAULT NULL,
+  `sender_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `reciever_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idrequest_information`),
   KEY `file_id` (`file_id`),
   KEY `task_id` (`task_id`),
+  KEY `reciever_id` (`reciever_id`) /*!80000 INVISIBLE */,
+  KEY `sender_id` (`sender_id`),
   CONSTRAINT `file_id_info_fk` FOREIGN KEY (`file_id`) REFERENCES `file` (`idfile`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `reciever_info_fk` FOREIGN KEY (`reciever_id`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `sender_info_fk` FOREIGN KEY (`sender_id`) REFERENCES `aspnetusers` (`Id`),
   CONSTRAINT `task_id_info_fk` FOREIGN KEY (`task_id`) REFERENCES `task` (`idtask`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -858,26 +875,31 @@ LOCK TABLES `request_information` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `role`
+-- Table structure for table `store`
 --
 
-DROP TABLE IF EXISTS `role`;
+DROP TABLE IF EXISTS `store`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `role` (
-  `idrole` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`idrole`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+CREATE TABLE `store` (
+  `idstore` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `pro_id` int DEFAULT NULL,
+  `Quantity` int DEFAULT NULL,
+  PRIMARY KEY (`idstore`),
+  KEY `product_id` (`pro_id`),
+  CONSTRAINT `FK_Product_store` FOREIGN KEY (`pro_id`) REFERENCES `product` (`idproduct`) ON DELETE CASCADE ON UPDATE RESTRICT
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `role`
+-- Dumping data for table `store`
 --
 
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
+LOCK TABLES `store` WRITE;
+/*!40000 ALTER TABLE `store` DISABLE KEYS */;
+INSERT INTO `store` VALUES (1,'store1',1,575),(2,'store1',2,165),(3,'store1',3,65),(4,'store1',4,125);
+/*!40000 ALTER TABLE `store` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -889,14 +911,14 @@ DROP TABLE IF EXISTS `target`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `target` (
   `idtarget` int NOT NULL AUTO_INCREMENT,
-  `salesmanId` varchar(255) DEFAULT NULL,
+  `salesmanId` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `visits` int DEFAULT NULL,
   `sales` int DEFAULT NULL,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`idtarget`),
   KEY `salesmanId_idx` (`salesmanId`),
-  CONSTRAINT `salesmanId` FOREIGN KEY (`salesmanId`) REFERENCES `aspnetusers` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  CONSTRAINT `salesmanId_fk` FOREIGN KEY (`salesmanId`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -917,12 +939,12 @@ DROP TABLE IF EXISTS `task`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `task` (
   `idtask` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `type_id` int DEFAULT NULL,
   `status_id` int DEFAULT NULL,
-  `responsible_id` int DEFAULT NULL,
-  `creator_id` int DEFAULT NULL,
-  `content` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `responsible_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `creator_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `content` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
   `file_id` int DEFAULT NULL,
@@ -932,11 +954,15 @@ CREATE TABLE `task` (
   KEY `status_id` (`status_id`),
   KEY `file_id_idx` (`file_id`),
   KEY `photo_id_idx` (`photo_id`),
+  KEY `creator_id` (`creator_id`),
+  KEY `responsible_id` (`responsible_id`),
   CONSTRAINT `file_id` FOREIGN KEY (`file_id`) REFERENCES `file` (`idfile`),
   CONSTRAINT `photo_id` FOREIGN KEY (`photo_id`) REFERENCES `photo` (`idphoto`),
   CONSTRAINT `status_id_fk` FOREIGN KEY (`status_id`) REFERENCES `task_status` (`idtask_status`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `task_creator_fk` FOREIGN KEY (`creator_id`) REFERENCES `aspnetusers` (`Id`),
+  CONSTRAINT `task_responsible_fk` FOREIGN KEY (`responsible_id`) REFERENCES `aspnetusers` (`Id`),
   CONSTRAINT `type_id_fk` FOREIGN KEY (`type_id`) REFERENCES `task_type` (`idtask_type`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -957,9 +983,9 @@ DROP TABLE IF EXISTS `task_status`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `task_status` (
   `idtask_status` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idtask_status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -980,9 +1006,9 @@ DROP TABLE IF EXISTS `task_type`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `task_type` (
   `idtask_type` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idtask_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1003,10 +1029,10 @@ DROP TABLE IF EXISTS `transporter`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `transporter` (
   `idtransporter` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `transporter_num` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `transporter_num` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idtransporter`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1015,38 +1041,8 @@ CREATE TABLE `transporter` (
 
 LOCK TABLES `transporter` WRITE;
 /*!40000 ALTER TABLE `transporter` DISABLE KEYS */;
-INSERT INTO `transporter` VALUES (1,'ali',NULL);
+INSERT INTO `transporter` VALUES (1,NULL,NULL);
 /*!40000 ALTER TABLE `transporter` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `user`
---
-
-DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `iduser` int NOT NULL AUTO_INCREMENT,
-  `full_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `user_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `password` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `e_mail` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `phone` int DEFAULT NULL,
-  `role_id` int DEFAULT NULL,
-  PRIMARY KEY (`iduser`),
-  KEY `role_id` (`role_id`),
-  CONSTRAINT `role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`idrole`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -1058,22 +1054,22 @@ DROP TABLE IF EXISTS `visit`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `visit` (
   `idvisit` int NOT NULL AUTO_INCREMENT,
-  `user_id` int DEFAULT NULL,
   `factory_id` int DEFAULT NULL,
   `project_id` int DEFAULT NULL,
   `task_id` int DEFAULT NULL,
   `gifts` int DEFAULT NULL,
-  `notes` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `notes` varchar(1000) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  `User_id` varchar(255) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`idvisit`),
-  KEY `user_id` (`user_id`),
   KEY `factory_id` (`factory_id`) /*!80000 INVISIBLE */,
   KEY `project_id` (`project_id`),
   KEY `task_id` (`task_id`),
+  KEY `user_id` (`User_id`),
   CONSTRAINT `factory_id_fk` FOREIGN KEY (`factory_id`) REFERENCES `factory` (`idfactory`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `project_id_fk` FOREIGN KEY (`project_id`) REFERENCES `project` (`idproject`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `task_id_fk` FOREIGN KEY (`task_id`) REFERENCES `task` (`idtask`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`iduser`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+  CONSTRAINT `user_visit_fk` FOREIGN KEY (`User_id`) REFERENCES `aspnetusers` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1094,4 +1090,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-09 11:12:24
+-- Dump completed on 2020-11-15 10:27:22

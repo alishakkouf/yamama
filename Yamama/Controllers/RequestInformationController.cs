@@ -165,7 +165,6 @@ namespace Yamama.Controllers
         // PUT api/<RequestInformationController>/
         [HttpPut]
         [Route("UpdateRequestInfo/{id}")]
-
         public async Task<IActionResult> UpdateRequestInfo(int id,[FromBody] TaskTypeViewModel taskTypeViewModel)
         {
             try

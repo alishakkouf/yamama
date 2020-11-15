@@ -29,7 +29,7 @@ namespace Yamama.Controllers
         // GET: api/<ProjectsController>
         //method to send get request to get all projects
         [HttpGet]
-        [Route("/api/getprojects")]
+        [Route("getprojects")]
         public async Task<ActionResult> getprojects()
         {
             try
@@ -58,7 +58,7 @@ namespace Yamama.Controllers
         // GET api/<ProjectsController>/5
         //method to send get request to  get specific project by id 
         [HttpGet]
-        [Route("/api/getproject")]
+        [Route("getproject")]
         public async Task <ActionResult<Project>> getproject(int id)
         {
             try
@@ -85,7 +85,7 @@ namespace Yamama.Controllers
         // POST api/<ProjectsController>
         //method to send post request to add new project
         [HttpPost]
-        [Route("/api/addproject")]
+        [Route("addproject")]
         public async Task <IActionResult> addproject(Project project)
         {
             try
@@ -107,7 +107,7 @@ namespace Yamama.Controllers
         // PUT api/<ProjectsController>/5
         //method to send put request to edit specific project by id
         [HttpPut]
-        [Route("/api/updateproject")]
+        [Route("updateproject")]
         public async Task  <IActionResult> updateproject( Project project , int id)
         {
             try
@@ -128,7 +128,7 @@ namespace Yamama.Controllers
         // DELETE api/<ProjectsController>/5
         //method to send delete request to remove specific project by id 
         [HttpDelete]
-        [Route("/api/deleteproject")]
+        [Route("deleteproject")]
         public async Task <ActionResult> deleteproject(int id)
         {
             

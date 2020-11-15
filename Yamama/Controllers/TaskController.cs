@@ -32,7 +32,6 @@ namespace Yamama.Controllers
         // POST api/<TaskController>
         [HttpPost]
         [Route("AddTask")]
-        
         public async Task<IActionResult> AddTask([FromBody] TaskTypeViewModel taskTypeViewModel)
         {
             try

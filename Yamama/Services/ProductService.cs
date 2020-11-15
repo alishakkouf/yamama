@@ -29,10 +29,10 @@ namespace Yamama.Services
         }
 
         ///to get the price of specific product
-        public async Task<Decimal> GetProductPrice(string name)
+        public async Task<Double> GetProductPrice(string name)
         {
             int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
-            Decimal result = 0;
+            Double result = 0;
             try
             {
                 

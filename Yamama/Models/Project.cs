@@ -10,6 +10,7 @@ namespace Yamama
             CustomerSatisfactionReports = new HashSet<CustomerSatisfactionReports>();
             Invoice = new HashSet<Invoice>();
             MoneyDelivered = new HashSet<MoneyDelivered>();
+            Photo = new HashSet<Photo>();
             Visit = new HashSet<Visit>();
         }
 
@@ -18,7 +19,7 @@ namespace Yamama
         public string Owner { get; set; }
         public string Location { get; set; }
         public string Space { get; set; }
-        public decimal? Cost { get; set; }
+        public double? Cost { get; set; }
         public string Contractor { get; set; }
         public string Consultant { get; set; }
         public string Status { get; set; }
@@ -29,6 +30,7 @@ namespace Yamama
         public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }
+        public virtual ICollection<Photo> Photo { get; set; }
         public virtual ICollection<Visit> Visit { get; set; }
     }
 }

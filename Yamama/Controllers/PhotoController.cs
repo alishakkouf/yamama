@@ -31,8 +31,7 @@ namespace Yamama.Controllers
 
         // get projects photos 
         [HttpGet]
-        [Route("/api/getprojectphotos/{id}")]
-
+        [Route("getprojectphotos/{id}")]
         public async Task<ActionResult<Photo>> GetProjectPhotos(int id)
         {
             try
@@ -55,7 +54,7 @@ namespace Yamama.Controllers
         }
         // POST api/<PhotoController>
         [HttpPost]
-        [Route("/api/addphoto")]
+        [Route("addphoto")]
         public async Task<IActionResult> addphoto(ImageViewModel model)
         {
             try

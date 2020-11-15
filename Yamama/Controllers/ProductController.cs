@@ -29,7 +29,7 @@ namespace Yamama.Controllers
         // to get product details
 
         [HttpGet]
-        [Route("/api/getproduct")]
+        [Route("getproduct")]
         public async Task<ActionResult<Product>> getproduct(string name)
         {
             try

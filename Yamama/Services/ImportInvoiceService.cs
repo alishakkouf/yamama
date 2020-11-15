@@ -55,14 +55,14 @@ namespace Yamama.Services
                 //get the last addes cart
                 var RecentCart = _db.Cart.OrderByDescending(c => c.IdCart).FirstOrDefault();
                 //get the quantity from this cart
-                int qty = RecentCart.Qty;
+                Double qty = RecentCart.Qty;
                 //get the product id from this cart
                 int? id = RecentCart.ProductId;
 
                 //pass the store records and add the quantity for the specific product id
                 foreach (var item in _db.Store)
                 {
-                    if (item.ProductId == id)
+                    if (item.ProId == id)
                     {
                         item.Quantity += qty;
                     }

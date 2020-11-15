@@ -14,6 +14,7 @@ namespace Yamama
         public string Path { get; set; }
         public int? ProjectId { get; set; }
 
+        public virtual Project Project { get; set; }
         public virtual ICollection<Task> Task { get; set; }
     }
 }

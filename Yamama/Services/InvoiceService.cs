@@ -191,7 +191,7 @@ namespace Yamama.Services
                     for (int i = 0; i < invoiceCart.listcart.Count; i++)
                     {
                         //get the quantity of this product
-                        int q = _yamamadbContext.Store.Where(x => x.ProductId == invoiceCart.listcart[i].ProductId).Select(c => c.Quantity).SingleOrDefault();
+                        Double q = _yamamadbContext.Store.Where(x => x.ProId == invoiceCart.listcart[i].ProductId).Select(c => c.Quantity).SingleOrDefault();
                         if (q<invoiceCart.listcart[i].Qty)
                         {
                             return " ERROR : The quantity in store is less than the invoice quantity !!!!";
@@ -286,7 +286,7 @@ namespace Yamama.Services
                         for (int j = 0; j < invoicesNumbers.Count; j++)
                         {
                             InvoiceCartViewModel subResult = await getInvoiceDetailes(invoicesNumbers[j]);
-                            value += Convert.ToDouble(subResult.invoice.FullCost);
+                            value += subResult.invoice.FullCost;
 
                         }
                         result.Add((test,value));
@@ -397,7 +397,7 @@ namespace Yamama.Services
 
                     for (int k = 0; k < InvoicesID.Count; k++)
                     {
-                        int subQty = await _yamamadbContext.Cart.Where(x => x.InvoiceId == InvoicesID[k]).Select(x => x.Qty).SumAsync();
+                        double subQty = await _yamamadbContext.Cart.Where(x => x.InvoiceId == InvoicesID[k]).Select(x => x.Qty).SumAsync();
                         InvoiceAndQuantity invoiceAndQuantity = new InvoiceAndQuantity();
                         invoiceAndQuantity.Qty = subQty;
                         invoiceAndQuantity.CartInvoiceId = InvoicesID[k];
@@ -650,7 +650,7 @@ namespace Yamama.Services
             } else {
             client1 = _yamamadbContext.Project.Where(x => x.Idproject == ProjectId).Select(x => x.Name).SingleOrDefault();
             }
-            int sum = 0;
+           Double sum = 0;
             for (int i = 0; i < InvoicesID.Count; i++)
             {
                 int invoiceRow = InvoicesID[i].InvoiceId;

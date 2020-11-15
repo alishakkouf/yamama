@@ -28,8 +28,7 @@ namespace Yamama.Controllers
         }
 
         [HttpPost]
-        [Route("/api/AddBalance")]
-
+        [Route("AddBalance")]
         public async Task<IActionResult> AddBalance(string  name)
        {
             try
@@ -54,7 +53,7 @@ namespace Yamama.Controllers
 
         /// report last period quantity by product 
         [HttpGet]
-        [Route("/api/GetProductLastByQty")]
+        [Route("GetProductLastByQty")]
         public async Task<ActionResult<Balance>> GetProductLastByQty(DateTime date ,string name)
         {
             try
@@ -81,7 +80,7 @@ namespace Yamama.Controllers
         //report last period value(ton) by product
 
         [HttpGet]
-        [Route("/api/GetBalanceByPrice")]
+        [Route("GetBalanceByPrice")]
         public async Task<ActionResult<Balance>> GetBalanceByPrice(DateTime date, string name)
         {
             try
@@ -109,7 +108,7 @@ namespace Yamama.Controllers
 
         /// report last period quantity for all products 
         [HttpGet]
-        [Route("/api/GetBalanceByQty")]
+        [Route("GetBalanceByQty")]
         public async Task<ActionResult<Balance>> GetBalanceByQty(DateTime date)
         {
             try
@@ -161,7 +160,7 @@ namespace Yamama.Controllers
 
         /// report last period Value(ton) for all products 
         [HttpGet]
-        [Route("/api/GetAllBalanceByPrice")]
+        [Route("GetAllBalanceByPrice")]
         public async Task<ActionResult<Balance>> GetAllBalanceByPrice(DateTime date)
         {
             try

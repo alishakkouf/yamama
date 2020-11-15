@@ -33,7 +33,7 @@ namespace YamamaAPI.Controllers
        
         // POST api/<ImportInvoiceController>
         [HttpPost]
-        [Route("/api/addimportinvoice")]
+        [Route("addimportinvoice")]
         public async Task<ActionResult> AddImportInvoice(InvoiceCartViewModel impoInvoice)
         {
             try
@@ -52,7 +52,7 @@ namespace YamamaAPI.Controllers
 
         // GET: api/<InvoicesController>
         [HttpGet]
-        [Route("/api/getinvoices")]
+        [Route("getinvoices")]
         public async Task<ActionResult> GetAll()
         {
             try
@@ -77,8 +77,7 @@ namespace YamamaAPI.Controllers
 
         // GET api/<InvoicesController>/5
         [HttpGet]
-        [Route("/api/getinvoice/{id}")]
-
+        [Route("getinvoice")]
         public async Task<ActionResult<Invoice>> GetInvoice(int id)
         {
             try
@@ -102,7 +101,7 @@ namespace YamamaAPI.Controllers
 
         // DELETE api/<InvoicesController>/5
         [HttpDelete]
-        [Route("/api/deleteinvoice/{id}")]
+        [Route("deleteinvoice")]
         public async Task<ActionResult> Delete(int id)
         {
 

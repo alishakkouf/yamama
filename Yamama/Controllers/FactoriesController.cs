@@ -29,8 +29,8 @@ namespace Yamama.Controllers
 
         // GET: api/<FactoriesController>
         [HttpGet]
-        [Route("/api/getfactories")]
-        public  async Task <ActionResult> getfactories()
+        [Route("getfactories")]
+        public async Task<IActionResult> getfactories()
         {
             try
             {
@@ -54,9 +54,8 @@ namespace Yamama.Controllers
 
         // GET api/<FactoriesController>/5
         [HttpGet]
-        [Route("/api/getfactory")]
-
-        public async  Task<ActionResult<Factory>> getfactory( int id)
+        [Route("getfactory")]
+        public async  Task<IActionResult> getfactory( int id)
         {
             try
             {
@@ -78,7 +77,7 @@ namespace Yamama.Controllers
         }
         // POST api/<FactoriesController>
         [HttpPost]
-        [Route("/api/addfactory")]
+        [Route("addfactory")]
         public async Task <IActionResult> addfactory(Factory factory)
         {
             try
@@ -100,7 +99,7 @@ namespace Yamama.Controllers
       
         // PUT api/<FactoriesController>/5
         [HttpPut]
-        [Route("/api/updatefactory")]
+        [Route("updatefactory")]
         public async Task<IActionResult> updatefactory(Factory factory , int id )
         {
             try
@@ -120,7 +119,7 @@ namespace Yamama.Controllers
 
         // DELETE api/<FactoriesController>/5
         [HttpDelete]
-        [Route("/api/deletefactory")]
+        [Route("deletefactory")]
         public async Task<ActionResult> deletefactory( int id)
         {
     

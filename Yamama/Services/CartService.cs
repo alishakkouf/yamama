@@ -34,7 +34,7 @@ namespace Yamama.Services
 
                     await _yamamadbContext.SaveChangesAsync();
 
-                    var store = _yamamadbContext.Store.Where(x => x.ProductId == invoiceCart.listcart[i].ProductId).SingleOrDefault();
+                    var store = _yamamadbContext.Store.Where(x => x.ProId == invoiceCart.listcart[i].ProductId).SingleOrDefault();
                     if (invoiceCart.invoice.Type == "Purchses" || invoiceCart.invoice.Type == "import")
                     {
 
@@ -48,7 +48,7 @@ namespace Yamama.Services
                         {
                             Store newStore = new Store
                             {
-                                ProductId = invoiceCart.listcart[i].ProductId,
+                                ProId = invoiceCart.listcart[i].ProductId,
                                 Quantity = invoiceCart.listcart[i].Qty,
                                 Name = _yamamadbContext.Product.Where(x => x.Idproduct == invoiceCart.listcart[i].ProductId).Select(x => x.Name).SingleOrDefault()
                             };

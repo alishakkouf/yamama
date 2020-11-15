@@ -252,7 +252,6 @@ namespace Yamama.Controllers
         // PUT api/<VisitController>/
         [HttpPut]
         [Route("UpdateVisit/{id}")]
-
         public async Task<IActionResult> UpdateVisit(TaskTypeViewModel taskTypeViewModel, int id)
         {
             try
@@ -278,7 +277,6 @@ namespace Yamama.Controllers
                 return BadRequest();
             }
         }
-
         // DELETE api/<VisitController>/
         [HttpDelete]
         [Route("DeleteVisit/{id}")]

@@ -23,7 +23,7 @@ namespace Yamama.Services
         {
             int result = 0;
             // add new store
-            //await _db.Store.AddAsync(store);
+            await _db.Store.AddAsync(store);
             //if the operation succecced return 1
             result += 1;
             return result;
@@ -33,21 +33,21 @@ namespace Yamama.Services
         /////*****reporting *****
 
         //get the existing quantity in store for specific product
-        public   List<(string, int)> GetProductStore(string name)
+        public   List<(string, Double)> GetProductStore(string name)
         {
  
                  int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
-                List<(string, int)> result = new List<(string, int)>();
-                int qty = _db.Store.Where(s => s.ProductId == prodid).Select(s => s.Quantity).FirstOrDefault();
-                //string nam = _db.Product.Where(p => p.Idproduct ==id).Select(p => p.Name).FirstOrDefault();
-                result.Add((name, qty));
+                List<(string, Double)> result = new List<(string, Double)>();
+                Double qty = _db.Store.Where(s => s.ProId == prodid).Select(s => s.Quantity).FirstOrDefault();
+            //string nam = _db.Product.Where(p => p.Idproduct == id).Select(p => p.Name).FirstOrDefault();
+            result.Add((name, qty));
             
                 return result; 
         }
         //get the existing quantity in store for specific product
-        public async Task<int> GetTotalStore()
+        public async Task<Double> GetTotalStore()
         {
-            int qty = +await _db.Store.SumAsync(s => s.Quantity);
+            Double qty = await _db.Store.SumAsync(s => s.Quantity);
 
             return qty;
           

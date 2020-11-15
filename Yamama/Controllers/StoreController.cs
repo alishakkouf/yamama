@@ -26,7 +26,7 @@ namespace Yamama.Controllers
 
         // POST api/<StoreController>
         [HttpPost]
-        [Route("/api/addstore")]
+        [Route("addstore")]
         public async Task<ActionResult> Add(Store store)
         {
             try
@@ -47,7 +47,7 @@ namespace Yamama.Controllers
 
         // GET: api/<StoreController>
         [HttpGet]
-        [Route("/api/getproductstore")]
+        [Route("getproductstore")]
         public async  Task<ActionResult> GetProductStore(string name )
         {
             try
@@ -68,7 +68,7 @@ namespace Yamama.Controllers
             }
         }
         [HttpGet]
-        [Route("/api/gettotalproductstore")]
+        [Route("gettotalproductstore")]
         public async Task<ActionResult> GetTotalStore()
         {
             try

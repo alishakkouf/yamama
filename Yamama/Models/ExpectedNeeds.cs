@@ -6,7 +6,7 @@ namespace Yamama
     public partial class ExpectedNeeds
     {
         public int IdexpectedNeeds { get; set; }
-        public int ExpectedQuantity { get; set; }
+        public int? ExpectedQuantity { get; set; }
         public DateTime? Date { get; set; }
         public int? ProductId { get; set; }
 

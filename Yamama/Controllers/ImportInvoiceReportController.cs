@@ -29,8 +29,7 @@ namespace YamamaAPI.Controllers
         
         //get  import reports (daily - annual- monthly)
         [HttpGet]
-        [Route("/api/getimportreport")]
-
+        [Route("getimportreport")]
         public async Task<ActionResult<Invoice>> GetImportedReports( string period , DateTime from, DateTime to, string invoType)
         {
             try
@@ -54,8 +53,7 @@ namespace YamamaAPI.Controllers
         //get  import reports based on product type (daily - annual- monthly)
 
         [HttpGet]
-        [Route("/api/getproductimportreport")]
-
+        [Route("getproductimportreport")]
         public async Task<ActionResult<Invoice>> GetProductImportedReports(string period, DateTime from, DateTime to, string name, string invoType)
         {
             try

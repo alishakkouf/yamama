@@ -18,11 +18,13 @@ namespace Yamama
         public string Location { get; set; }
         public string ActivityNature { get; set; }
         public int? ProductId { get; set; }
-        public decimal? CementPrice { get; set; }
+        public double? CementPrice { get; set; }
         public int? TransporterId { get; set; }
         public string Notes { get; set; }
         public string InformationSource { get; set; }
 
+        public virtual Product Product { get; set; }
+        public virtual Transporter Transporter { get; set; }
         public virtual ICollection<CustomerSatisfactionReports> CustomerSatisfactionReports { get; set; }
         public virtual ICollection<Invoice> Invoice { get; set; }
         public virtual ICollection<MoneyDelivered> MoneyDelivered { get; set; }

@@ -55,7 +55,6 @@ namespace Yamama.Controllers
         // PUT api/<ProductionByTypeController>/
         [HttpPost]
         [Route("UpdateProd")]
-
         public async Task<IActionResult> UpdateProd(int id, Production prod )
         {
             try

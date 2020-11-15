@@ -8,6 +8,7 @@ namespace Yamama
         public Transporter()
         {
             Cart = new HashSet<Cart>();
+            Factory = new HashSet<Factory>();
         }
 
         public int Idtransporter { get; set; }
@@ -15,5 +16,6 @@ namespace Yamama
         public string TransporterNum { get; set; }
 
         public virtual ICollection<Cart> Cart { get; set; }
+        public virtual ICollection<Factory> Factory { get; set; }
     }
 }

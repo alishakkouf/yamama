@@ -29,7 +29,7 @@ namespace Yamama.Controllers
         // POST api/<ProductionController>
         //request to add new production
         [HttpPost]
-        [Route("/api/addproduction")]
+        [Route("addproduction")]
         public async Task<ActionResult> AddProduction(Production production)
         {
             try
@@ -48,8 +48,7 @@ namespace Yamama.Controllers
         //.........API Controllers for reporting Production reports (daily - montly - annual) .........
    
         [HttpGet]
-        [Route("/api/getProductionReports")]
-
+        [Route("getProductionReports")]
         public async Task<ActionResult<Production>> GetProductionReports(string period, DateTime from, DateTime to)
         {
             try

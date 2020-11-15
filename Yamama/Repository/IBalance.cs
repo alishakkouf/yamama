@@ -9,7 +9,7 @@ namespace Yamama.Repository
    public  interface IBalance
     {
         // function to move the quantity of product from store to balance 
-        Task<int> AddBalanceAsync(string name);
+        Task<Double> AddBalanceAsync(string name);
 
         // get product balance by quantity
         Task<List<(string, double)>> GetProductBalanceQty( DateTime date, string name);

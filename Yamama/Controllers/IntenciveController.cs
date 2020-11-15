@@ -30,7 +30,7 @@ namespace Yamama.Controllers
         // GET: api/IntenciveController>
         [HttpGet] 
         [Route("GetDailyActualIntencive")]
-            public async Task<IActionResult> GetDailyActualIntencive(int id)
+        public async Task<IActionResult> GetDailyActualIntencive(int id)
             {
                 try
                 {
@@ -58,7 +58,7 @@ namespace Yamama.Controllers
         // GET: api/<IntenciveController>
         [HttpGet]
         [Route("GetDailyExpectedIntencive")]
-            public async Task<IActionResult> GetDailyExpectedIntencive(int id)
+        public async Task<IActionResult> GetDailyExpectedIntencive(int id)
             {
                 try
                 {
@@ -85,7 +85,7 @@ namespace Yamama.Controllers
         // GET: api/<IntenciveController>
         [HttpGet]
         [Route("GetExpectedIntenciveByUser")]
-            public async Task<IActionResult> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end)
+        public async Task<IActionResult> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end)
             {
                 try
                 {
@@ -112,7 +112,7 @@ namespace Yamama.Controllers
         // GET: api/<IntenciveController>
         [HttpGet]
         [Route("GetActaulIntenciveByUser")]
-            public async Task<IActionResult> GetActaulIntenciveByUser(string user, string period, DateTime start, DateTime end)
+         public async Task<IActionResult> GetActaulIntenciveByUser(string user, string period, DateTime start, DateTime end)
             {
                 try
                 {
@@ -139,7 +139,7 @@ namespace Yamama.Controllers
         // POST api/<IntenciveController>
         [HttpPost]
         [Route("AddActualIntencive")]
-            public async Task<IActionResult> AddActualIntencive([FromBody] ActualIntencive actual)
+        public async Task<IActionResult> AddActualIntencive([FromBody] ActualIntencive actual)
             {
                 try
                 {
@@ -168,7 +168,7 @@ namespace Yamama.Controllers
         // POST api/<IntenciveController>
         [HttpPost]
         [Route("AddExpectedIntencive")]
-            public async Task<IActionResult> AddExpectedIntencive([FromBody] ExpectedIntencive expected)
+        public async Task<IActionResult> AddExpectedIntencive([FromBody] ExpectedIntencive expected)
             {
                 try
                 {
@@ -255,7 +255,7 @@ namespace Yamama.Controllers
         // DELETE api/IntenciveController>/
         [HttpDelete]
         [Route("DeleteActualIntencive/{id}")]
-            public async Task<IActionResult> DeleteActualIntencive(int id)
+        public async Task<IActionResult> DeleteActualIntencive(int id)
             {
                 try
                 {
@@ -288,7 +288,7 @@ namespace Yamama.Controllers
         // DELETE api/<IntenciveController>/
         [HttpDelete]
         [Route("DeleteExpectedIntencive/{id}")]
-            public async Task<IActionResult> DeleteExpectedIntencive(int id)
+         public async Task<IActionResult> DeleteExpectedIntencive(int id)
             {
                 try
                 {
