@@ -16,22 +16,27 @@ namespace Yamama.Services
         {
             _db = db;
         }
-
         // get product details
-        public async Task<Product> GetProduct(int id)
+        public async Task<Product> GetProduct(string name)
         {
-            var product = await _db.Product.FirstOrDefaultAsync(f => f.Idproduct == id);
-            return product;
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
+            if (_db != null)
+            {
+                var product = await _db.Product.FirstOrDefaultAsync(f => f.Idproduct == prodid);
+                return product;
+            }
+            return null;
         }
 
         ///to get the price of specific product
-        public async Task<Decimal> GetProductPrice(int id)
+        public async Task<Decimal> GetProductPrice(string name)
         {
+            int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
             Decimal result = 0;
             try
             {
                 
-                result = await _db.Product.Where(p => p.Idproduct == id).Select(p => p.Price).FirstOrDefaultAsync();
+                result = await _db.Product.Where(p => p.Idproduct == prodid).Select(p => p.Price).FirstOrDefaultAsync();
                 return result;
             }
             catch (Exception)

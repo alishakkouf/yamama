@@ -31,11 +31,11 @@ namespace YamamaAPI.Controllers
         [HttpGet]
         [Route("/api/getimportreport")]
 
-        public async Task<ActionResult<Invoice>> GetImportedReports( string period , DateTime from, DateTime to)
+        public async Task<ActionResult<Invoice>> GetImportedReports( string period , DateTime from, DateTime to, string invoType)
         {
             try
             {
-                var imported = await _report.GetImportedReports(period, from, to);
+                var imported = await _report.GetImportedReports(period, from, to, invoType);
                 if (imported == null)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
@@ -56,11 +56,11 @@ namespace YamamaAPI.Controllers
         [HttpGet]
         [Route("/api/getproductimportreport")]
 
-        public async Task<ActionResult<Invoice>> GetProductImportedReports(string period, DateTime from, DateTime to, int id )
+        public async Task<ActionResult<Invoice>> GetProductImportedReports(string period, DateTime from, DateTime to, string name, string invoType)
         {
             try
             {
-                var imported = await _report.GetProductImportedReports(period, from, to, id );
+                var imported = await _report.GetProductImportedReports(period, from, to, name, invoType);
                 if (imported == null)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);

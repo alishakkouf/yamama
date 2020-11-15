@@ -25,43 +25,16 @@ namespace Yamama.Controllers
             _product = product;
 
         }
-
-        [HttpGet]
-        [Route("getproductprice")]
-        public async Task<IActionResult> getproductprice(int id)
-        {
-            try
-            {
-                var product = await _product.GetProductPrice(id);
-                //check if the item has value if not  return msg no content
-                if (product == 0)
-                {
-                    ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
-                    return Ok(Response1);
-                }
-                //if the item has value  return succes
-                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", product);
-                return Ok(Response);
-            }
-            //if the operation faild cause of syntax errors or servers errors
-            catch (Exception)
-            {
-                var Response = new ResponseViewModel(false, HttpStatusCode.BadRequest, "failed", null);
-                return Ok(Response);
-            }
-
-        }
-
-
+      
         // to get product details
 
         [HttpGet]
-        [Route("getproduct")]
-        public async Task<ActionResult<Product>> getproduct(int id)
+        [Route("/api/getproduct")]
+        public async Task<ActionResult<Product>> getproduct(string name)
         {
             try
             {
-                var product = await _product.GetProduct(id);
+                var product = await _product.GetProduct(name);
                 //check if the item has value if not  return msg no content
                 if (product == null)
                 {
@@ -80,5 +53,32 @@ namespace Yamama.Controllers
             }
 
         }
+
+        //[HttpGet]
+        //[Route("/api/getproductprice")]
+        //public async Task<IActionResult> getproductprice(int id)
+        //{
+        //    try
+        //    {
+        //        var product = await _product.GetProductPrice(id);
+        //        //check if the item has value if not  return msg no content
+        //        if (product == 0)
+        //        {
+        //            ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
+        //            return Ok(Response1);
+        //        }
+        //        //if the item has value  return succes
+        //        var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", product);
+        //        return Ok(Response);
+        //    }
+        //    //if the operation faild cause of syntax errors or servers errors
+        //    catch (Exception)
+        //    {
+        //        var Response = new ResponseViewModel(false, HttpStatusCode.BadRequest, "failed", null);
+        //        return Ok(Response);
+        //    }
+
+        //}
+
     }
 }

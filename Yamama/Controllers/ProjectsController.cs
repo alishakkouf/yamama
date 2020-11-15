@@ -58,8 +58,8 @@ namespace Yamama.Controllers
         // GET api/<ProjectsController>/5
         //method to send get request to  get specific project by id 
         [HttpGet]
-        [Route("/api/getproject/{id}")]
-        public async Task <ActionResult<Project>> GetProject(int id)
+        [Route("/api/getproject")]
+        public async Task <ActionResult<Project>> getproject(int id)
         {
             try
             {
@@ -86,12 +86,11 @@ namespace Yamama.Controllers
         //method to send post request to add new project
         [HttpPost]
         [Route("/api/addproject")]
-        public async Task <ActionResult> Add(Project project)
+        public async Task <IActionResult> addproject(Project project)
         {
             try
             {
-                await _project.AddProjectAsync(project);
-                await _db.SaveChangesAsync();
+                await _project.AddProjectAsync(project);               
                 //if the operation succucced return success
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", project);
                 return Ok(Response);
@@ -108,13 +107,12 @@ namespace Yamama.Controllers
         // PUT api/<ProjectsController>/5
         //method to send put request to edit specific project by id
         [HttpPut]
-        [Route("/api/updateproject/{id}")]
-        public async Task  <ActionResult> Update( Project project , int id)
+        [Route("/api/updateproject")]
+        public async Task  <IActionResult> updateproject( Project project , int id)
         {
             try
             {
-               await  _project.UpdateProject(id, project);
-                await _db.SaveChangesAsync();
+               await  _project.UpdateProject(id, project);           
                 //if the operation succucced return success
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", project);
                 return Ok(Response);
@@ -122,7 +120,7 @@ namespace Yamama.Controllers
             //if the operation faild cause of syntax errors or servers errors
             catch (Exception)
             {
-                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "Failed", null);
                 return Ok(Response);
             }
         }
@@ -130,20 +128,19 @@ namespace Yamama.Controllers
         // DELETE api/<ProjectsController>/5
         //method to send delete request to remove specific project by id 
         [HttpDelete]
-        [Route("/api/deleteproject/{id}")]
-        public async Task <ActionResult> Delete(int id)
+        [Route("/api/deleteproject")]
+        public async Task <ActionResult> deleteproject(int id)
         {
-            try
-            {
-                 await  _project.DeleteProjectAsync(id);
-                //if the operation succucced return success
-                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", null);
-                return Ok(Response);
-            }
-            //if the operation faild cause of syntax errors or servers errors
-            catch (Exception)
+            
+                var project= await  _project.DeleteProjectAsync(id);
+            if (project == 0)
             {
                 var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", null);
                 return Ok(Response);
             }
         }

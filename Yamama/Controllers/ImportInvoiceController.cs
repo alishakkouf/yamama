@@ -38,8 +38,7 @@ namespace YamamaAPI.Controllers
         {
             try
             {
-                await i_ImportInvoce.AddImportInvoceAsync(impoInvoice);
-                await _db.SaveChangesAsync();              
+                await i_ImportInvoce.AddImportInvoceAsync(impoInvoice);                     
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", impoInvoice);
                 return Ok(Response);
             }
