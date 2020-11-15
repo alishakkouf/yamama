@@ -108,8 +108,8 @@ namespace Yamama.Services
                 {
                     //Define list of visits to store the result
                     List<(string, string, Double)> result = new List<(string, string, double)>();
-                   var clientName = string.Empty;
-                   var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+                    var clientName = string.Empty;
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {
                         //to store the all visits
@@ -146,11 +146,11 @@ namespace Yamama.Services
                         }
                         for (int j = 0; j < visits.Count; j++)
                         {
-                            value = value + 1;
+                            value += 1;
                         }
 
 
-                       result.Add((salesman, clientName, value));
+                        result.Add((salesman, clientName, value));
                     }
 
 
@@ -161,7 +161,7 @@ namespace Yamama.Services
                     //Define list of visits to store the result
                     List<(string, string, Double)> result = new List<(string, string, double)>();
                     var clientName = string.Empty;
-                   var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var year = start.Year; year <= end.Year; year++)
                     {
                         //to store the full sales
@@ -361,7 +361,7 @@ namespace Yamama.Services
                         {
                             if (factoryName != null)
                             {
-                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x=>x.Idfactory).FirstOrDefault();
+                                var factoryId = _db.Factory.Where(x => x.Name == factoryName).Select(x => x.Idfactory).FirstOrDefault();
                                 var one = await _db.Visit.Where(x => x.TaskId == tasks[j] && x.FactoryId == factoryId)
                                     .Select(x => x.Idvisit).SingleOrDefaultAsync();
                                 if (one != 0)
@@ -543,130 +543,210 @@ namespace Yamama.Services
         }
 
         ////////////with no async just for calculation in target service
-        public List<Double> GetVistisBySalesmanRepo(string salesman, string period, DateTime start, DateTime end)
+        //public List<Double> GetVistisBySalesmanRepo(string salesman, string period, DateTime start, DateTime end)
+        //{
+        //    try
+        //    {
+        //        if (period == "daily")
+        //        {
+        //            //Define list of visits each day to store the result
+        //            List<Double> result = new List<double>();
+        //            var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+        //            for (var day = start.Date; day <= end.Date; day = day.AddDays(1))
+        //            {
+        //                //to store the all visits
+
+        //                Double value = 0;
+
+        //                string test = day.ToString("yyyy-MM-dd");
+        //                //return list of Idvisits in each day
+
+        //                List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == userId)
+        //                    .Select(x => x.Idtask).ToList();
+        //                List<int> visits = new List<int>();
+        //                for (int j = 0; j < tasks.Count; j++)
+        //                {
+        //                    var one = _db.Visit.Where(x => x.TaskId == tasks[j])
+        //                        .Select(x => x.Idvisit).SingleOrDefault();
+        //                    if (one != 0)
+        //                    {
+        //                        visits.Add(one);
+        //                    }
+        //                }
+        //                for (int j = 0; j < visits.Count; j++)
+        //                {
+        //                    value++;
+        //                }
+        //                result.Add(value);
+
+        //            }
+        //            return result;
+        //        }
+        //        else if (period == "monthly")
+        //        {
+        //            //Define list of productions to store the result
+        //            List<Double> result = new List<double>();
+        //            var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+        //            for (var month = start.Month; month <= end.Month; month++)
+        //            {
+        //                //to store the full visits
+        //                Double value = 0;
+
+        //                //return list of idvisit in each day
+        //                List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
+        //                    .Select(x => x.Idtask).ToList();
+        //                List<int> visits = new List<int>();
+        //                for (int j = 0; j < tasks.Count; j++)
+        //                {
+
+        //                    var one = _db.Visit.Where(x => x.TaskId == tasks[j])
+        //                        .Select(x => x.Idvisit).ToList();
+        //                    foreach (var item in one)
+        //                    {
+        //                        if (item != 0)
+        //                        {
+        //                            visits.Add(item);
+        //                        }
+        //                    }
+        //                }
+        //                for (int j = 0; j < visits.Count; j++)
+        //                {
+        //                    value++;
+        //                }
+
+
+        //                result.Add(value);
+        //            }
+
+
+        //            return result;
+        //        }
+        //        else if (period == "annual")
+        //        {
+        //            //Define list of visits to store the result
+        //            List<Double> result = new List<double>();
+        //            var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+        //            for (var year = start.Year; year <= end.Year; year++)
+        //            {
+        //                //to store the all visits
+        //                Double value = 0;
+
+        //                //return list of idvisit in each day
+        //                List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
+        //                    .Select(x => x.Idtask).ToList();
+        //                List<int> visits = new List<int>();
+        //                for (int j = 0; j < tasks.Count; j++)
+        //                {
+
+        //                    var one = _db.Visit.Where(x => x.TaskId == tasks[j])
+        //                        .Select(x => x.Idvisit).ToList();
+        //                    foreach (var item in one)
+        //                    {
+        //                        if (item != 0)
+        //                        {
+        //                            visits.Add(item);
+        //                        }
+        //                    }
+
+        //                }
+        //                for (int j = 0; j < visits.Count; j++)
+        //                {
+        //                    value++;
+        //                }
+
+        //                result.Add(value);
+        //            }
+
+
+        //            return result;
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return null;
+        //    }
+        //}
+        public Double GetVistisBySalesmanByMonth(string salesman, int? month, int? year)
         {
             try
             {
-                if (period == "daily")
-                {
-                    //Define list of visits each day to store the result
-                    List<Double> result = new List<double>();
-                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
-                    for (var day = start.Date; day <= end.Date; day = day.AddDays(1))
-                    {
-                        //to store the all visits
-
-                        Double value = 0;
-
-                        string test = day.ToString("yyyy-MM-dd");
-                        //return list of Idvisits in each day
-
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.ToString() == test && x.ResponsibleId == userId)
-                            .Select(x => x.Idtask).ToList();
-                        List<int> visits = new List<int>();
-                        for (int j = 0; j < tasks.Count; j++)
-                        {
-                            var one = _db.Visit.Where(x => x.TaskId == tasks[j])
-                                .Select(x => x.Idvisit).SingleOrDefault();
-                            if (one != 0)
-                            {
-                                visits.Add(one);
-                            }
-                        }
-                        for (int j = 0; j < visits.Count; j++)
-                        {
-                            value++;
-                        }
-                        result.Add(value);
-
-                    }
-                    return result;
-                }
-                else if (period == "monthly")
-                {
-                    //Define list of productions to store the result
-                    List<Double> result = new List<double>();
-                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
-                    for (var month = start.Month; month <= end.Month; month++)
-                    {
-                        //to store the full visits
-                        Double value = 0;
-
-                        //return list of idvisit in each day
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
-                            .Select(x => x.Idtask).ToList();
-                        List<int> visits = new List<int>();
-                        for (int j = 0; j < tasks.Count; j++)
-                        {
-
-                            var one = _db.Visit.Where(x => x.TaskId == tasks[j])
-                                .Select(x => x.Idvisit).ToList();
-                            foreach (var item in one)
-                            {
-                                if (item != 0)
-                                {
-                                    visits.Add(item);
-                                }
-                            }
-                        }
-                        for (int j = 0; j < visits.Count; j++)
-                        {
-                            value++;
-                        }
-
-
-                        result.Add(value);
-                    }
-
-
-                    return result;
-                }
-                else if (period == "annual")
+                if (year == null)
                 {
                     //Define list of visits to store the result
-                    List<Double> result = new List<double>();
+                    Double result = 0;
                     var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
-                    for (var year = start.Year; year <= end.Year; year++)
+
+
+
+                    //return list of idvisit in each day
+                    List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Month == month && x.ResponsibleId == userId)
+                        .Select(x => x.Idtask).ToList();
+                    List<int> visits = new List<int>();
+                    for (int j = 0; j < tasks.Count; j++)
                     {
-                        //to store the all visits
-                        Double value = 0;
 
-                        //return list of idvisit in each day
-                        List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
-                            .Select(x => x.Idtask).ToList();
-                        List<int> visits = new List<int>();
-                        for (int j = 0; j < tasks.Count; j++)
+                        var one = _db.Visit.Where(x => x.TaskId == tasks[j])
+                            .Select(x => x.Idvisit).ToList();
+                        foreach (var item in one)
                         {
-
-                            var one = _db.Visit.Where(x => x.TaskId == tasks[j])
-                                .Select(x => x.Idvisit).ToList();
-                            foreach (var item in one)
+                            if (item != 0)
                             {
-                                if (item != 0)
-                                {
-                                    visits.Add(item);
-                                }
+                                visits.Add(item);
                             }
-
                         }
-                        for (int j = 0; j < visits.Count; j++)
-                        {
-                            value++;
-                        }
-
-                        result.Add(value);
                     }
-
+                    for (int j = 0; j < visits.Count; j++)
+                    {
+                        result++;
+                    }
 
                     return result;
                 }
-                return null;
+                else if (month == null)
+                {
+                    Double result = 0;
+                    var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
+
+
+                    //return list of idvisit in each day
+                    List<int> tasks = _db.Task.Where(x => x.StartDate.Value.Year == year && x.ResponsibleId == userId)
+                        .Select(x => x.Idtask).ToList();
+                    List<int> visits = new List<int>();
+                    for (int j = 0; j < tasks.Count; j++)
+                    {
+
+                        var one = _db.Visit.Where(x => x.TaskId == tasks[j])
+                            .Select(x => x.Idvisit).ToList();
+                        foreach (var item in one)
+                        {
+                            if (item != 0)
+                            {
+                                visits.Add(item);
+                            }
+                        }
+
+                    }
+                    for (int j = 0; j < visits.Count; j++)
+                    {
+                        result++;
+                    }
+
+                    return result;
+                }
+
+
+                return 0;
             }
+            
             catch (Exception)
             {
 
-                return null;
+                return 0;
             }
         }
     }
+
 }
+

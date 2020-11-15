@@ -12,7 +12,7 @@ namespace Yamama.Repository
         Task<int> AddTarget(Target target);
         Task<int> UpdateTarget(int id,Target target);
         Task<int> DeleteTarget(int id);
-        List<TargetViewModel> EvaluateSalesman(string salesman, string period, DateTime start, DateTime end);
+        List<(Double,Double)> EvaluateSalesman(string salesman, string period, DateTime start, DateTime end);
        //Task<List<Double>> GetVisitTartget(int salesman, string period, DateTime start, DateTime end);
 
     }
