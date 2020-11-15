@@ -47,12 +47,12 @@ namespace Yamama.Controllers
 
         // GET: api/<StoreController>
         [HttpGet]
-        [Route("/api/getproductstore/{id}")]
-        public async  Task<ActionResult> GetProductStore(int id)
+        [Route("/api/getproductstore")]
+        public async  Task<ActionResult> GetProductStore(string name )
         {
             try
             {
-                int prodStore = _store.GetProductStore(id);
+               var prodStore =   _store.GetProductStore(name);
                 if (prodStore == null)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
@@ -74,7 +74,7 @@ namespace Yamama.Controllers
             try
             {
                 var prodStore = await _store.GetTotalStore();
-                if (prodStore == null)
+                if (prodStore == 0)
                 {
                     ResponseViewModel Response1 = new ResponseViewModel(false, HttpStatusCode.NoContent, "NoContent", null);
                     return Ok(Response1);

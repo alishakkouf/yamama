@@ -20,16 +20,15 @@ namespace Yamama.Services
             _db = db;
         }
         // function to add new factory
-        public async  Task<int> AddFactoryAsync(Factory factory)
+        public async Task<int> AddFactoryAsync(Factory factory)
         {
-           int result = 0;
-         // add new factory
-           await _db.Factory.AddAsync(factory);
+            int result = 0;
+            // add new factory
+            await _db.Factory.AddAsync(factory);
             await _db.SaveChangesAsync();
             //if the operation succecced return 1
             result += 1;
-            return result;
-     
+            return result;   
         }
 
         //function to delete factory by id 
@@ -71,9 +70,13 @@ namespace Yamama.Services
         //function to get specific factory by id
         public async Task <Factory> GetFactory(int id)
         {
-            //get all factories
-            return   await _db.Factory.FirstOrDefaultAsync(f => f.Idfactory == id);
-           
+            if (_db != null)
+            {
+                //get all factories
+                return await _db.Factory.FirstOrDefaultAsync(f => f.Idfactory == id);
+            }
+            return null;
+
         }
 
 

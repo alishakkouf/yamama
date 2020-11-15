@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Yamama.ViewModels;
 
 namespace Yamama.Repository
 {
@@ -10,11 +10,11 @@ namespace Yamama.Repository
     {
         
         Task<int> AddstoreAsync(Store store);
-     
-       ///***** reporting for stores based on product type ...................
 
-          int GetProductStore(int id);
-          Task <int> GetTotalStore();
+        ///***** reporting for stores based on product type ...................
+
+        List<(string,int)> GetProductStore(string  name);
+        Task <int> GetTotalStore();
 
     }
 }

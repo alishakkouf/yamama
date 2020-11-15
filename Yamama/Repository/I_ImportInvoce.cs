@@ -14,24 +14,14 @@ namespace Yamama.Repository
 
 
         //.................Report for import  for all product................
-         Task<List<Double>> GetImportedReports(string period , DateTime from, DateTime to);
+         Task<List<Double>> GetImportedReports(string period , DateTime from, DateTime to, string invoType);
         
         ///........Report for Import based on product type ...........
         ///
 
-        Task<List<Double>> GetProductImportedReports(string period, DateTime from, DateTime to, int id );
+        Task<List<(string, double)>> GetProductImportedReports(string period, DateTime from, DateTime to, string name , string invoType);
         
 
-        //Task<List<Double>> GetDailyTypeImported(DateTime from /*, DateTime to*/, int id);
-
-        //Task<List<Double>> GetMonthlyTypeImported(DateTime from, DateTime to, int id);
-
-        //Task<List<Double>> GetAnnualTypeImported(DateTime from, DateTime to, int id);
-
-        //Task<List<Double>> GetDailyImported(DateTime from /*, DateTime to*/);
-
-        //Task<List<Double>> GetMonthlyImported(DateTime from, DateTime to);
-
-        //Task<List<Double>> GetAnnualImported(DateTime from, DateTime to);
+       
     };
 }

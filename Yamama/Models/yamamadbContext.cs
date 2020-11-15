@@ -1,16 +1,17 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Yamama
 {
-    public partial class yamamadbContext : DbContext
+    public partial class yamamadbContext : IdentityDbContext<ExtendedUser>
     {
         //public yamamadbContext()
         //{
         //}
 
-        public yamamadbContext(DbContextOptions<yamamadbContext> options)
+    public yamamadbContext(DbContextOptions<yamamadbContext> options)
             : base(options)
         {
         }
@@ -44,26 +45,28 @@ namespace Yamama
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<RequestInformation> RequestInformation { get; set; }
-        
         public virtual DbSet<Store> Store { get; set; }
         public virtual DbSet<Target> Target { get; set; }
         public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<TaskType> TaskType { get; set; }
         public virtual DbSet<Transporter> Transporter { get; set; }
+        //public virtual DbSet<User> User { get; set; }
         public virtual DbSet<Visit> Visit { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=batoolhammoud95_mysql;");
-            }
-        }
+//        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//        {
+//            if (!optionsBuilder.IsConfigured)
+//            {
+//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                optionsBuilder.UseMySql("Server=localhost;Database=yamamadb;UID=root;PWD=0935479586;");
+//            }
+//        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<ActualIntencive>(entity =>
             {
                 entity.HasKey(e => e.IdactualIntencive)
@@ -84,7 +87,7 @@ namespace Yamama
 
                 entity.Property(e => e.IdUser)
                     .HasColumnName("id_user")
-                    .HasColumnType("varchar(255)");
+                    .HasColumnType("varchar(45)");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.ActualIntencive)
@@ -126,16 +129,10 @@ namespace Yamama
                 entity.ToTable("alert");
 
                 entity.HasIndex(e => e.FileId)
-                    .HasName("file_id_fk_idx");
-
-                entity.HasIndex(e => e.RecieverId)
-                    .HasName("reciever_id_fk_idx");
-
-                entity.HasIndex(e => e.SenderId)
-                    .HasName("sender_id_fk_idx");
+                    .HasName("file_id");
 
                 entity.HasIndex(e => e.TaskId)
-                    .HasName("task_id_fk_idx");
+                    .HasName("task_id");
 
                 entity.Property(e => e.Idalert).HasColumnName("idalert");
 
@@ -145,35 +142,23 @@ namespace Yamama
                     .HasColumnName("notes")
                     .HasColumnType("longtext");
 
-                entity.Property(e => e.RecieverId)
-                    .HasColumnName("reciever_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.RecieverId).HasColumnName("reciever_id");
 
-                entity.Property(e => e.SenderId)
-                    .HasColumnName("sender-id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.SenderId).HasColumnName("sender-id");
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
                 entity.HasOne(d => d.File)
                     .WithMany(p => p.Alert)
                     .HasForeignKey(d => d.FileId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("file_id_fk");
-
-                entity.HasOne(d => d.Reciever)
-                    .WithMany(p => p.AlertReciever)
-                    .HasForeignKey(d => d.RecieverId)
-                    .HasConstraintName("reciever_id_fk");
-
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.AlertSender)
-                    .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("sender_id_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Alert)
                     .HasForeignKey(d => d.TaskId)
-                    .HasConstraintName("task_id_fk");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("task_id_al_fk");
             });
 
             modelBuilder.Entity<Answers>(entity =>
@@ -649,6 +634,10 @@ namespace Yamama
                     .HasColumnName("user_id")
                     .HasColumnType("varchar(255)");
 
+                entity.Property(e => e.Supplier)
+                    .HasColumnName("supplier")
+                    .HasColumnType("varchar(100)");
+
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Invoice)
                     .HasForeignKey(d => d.FactoryId)
@@ -827,6 +816,7 @@ namespace Yamama
                     .HasColumnType("decimal(10,0)");
             });
 
+
             modelBuilder.Entity<Production>(entity =>
             {
                 entity.HasKey(e => e.Idproduction)
@@ -925,16 +915,10 @@ namespace Yamama
                 entity.ToTable("request_information");
 
                 entity.HasIndex(e => e.FileId)
-                    .HasName("file_id_info_fk_idx");
-
-                entity.HasIndex(e => e.RecieverId)
-                    .HasName("reciever_id_fk_idx");
-
-                entity.HasIndex(e => e.SenderId)
-                    .HasName("sender_id_fk_idx");
+                    .HasName("file_id");
 
                 entity.HasIndex(e => e.TaskId)
-                    .HasName("task_req_id_fk_idx");
+                    .HasName("task_id");
 
                 entity.Property(e => e.IdrequestInformation).HasColumnName("idrequest_information");
 
@@ -944,35 +928,23 @@ namespace Yamama
                     .HasColumnName("notes")
                     .HasColumnType("longtext");
 
-                entity.Property(e => e.RecieverId)
-                    .HasColumnName("reciever_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.RecieverId).HasColumnName("reciever_id");
 
-                entity.Property(e => e.SenderId)
-                    .HasColumnName("sender_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.SenderId).HasColumnName("sender_id");
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
                 entity.HasOne(d => d.File)
                     .WithMany(p => p.RequestInformation)
                     .HasForeignKey(d => d.FileId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("file_id_info_fk");
-
-                entity.HasOne(d => d.Reciever)
-                    .WithMany(p => p.RequestInformationReciever)
-                    .HasForeignKey(d => d.RecieverId)
-                    .HasConstraintName("recieve_id_fk");
-
-                entity.HasOne(d => d.Sender)
-                    .WithMany(p => p.RequestInformationSender)
-                    .HasForeignKey(d => d.SenderId)
-                    .HasConstraintName("send_id_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.RequestInformation)
                     .HasForeignKey(d => d.TaskId)
-                    .HasConstraintName("task_req_id_fk");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("task_id_info_fk");
             });
 
             modelBuilder.Entity<Store>(entity =>
@@ -1001,6 +973,7 @@ namespace Yamama
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("product_store_fk");
             });
+
 
             modelBuilder.Entity<Target>(entity =>
             {
@@ -1039,23 +1012,17 @@ namespace Yamama
 
                 entity.ToTable("task");
 
-                entity.HasIndex(e => e.CreatorId)
-                    .HasName("creator_id_fk_idx");
-
                 entity.HasIndex(e => e.FileId)
                     .HasName("file_id_idx");
 
                 entity.HasIndex(e => e.PhotoId)
                     .HasName("photo_id_idx");
 
-                entity.HasIndex(e => e.ResponsibleId)
-                    .HasName("responsible_id_fk_idx");
-
                 entity.HasIndex(e => e.StatusId)
-                    .HasName("status_id_fk_idx");
+                    .HasName("status_id");
 
                 entity.HasIndex(e => e.TypeId)
-                    .HasName("type_id_fk_idx");
+                    .HasName("type_id");
 
                 entity.Property(e => e.Idtask).HasColumnName("idtask");
 
@@ -1063,9 +1030,7 @@ namespace Yamama
                     .HasColumnName("content")
                     .HasColumnType("varchar(1000)");
 
-                entity.Property(e => e.CreatorId)
-                    .HasColumnName("creator_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.CreatorId).HasColumnName("creator_id");
 
                 entity.Property(e => e.EndDate)
                     .HasColumnName("end_date")
@@ -1079,9 +1044,7 @@ namespace Yamama
 
                 entity.Property(e => e.PhotoId).HasColumnName("photo_id");
 
-                entity.Property(e => e.ResponsibleId)
-                    .HasColumnName("responsible_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.ResponsibleId).HasColumnName("responsible_id");
 
                 entity.Property(e => e.StartDate)
                     .HasColumnName("start_date")
@@ -1090,11 +1053,6 @@ namespace Yamama
                 entity.Property(e => e.StatusId).HasColumnName("status_id");
 
                 entity.Property(e => e.TypeId).HasColumnName("type_id");
-
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.TaskCreator)
-                    .HasForeignKey(d => d.CreatorId)
-                    .HasConstraintName("creator_id_fk");
 
                 entity.HasOne(d => d.File)
                     .WithMany(p => p.Task)
@@ -1106,19 +1064,16 @@ namespace Yamama
                     .HasForeignKey(d => d.PhotoId)
                     .HasConstraintName("photo_id");
 
-                entity.HasOne(d => d.Responsible)
-                    .WithMany(p => p.TaskResponsible)
-                    .HasForeignKey(d => d.ResponsibleId)
-                    .HasConstraintName("responsible_id_fk");
-
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Task)
                     .HasForeignKey(d => d.StatusId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("status_id_fk");
 
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Task)
                     .HasForeignKey(d => d.TypeId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("type_id_fk");
             });
 
@@ -1168,6 +1123,8 @@ namespace Yamama
                     .HasColumnType("varchar(50)");
             });
 
+       
+
             modelBuilder.Entity<Visit>(entity =>
             {
                 entity.HasKey(e => e.Idvisit)
@@ -1176,16 +1133,16 @@ namespace Yamama
                 entity.ToTable("visit");
 
                 entity.HasIndex(e => e.FactoryId)
-                    .HasName("factory_id_fk_idx");
+                    .HasName("factory_id");
 
                 entity.HasIndex(e => e.ProjectId)
-                    .HasName("project_id_fk_idx");
+                    .HasName("project_id");
 
                 entity.HasIndex(e => e.TaskId)
-                    .HasName("task_id_fk_idx");
+                    .HasName("task_id");
 
                 entity.HasIndex(e => e.UserId)
-                    .HasName("user_id_fk_idx");
+                    .HasName("user_id");
 
                 entity.Property(e => e.Idvisit).HasColumnName("idvisit");
 
@@ -1201,30 +1158,27 @@ namespace Yamama
 
                 entity.Property(e => e.TaskId).HasColumnName("task_id");
 
-                entity.Property(e => e.UserId)
-                    .HasColumnName("user_id")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.HasOne(d => d.Factory)
                     .WithMany(p => p.Visit)
                     .HasForeignKey(d => d.FactoryId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("factory_id_fk");
 
                 entity.HasOne(d => d.Project)
                     .WithMany(p => p.Visit)
                     .HasForeignKey(d => d.ProjectId)
+                    .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("project_id_fk");
 
                 entity.HasOne(d => d.Task)
                     .WithMany(p => p.Visit)
                     .HasForeignKey(d => d.TaskId)
-                    .HasConstraintName("task_fk");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Visit)
-                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("user_id_fk");
+                    .HasConstraintName("task_id_fk");
+
+            
             });
         }
     }

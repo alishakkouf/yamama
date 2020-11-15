@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 //using Yamama.Models;
 using Yamama.Repository;
+using Yamama.ViewModels;
 
 namespace Yamama.Services
 {
@@ -28,20 +29,25 @@ namespace Yamama.Services
             return result;
 
         }
-     
-        /////*****reporting *****
- 
-        //get the existing quantity in store for specific product
-        public  int GetProductStore(int id)
-        {
-            int qty =   _db.Store.Where(s => s.ProductId == id).Select(s => s.Quantity).FirstOrDefault();
 
-            return qty;
+        /////*****reporting *****
+
+        //get the existing quantity in store for specific product
+        public   List<(string, int)> GetProductStore(string name)
+        {
+ 
+                 int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
+                List<(string, int)> result = new List<(string, int)>();
+                int qty = _db.Store.Where(s => s.ProductId == prodid).Select(s => s.Quantity).FirstOrDefault();
+                //string nam = _db.Product.Where(p => p.Idproduct ==id).Select(p => p.Name).FirstOrDefault();
+                result.Add((name, qty));
+            
+                return result; 
         }
         //get the existing quantity in store for specific product
         public async Task<int> GetTotalStore()
         {
-            int qty = 0;// await _db.Store.SumAsync(s => s.Quantity);
+            int qty = +await _db.Store.SumAsync(s => s.Quantity);
 
             return qty;
           
