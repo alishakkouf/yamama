@@ -88,8 +88,8 @@ namespace Yamama.Services
             if (_yamamadbContext != null)
             {
                 InvoiceCartViewModel invoiceCartViewModel = new InvoiceCartViewModel();
-                //try
-                //{
+                try
+                {
                     //get items from invoice table according to invoice_id
                     Invoice invoiceInfo =  GetAbstractInvoice(invoiceId);
 
@@ -126,12 +126,12 @@ namespace Yamama.Services
                     invoiceCartViewModel.Money = MoneyList;
 
                     return invoiceCartViewModel;
-                //}
-                //catch (Exception)
-                //{
+                }
+                catch (Exception)
+                {
 
-                //    return null;
-                //}
+                    return null;
+                }
             }
 
             return null;
