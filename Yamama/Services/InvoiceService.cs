@@ -88,8 +88,8 @@ namespace Yamama.Services
             if (_yamamadbContext != null)
             {
                 InvoiceCartViewModel invoiceCartViewModel = new InvoiceCartViewModel();
-                try
-                {
+                //try
+                //{
                     //get items from invoice table according to invoice_id
                     Invoice invoiceInfo =  GetAbstractInvoice(invoiceId);
 
@@ -126,12 +126,12 @@ namespace Yamama.Services
                     invoiceCartViewModel.Money = MoneyList;
 
                     return invoiceCartViewModel;
-                }
-                catch (Exception)
-                {
+                //}
+                //catch (Exception)
+                //{
 
-                    return null;
-                }
+                //    return null;
+                //}
             }
 
             return null;
@@ -238,8 +238,8 @@ namespace Yamama.Services
                
         public async Task<List<(string,Double)>> GetSalesReports(string period, DateTime start, DateTime end)
         {
-            try
-            {
+            //try
+            //{
                 if (period == "daily")
                 {
                     //Define list of date and valyes to store the result
@@ -366,12 +366,12 @@ namespace Yamama.Services
                 }*/
 
                 return null;
-            }
-            catch (Exception)
-            {
+            //}
+            //catch (Exception)
+            //{
 
-                return null;
-            }
+            //    return null;
+            //}
         }
 
         public async Task<List<(string,MoneyAndQuantity)>> GetSalesReportsClientCement(string factoryName, string projectName, string CementType, string period, DateTime from, DateTime end)

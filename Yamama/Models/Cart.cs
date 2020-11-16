@@ -8,7 +8,7 @@ namespace Yamama
         public int IdCart { get; set; }
         public int? ProductId { get; set; }
         public double? Price { get; set; }
-        public Double Qty { get; set; }
+        public int Qty { get; set; }
         public double? SubCost { get; set; }
         public int InvoiceId { get; set; }
         public int? TransportedId { get; set; }
