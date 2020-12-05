@@ -11,5 +11,8 @@ namespace Yamama.Repository
         Task<Double> AddQuestionnaire(QuestionnaireViewModel questionnaireViewModel);
         //Task<List<CustomerSatisfactionReports>> GetQuestionnaireTexts(int factory , int project);
         Task<List<QuestionnairesReports>> GetQuestionnaireTexts(int factory, int project);
+
+        Task<fullQuestionModel> AddQuestionModel(fullQuestionModel questionModel);
+        Task<string> AddModelName(string name);
     }
 }

@@ -8,8 +8,8 @@ namespace Yamama.ViewModels
 {
     public class QuestionnaireViewModel
     {
-        public int FactoryId { get; set; }
-        public int ProjectId { get; set; }
+        public string FactoryId { get; set; }
+        public string ProjectId { get; set; }
         public string Notes { get; set; }
         public List<QA> QA { get; set; }
     }

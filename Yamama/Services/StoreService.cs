@@ -33,12 +33,12 @@ namespace Yamama.Services
         /////*****reporting *****
 
         //get the existing quantity in store for specific product
-        public   List<(string, Double)> GetProductStore(string name)
+        public   List<(string, double)> GetProductStore(string name)
         {
  
                  int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
-                List<(string, Double)> result = new List<(string, Double)>();
-                Double qty = _db.Store.Where(s => s.ProId == prodid).Select(s => s.Quantity).FirstOrDefault();
+                List<(string, double)> result = new List<(string, double)>();
+                double qty = _db.Store.Where(s => s.ProId == prodid).Select(s => s.Quantity).FirstOrDefault();
             //string nam = _db.Product.Where(p => p.Idproduct == id).Select(p => p.Name).FirstOrDefault();
             result.Add((name, qty));
             

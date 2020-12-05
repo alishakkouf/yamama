@@ -1,11 +1,10 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Yamama
 {
-    public partial class yamamadbContext : IdentityDbContext<ExtendedUser>
+    public partial class yamamadbContext : DbContext
     {
         //public yamamadbContext()
         //{
@@ -43,6 +42,7 @@ namespace Yamama
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<Production> Production { get; set; }
         public virtual DbSet<Project> Project { get; set; }
+        public virtual DbSet<QModelNames> QModelNames { get; set; }
         public virtual DbSet<Questions> Questions { get; set; }
         public virtual DbSet<RequestInformation> RequestInformation { get; set; }
         public virtual DbSet<Store> Store { get; set; }
@@ -65,7 +65,6 @@ namespace Yamama
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<ActualIntencive>(entity =>
             {
                 entity.HasKey(e => e.IdactualIntencive)
@@ -930,6 +929,20 @@ namespace Yamama
                     .HasColumnType("varchar(50)");
             });
 
+            modelBuilder.Entity<QModelNames>(entity =>
+            {
+                entity.HasKey(e => e.IdqModelNames)
+                    .HasName("PRIMARY");
+
+                entity.ToTable("q_model_names");
+
+                entity.Property(e => e.IdqModelNames).HasColumnName("idq_model_names");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasColumnType("varchar(1000)");
+            });
+
             modelBuilder.Entity<Questions>(entity =>
             {
                 entity.HasKey(e => e.IdQuestions)
@@ -937,11 +950,21 @@ namespace Yamama
 
                 entity.ToTable("questions");
 
+                entity.HasIndex(e => e.ModelName)
+                    .HasName("model_name_idx");
+
                 entity.Property(e => e.IdQuestions).HasColumnName("idQuestions");
+
+                entity.Property(e => e.ModelName).HasColumnName("model_name");
 
                 entity.Property(e => e.QuestionText)
                     .HasColumnName("question_text")
                     .HasColumnType("text");
+
+                entity.HasOne(d => d.ModelNameNavigation)
+                    .WithMany(p => p.Questions)
+                    .HasForeignKey(d => d.ModelName)
+                    .HasConstraintName("model_name");
             });
 
             modelBuilder.Entity<RequestInformation>(entity =>

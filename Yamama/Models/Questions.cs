@@ -13,7 +13,9 @@ namespace Yamama
 
         public int IdQuestions { get; set; }
         public string QuestionText { get; set; }
+        public int? ModelName { get; set; }
 
+        public virtual QModelNames ModelNameNavigation { get; set; }
         public virtual ICollection<Answers> Answers { get; set; }
         public virtual ICollection<LinkRQA> LinkRQA { get; set; }
     }

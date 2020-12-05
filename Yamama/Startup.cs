@@ -12,6 +12,7 @@ using Yamama.Repository;
 using Yamama.Services;
 using Yamama.ViewModels;
 using IEmailSender = Yamama.Repository.IEmailSender;
+using System;
 //using Yamama.Models.AppYamamaContext;
 
 namespace Yamama
@@ -34,7 +35,7 @@ namespace Yamama
             // Add application services.
 
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddTransient<Iquestionnaire, QuestionnaireService>();
+            services.AddScoped<Iquestionnaire, QuestionnaireService>();
             services.AddScoped<IInvoicecs, InvoiceService>();
             services.AddScoped<ICart, CartService>();
             services.Configure<AuthMessageSMSSenderOptions>(Configuration);
@@ -50,6 +51,8 @@ namespace Yamama
 
             }).AddEntityFrameworkStores<yamamadbContext>()
               .AddDefaultTokenProviders();
+
+    
 
 
             // inject the repositories and services classes

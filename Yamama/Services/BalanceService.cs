@@ -139,10 +139,12 @@ namespace Yamama.Services
 
         public async Task<double> GetAllBalancePrice(DateTime date)
         {
-            try
-            {
+            //try
+            //{
+                List<Balance> bb = _db.Balance.ToList();
                 // pass all balance record
-                foreach (var item in _db.Balance)
+                //foreach (var item in _db.Balance)
+                for(int j=0;j<bb.Count;j++)
             {
                
                 //variable to store the total last period  value (qty * price for each product in this month)
@@ -164,12 +166,12 @@ namespace Yamama.Services
             }
             return 0;
 
-            }
+            //}
 
-            catch (Exception)
-            {
-                return 0;
-            }
+            //catch (Exception)
+            //{
+            //    return 0;
+            //}
         }
 
 

@@ -48,7 +48,7 @@ namespace Yamama.Controllers
         // GET: api/<StoreController>
         [HttpGet]
         [Route("getproductstore")]
-        public async  Task<ActionResult> GetProductStore(string name )
+        public async  Task<ActionResult> getproductstore(string name )
         {
             try
             {

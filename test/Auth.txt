@@ -20,3 +20,11 @@
 "Password" : "Ali@123456789",
 
 "RememberMe" : true
+
+
+change pass
+	"CurrentPass":"a_shakkouf@prokoders.com",
+
+	"NewPass":"La@123456789",
+	
+"ConfirmPass":"La@123456789"

@@ -44,7 +44,7 @@ namespace Yamama.Controllers
 
         //POST api/<CustomerController>
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")] 
         [Route("GetQuestion")]
         public async Task<IActionResult> GetQuestion(int factory, int project)
         {
@@ -61,6 +61,43 @@ namespace Yamama.Controllers
                 return Ok(Response);
             }
 
+        }
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")] 
+        [Route("AddQuestionModel")]
+        public async Task<IActionResult> AddQuestionModel(fullQuestionModel questionModel) 
+        {
+            var result = await _question.AddQuestionModel(questionModel);
+            if (result != null)
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
+        }
+
+
+        [HttpPost]
+        //[Authorize(Roles = "Admin")] 
+        [Route("AddModelName")]
+        public async Task<IActionResult> AddModelName(string name)
+        {
+            var result = await _question.AddModelName(name);
+            if (result == "success")
+            {
+                var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
+                return Ok(Response);
+            }
+            else
+            {
+                var Response = new ResponseViewModel(false, HttpStatusCode.NoContent, "failed", null);
+                return Ok(Response);
+            }
         }
     }
 }

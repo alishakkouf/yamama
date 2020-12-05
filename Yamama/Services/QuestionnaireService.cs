@@ -16,6 +16,54 @@ namespace Yamama.Services
         {
             _yamamadbcontext = yamamadbContext;
         }
+
+        public async Task<fullQuestionModel> AddQuestionModel(fullQuestionModel questionModel)
+        {
+            int modelId = _yamamadbcontext.QModelNames.Where(x => x.Name == questionModel.ModelName).Select(x => x.IdqModelNames).SingleOrDefault();
+
+            List<Answers> result = new List<Answers>();
+                Questions q = new Questions()
+                {
+                    QuestionText = questionModel.Question,
+                    ModelName = modelId
+                };
+                await _yamamadbcontext.Questions.AddAsync(q);
+                await _yamamadbcontext.SaveChangesAsync();
+
+
+                //get id for this questionnaire
+                var RecentQuestionnaire = _yamamadbcontext.Questions.OrderByDescending(p => p.IdQuestions).FirstOrDefault();
+                int RecentQuestionID = RecentQuestionnaire.IdQuestions;
+
+                for (int j = 0; j < questionModel.Answers.Count; j++)
+                {
+                    Answers answers = new Answers()
+                    {
+                        AnswerText = questionModel.Answers[j],
+                        AnswerWeight = questionModel.Weights[j],
+                        QuestionId=RecentQuestionID
+                    
+                    };
+                result.Add(answers);
+                  
+                }
+          await  insertToAnswers(result);
+
+
+            return questionModel; ;
+        }
+
+        public async Task<Double> insertToAnswers(List<Answers> result )
+        {
+            for (int i = 0; i < result.Count; i++)
+            {
+               
+               await _yamamadbcontext.Answers.AddAsync(result[i]);
+               await _yamamadbcontext.SaveChangesAsync();
+            }
+            return 0;
+        }
+
         public async Task<Double> AddQuestionnaire(QuestionnaireViewModel questionnaireViewModel)
         {
             List<QA> qa = questionnaireViewModel.QA;
@@ -30,14 +78,16 @@ namespace Yamama.Services
             }
             double avg = sum / (qa.Count);
 
-            //if (questionnaireViewModel.Factory != 0) { client = questionnaireViewModel.Factory; } else { client = questionnaireViewModel.Project; }
+            int p_id = _yamamadbcontext.Project.Where(x => x.Name == questionnaireViewModel.ProjectId).Select(x => x.Idproject).SingleOrDefault();
+            int f_id = _yamamadbcontext.Factory.Where(x => x.Name == questionnaireViewModel.FactoryId).Select(x => x.Idfactory).SingleOrDefault();
+
 
             CustomerSatisfactionReports reports = new CustomerSatisfactionReports
             {
 
-                ProjectId = (questionnaireViewModel.ProjectId != 0) ? questionnaireViewModel.ProjectId : (int?)null,
+                ProjectId = (p_id != 0) ? p_id : (int?)null,
 
-                FactoryId = (questionnaireViewModel.FactoryId != 0) ? questionnaireViewModel.FactoryId : (int?) null,
+                FactoryId = (f_id != 0) ? f_id : (int?) null,
 
 
                 Notes = questionnaireViewModel.Notes,
@@ -118,6 +168,7 @@ namespace Yamama.Services
                 QuestionnairesReports SubResult = new QuestionnairesReports();
                 string ProjectName = _yamamadbcontext.Project.Where(x => x.Idproject == satisfactionReports[i].ProjectId).Select
                      (x => x.Name).SingleOrDefault();
+
                 string FactoryName = _yamamadbcontext.Factory.Where(x => x.Idfactory == satisfactionReports[i].FactoryId).Select
                      ( x => x.Name).SingleOrDefault();
                 SubResult.client = (satisfactionReports[i].ProjectId != null) ? ProjectName : FactoryName;
@@ -150,7 +201,25 @@ namespace Yamama.Services
             return ListText;
         }
 
+        public async Task<string> AddModelName(string name)
+        {
+            try
+            {
+                QModelNames qModelNames = new QModelNames();
+                qModelNames.Name = name;
+              await  _yamamadbcontext.QModelNames.AddAsync(qModelNames);
+               await _yamamadbcontext.SaveChangesAsync();
+                return "success";
+            }
+            catch (Exception)
+            {
 
-
+                return "failed";
+            }
+       
         }
+
+
+
+    }
 }

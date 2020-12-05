@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -40,10 +41,10 @@ namespace Yamama.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterInformation userRegisterInformation)
         {
-            //try
-            //{
-            //check if the email is in use
-            var user1 = await userManager.FindByEmailAsync(userRegisterInformation.E_mail);
+            try
+            {
+                //check if the email is in use
+                var user1 = await userManager.FindByEmailAsync(userRegisterInformation.E_mail);
             if (user1 == null)
             {
 
@@ -61,9 +62,13 @@ namespace Yamama.Controllers
 
 
                     //var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-                    //var confirmationlink = Url.Action("ConfirmEmail", "Auth", new { userId = user.Id, Token = token }, Request.Scheme);
+                    //var confirmationlink = Url.Action("ConfirmEmail", "Auth", new { userId = user.Id, token = token }, Request.Scheme);
 
                     //logger.Log(LogLevel.Warning, confirmationlink);
+
+                    //   var checkConfirm = ConfirmEmail(user.Id, token);
+                 
+
                     await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
                     return Ok("successful");
                 }
@@ -72,16 +77,32 @@ namespace Yamama.Controllers
                     return BadRequest();
                 }
             }
-            else { return BadRequest("the email is in use !! try another email"); }
+            else { return BadRequest("the email is in use !! try another  email"); }
 
-            //}
-            //catch (Exception)
-            //{
-            //    return BadRequest();
-            //}
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
 
+        //public void ConfirmEmail(string id, string token)
+        //{
+        //    //if (id == null || token == null)
+        //    //{
+        //    //    return BadRequest("the id or token is null !!");
+        //    //}
+        //    ExtendedUser user = userManager.FindByIdAsync(id);
+        //    if (user == null) { return BadRequest("user with id " + id + "not found !!"); }
+
+        //    else
+        //    {
+
+        //        var result = userManager.ConfirmEmailAsync(user, token);
+        //        return Ok();
+        //    }
+        //}
 
         [HttpPost]
         [Route("Login")]
@@ -133,6 +154,7 @@ namespace Yamama.Controllers
 
         //    var test = await smsSender.SendSmsAsync(twoFactor.number, message);
         //    return Ok();
+
 
         //}
 
@@ -288,8 +310,11 @@ namespace Yamama.Controllers
             if (usr != null /*&& await userManager.IsEmailConfirmedAsync(usr)*/)
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(usr);
+                
+                var encodedCode = HttpUtility.UrlEncode(token);
 
-                var passwordResetLink = Url.Action("ResetPassword", "Auth", new { email = Email, token = token }, Request.Scheme);
+
+                var passwordResetLink = Url.Action("ResetPassword", "Auth", new { email = Email, token = encodedCode }, Request.Scheme);
                 logger.Log(LogLevel.Warning, passwordResetLink);
 
                 return passwordResetLink;

@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Alexa.NET.Notifications" Version="1.0.4" />
+    <PackageReference Include="AWSSDK.ElasticBeanstalk" Version="3.5.1.12" />
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="ASPSMS" Version="0.0.2" />
     <PackageReference Include="MailKit" Version="2.9.0" />
