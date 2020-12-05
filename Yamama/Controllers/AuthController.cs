@@ -311,10 +311,10 @@ namespace Yamama.Controllers
             {
                 var token = await userManager.GeneratePasswordResetTokenAsync(usr);
                 
-                var encodedCode = HttpUtility.UrlEncode(token);
+                //var encodedCode = HttpUtility.UrlEncode(token);
 
 
-                var passwordResetLink = Url.Action("ResetPassword", "Auth", new { email = Email, token = encodedCode }, Request.Scheme);
+                var passwordResetLink = Url.Action("ResetPassword", "Auth", new { email = Email, token = token }, Request.Scheme);
                 logger.Log(LogLevel.Warning, passwordResetLink);
 
                 return passwordResetLink;
@@ -328,7 +328,7 @@ namespace Yamama.Controllers
             var user = await userManager.FindByEmailAsync(resetPassViewModel.Email);
             if (user != null)
             {
-                var result = await userManager.ResetPasswordAsync(user, resetPassViewModel.Token, resetPassViewModel.Password);
+                var result = await userManager.ResetPasswordAsync(user, /*HttpUtility.UrlDecode(resetPassViewModel.Token)*/ resetPassViewModel.Token, resetPassViewModel.Password);
                 if (result.Succeeded)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);

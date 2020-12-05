@@ -1,10 +1,11 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Yamama
 {
-    public partial class yamamadbContext : DbContext
+    public partial class yamamadbContext : IdentityDbContext<ExtendedUser>
     {
         //public yamamadbContext()
         //{
