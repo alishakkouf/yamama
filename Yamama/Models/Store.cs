@@ -8,7 +8,7 @@ namespace Yamama
         public int Idstore { get; set; }
         public string Name { get; set; }
         public int? ProId { get; set; }
-        public double? Quantity { get; set; }
+        public double Quantity { get; set; }
 
         public virtual Product Pro { get; set; }
     }

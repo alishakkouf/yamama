@@ -32,7 +32,7 @@ namespace Yamama.Services
         public async Task<Double> GetProductPrice(string name)
         {
             int prodid = _db.Product.Where(x => x.Name == name).Select(x => x.Idproduct).FirstOrDefault();
-            Double result = 0;
+            double result = 0;
             try
             {
                 

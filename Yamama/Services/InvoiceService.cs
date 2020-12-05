@@ -278,7 +278,7 @@ namespace Yamama.Services
                         string test = month +"";
 
                         //to store the full sales
-                        Double value = 0;
+                        double value = 0;
 
                         //return list of id_invoices in each day
                         List<int> invoicesNumbers = _yamamadbContext.Invoice.Where(x => x.Date.Value.Month == month).Select(x => x.Idinvoice).ToList();
@@ -776,8 +776,8 @@ namespace Yamama.Services
 
 
             List<Invoice> Invoices = _yamamadbContext.Invoice.ToList();
-            Double RemainForCustomer = 0;
-            Double RemainForYamama = 0;
+           double RemainForCustomer = 0;
+            double RemainForYamama = 0;
 
             for (int i = 0; i < Invoices.Count; i++)
             {

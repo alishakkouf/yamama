@@ -18,7 +18,7 @@ namespace Yamama
 
         public int Idproduct { get; set; }
         public string Name { get; set; }
-        public double? Price { get; set; }
+        public double Price { get; set; }
 
         public virtual ICollection<ActualNeeds> ActualNeeds { get; set; }
         public virtual ICollection<Balance> Balance { get; set; }
