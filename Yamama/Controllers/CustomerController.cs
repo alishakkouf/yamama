@@ -46,7 +46,7 @@ namespace Yamama.Controllers
         [HttpGet]
         //[Authorize(Roles = "Admin")] 
         [Route("GetQuestion")]
-        public async Task<IActionResult> GetQuestion(int factory, int project)
+        public async Task<IActionResult> GetQuestion(string factory, string project)
         {
 
             var result = await _question.GetQuestionnaireTexts(factory, project);

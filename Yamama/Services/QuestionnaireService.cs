@@ -140,25 +140,28 @@ namespace Yamama.Services
 
         }
 
-        public List<CustomerSatisfactionReports> GetQuestionnaire(int factory, int project)
+        public List<CustomerSatisfactionReports> GetQuestionnaire(string factory, string project)
         {
+            int f_id = _yamamadbcontext.Factory.Where(x => x.Name == factory).Select(x => x.Idfactory).SingleOrDefault();
+            int p_id = _yamamadbcontext.Project.Where(x => x.Name == project).Select(x => x.Idproject).SingleOrDefault();
+
             List<CustomerSatisfactionReports> satisfactionReports = new List<CustomerSatisfactionReports>();
-            if (factory != 0)
+            if (f_id != 0)
             {
-                satisfactionReports = _yamamadbcontext.CustomerSatisfactionReports.Where(x => x.FactoryId == factory).ToList();
+                satisfactionReports = _yamamadbcontext.CustomerSatisfactionReports.Where(x => x.FactoryId == f_id).ToList();
                 //int recentReport = _yamamadbcontext.CustomerSatisfactionReports.OrderByDescending(p => p.IdcustomerSatisfactionReports).Select
                 //                   (x =>x.IdcustomerSatisfactionReports).FirstOrDefault();
             }
             else
             {
-                satisfactionReports = _yamamadbcontext.CustomerSatisfactionReports.Where(x => x.ProjectId == project).ToList();
+                satisfactionReports = _yamamadbcontext.CustomerSatisfactionReports.Where(x => x.ProjectId == p_id).ToList();
                 // int report = _yamamadbcontext.CustomerSatisfactionReports.Where(x => x.FactoryId == factory).Select
                 //(x => x.IdcustomerSatisfactionReports).SingleOrDefault();
             }
             return satisfactionReports;
         }
 
-        public async Task<List<QuestionnairesReports>> GetQuestionnaireTexts(int factory, int project)
+        public async Task<List<QuestionnairesReports>> GetQuestionnaireTexts(string factory, string project)
         {
             List<CustomerSatisfactionReports> satisfactionReports = GetQuestionnaire(factory , project);
             //string client;

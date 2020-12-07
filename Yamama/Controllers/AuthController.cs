@@ -37,6 +37,10 @@ namespace Yamama.Controllers
 
         }
 
+        //public AuthController()
+        //{
+        //}
+
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterInformation userRegisterInformation)
@@ -70,7 +74,10 @@ namespace Yamama.Controllers
                  
 
                     await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
-                    return Ok("successful");
+
+
+                     
+                    return Ok(userRegisterInformation);
                 }
                 else
                 {
@@ -240,6 +247,21 @@ namespace Yamama.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("GetUserByEmail")]
+        public async Task<ExtendedUser> GetUserByEmail(string Email)
+        {
+            //fetch the user
+            var user = await userManager.FindByEmailAsync(Email);
+            if (user != null)
+            { return user; }
+            else
+            {
+                // return BadRequest("The user not found");
+                return null;
+            }
+        }
+
 
         [HttpGet]
         [Route("GetCurrentUserId")]
@@ -249,7 +271,7 @@ namespace Yamama.Controllers
             return usr?.Id;
         }
 
-        private Task<ExtendedUser> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
+        public Task<ExtendedUser> GetCurrentUserAsync() => userManager.GetUserAsync(HttpContext.User);
 
         //decrypt PasswordHash to readable password
         public static string base64Decode(string sData) //Decode    

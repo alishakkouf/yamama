@@ -12,7 +12,7 @@ namespace Yamama.Repository
 
         Task<InvoiceViewModel> GetInvoice(int IdInvoice);
 
-        Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart);
+        Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart ,string usrID);
 
         Task<int> DeleteInvoiceAsync(int IdInvoice);
 

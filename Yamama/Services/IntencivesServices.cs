@@ -27,7 +27,7 @@ namespace Yamama.Services
                 var item = await _db.ExpectedIntencive.FirstAsync(v => v.IdexpectedIntencive == id);
                 return item;
             }
-            public async Task<int> AddActualIntencive(ActualIntencive actual)
+          public async Task<int> AddActualIntencive(ActualIntencive actual)
             {
                 if (_db != null)
                 {
@@ -39,7 +39,7 @@ namespace Yamama.Services
                 return 0;
             }
 
-            public async Task<int> AddExpectedIntencive(ExpectedIntencive expected)
+         public async Task<int> AddExpectedIntencive(ExpectedIntencive expected)
             {
                 if (_db != null)
                 {
@@ -51,9 +51,7 @@ namespace Yamama.Services
                 }
                 return 0;
             }
-
-
-
+               
         public async Task<List<(string, double)>> GetActualIntenciveByUser(string user, string period, DateTime start, DateTime end)
         {
 
@@ -124,9 +122,7 @@ namespace Yamama.Services
                 return null;
             }
         }
-
-
-
+        
         public async Task<List<(string, double)>> GetExpectedIntenciveByUser(string user, string period, DateTime start, DateTime end)
         {
             try

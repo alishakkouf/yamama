@@ -52,8 +52,8 @@ namespace Yamama
             }).AddEntityFrameworkStores<yamamadbContext>()
               .AddDefaultTokenProviders();
 
-    
-
+            // tell the MVC to register all  controllers as services.
+            services.AddMvc().AddControllersAsServices();
 
             // inject the repositories and services classes
             services.AddScoped<IFactory, FactoryService>();

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Yamama.Repository;
 using Yamama.ViewModels;
@@ -16,11 +18,17 @@ namespace Yamama.Controllers
     {
         private readonly IInvoicecs _invoice;
         private readonly ICart _cart;
+        private readonly IHttpContextAccessor _context;
+        private readonly UserManager<ExtendedUser> userManager;
 
-        public InvoiceController(IInvoicecs invoice , ICart cart)
+
+        public InvoiceController(IInvoicecs invoice , ICart cart , IHttpContextAccessor context , UserManager<ExtendedUser> userManager)
         {
             _invoice = invoice;
             _cart = cart;
+            _context = context;
+            this.userManager = userManager;
+
         }
 
         //POST api/<InvoiceController>
@@ -30,7 +38,11 @@ namespace Yamama.Controllers
         public async Task<IActionResult> Create(InvoiceCartViewModel invoiceCartViewModel)
         {
 
-            var result = await _invoice.AddInvoiceAsync(invoiceCartViewModel);
+            var email =  _context.HttpContext.User?.Identity?.Name;
+
+            var user = await userManager.FindByEmailAsync(email);
+
+            var result = await _invoice.AddInvoiceAsync(invoiceCartViewModel , user.Id);
             if (result != null)
             {
                 var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
@@ -46,6 +58,8 @@ namespace Yamama.Controllers
 
 
         }
+
+      
 
         //POST api/<InvoiceController>
         [HttpGet]

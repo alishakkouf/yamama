@@ -27,7 +27,6 @@ namespace Yamama.Services
             }
             return 0;
         }
-
         public async Task<int> DeleteTarget(int id)
         {
             if (_db != null)
@@ -43,7 +42,6 @@ namespace Yamama.Services
             }
             return 0;
         }
-
         public List<Double> GetVisitTartget(string salesman, string period, DateTime start, DateTime end)
         {
             try
@@ -107,8 +105,6 @@ namespace Yamama.Services
                 return null;
             }
         }
-
-
         public async Task<int> UpdateTarget(int id, Target target)
         {
             if (_db != null)
@@ -129,8 +125,6 @@ namespace Yamama.Services
             }
             return 0;
         }
-
-
         public Double GetSalesbySalesmanByMonth(string salesman, int? month, int? year)
         {
 
@@ -309,7 +303,9 @@ namespace Yamama.Services
                     //Evaluate Visits
                     TargetViewModel n = new TargetViewModel();
                     List<(Double, Double)> result = new List<(Double, Double)>();
+
                     VisitServices visitServices = new VisitServices(_db);
+
                     var userId = _db.Aspnetusers.Where(x => x.FullName == salesman).Select(x => x.Id).SingleOrDefault();
                     for (var month = start.Month; month <= end.Month; month++)
                     {

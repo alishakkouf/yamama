@@ -15,6 +15,7 @@ namespace Yamama.Services
         private readonly yamamadbContext _yamamadbContext;
 
         private readonly ICart _cart;
+        
 
         public InvoiceService(yamamadbContext yamamadbContext, ICart cart)
         {
@@ -181,7 +182,7 @@ namespace Yamama.Services
             return null;
         }
 
-        public async Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart)
+        public async Task<string> AddInvoiceAsync(InvoiceCartViewModel invoiceCart ,string usrID)
         {
             try
             {
@@ -215,6 +216,8 @@ namespace Yamama.Services
                 {
                     invoiceCart.invoice.RemainForCustomer = invoiceCart.invoice.RemainForYamama = 0;
                 }
+
+                invoiceCart.invoice.UserId = usrID;
 
                 await _yamamadbContext.Invoice.AddAsync(invoiceCart.invoice);
                 await _yamamadbContext.SaveChangesAsync();
