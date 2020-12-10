@@ -77,6 +77,11 @@ namespace Yamama
             services.AddScoped<INeeds, NeedsServices>();
             services.AddScoped<IIntencive, IntencivesServices>();
             services.AddScoped<ITarget, TargetServices>();
+
+            services.Configure<DataProtectionTokenProviderOptions>(options =>
+    options.TokenLifespan = TimeSpan.FromDays(2));
+
+            //cSNgs5Foi;2$(eZ*hj!SxRt;BhNQ@s_
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

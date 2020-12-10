@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,6 +43,7 @@ namespace Yamama.Controllers
         //}
 
         [HttpPost]
+        //[Authorize(Roles = "admin")]
         [Route("Register")]
         public async Task<IActionResult> Register(UserRegisterInformation userRegisterInformation)
         {
@@ -75,9 +77,10 @@ namespace Yamama.Controllers
 
                     await userManager.AddToRoleAsync(user, userRegisterInformation.Role);
 
+                      ExtendedUser usr =await GetUserByEmail(userRegisterInformation.E_mail);
 
-                     
-                    return Ok(userRegisterInformation);
+
+                    return Ok(usr);
                 }
                 else
                 {
@@ -124,7 +127,8 @@ namespace Yamama.Controllers
 
                 if (result.Succeeded)
                 {
-                    return Ok();
+                    ExtendedUser usr = await GetUserByEmail(loginInformation.E_mail);
+                    return Ok(usr);
                 }
                 else if (result.IsNotAllowed)
                 {
@@ -350,7 +354,7 @@ namespace Yamama.Controllers
             var user = await userManager.FindByEmailAsync(resetPassViewModel.Email);
             if (user != null)
             {
-                var result = await userManager.ResetPasswordAsync(user, /*HttpUtility.UrlDecode(resetPassViewModel.Token)*/ resetPassViewModel.Token, resetPassViewModel.Password);
+                var result = await userManager.ResetPasswordAsync(user, resetPassViewModel.Token, resetPassViewModel.Password);
                 if (result.Succeeded)
                 {
                     var Response = new ResponseViewModel(true, HttpStatusCode.OK, "SUCCESS", result);
